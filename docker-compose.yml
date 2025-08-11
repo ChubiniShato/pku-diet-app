@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pku
+      POSTGRES_USER: pku
+      POSTGRES_PASSWORD: pku
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  api:
+    build: ./services/api
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/pku
+      DB_USER: pku
+      DB_PASSWORD: pku
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+volumes:
+  db_data:
