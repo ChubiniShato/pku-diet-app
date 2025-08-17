@@ -1,16 +1,17 @@
-# Compiled class file
+# =========================
+# Java / Maven / Spring Boot
+# =========================
+
+# Maven build directory (ყველა ქვეფოლდერში)
+**/target/
+
+# Compiled class files
 *.class
 
-# Log file
+# Logs
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
+# Package files
 *.jar
 *.war
 *.nar
@@ -19,21 +20,44 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs
+# JVM crash logs
 hs_err_pid*
 replay_pid*
 
-# Maven build directory
-target/
+# Spring Boot specific
+*.pid
 
-# IntelliJ IDEA project files
+# =========================
+# IDEs
+# =========================
+
+# IntelliJ IDEA
 .idea/
 *.iml
+out/
 
-# VS Code project files
+# VS Code
 .vscode/
 
-# OS specific files
-.DS_Store
-Thumbs.db
+# Eclipse
+.project
+.classpath
+.settings/
 
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# =========================
+# OS Specific
+# =========================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
