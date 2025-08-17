@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/pku}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/pku?characterEncoding=UTF-8&useUnicode=true}
     username: ${DB_USER:pku}
     password: ${DB_PASSWORD:pku}
   jpa:
@@ -11,6 +11,10 @@ spring:
         format_sql: true
         jdbc:
           time_zone: UTC
+        connection:
+          characterEncoding: UTF-8
+          useUnicode: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   flyway:
     enabled: true
 server:

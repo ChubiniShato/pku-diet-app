@@ -3,7 +3,7 @@ package com.chubini.pku.api.products;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
-import java.math.BigDecimal; // ✅ დავამატოთ
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "food_products")
@@ -20,14 +20,14 @@ public class FoodProduct {
     @Column(nullable = false)
     private String unit; // g/ml
 
-    // ✅ numeric(8,3) ↔ BigDecimal + precision/scale
+    // numeric(8,3) corresponds to BigDecimal with precision/scale
     @Column(name = "protein_100g", nullable = false, precision = 8, scale = 3)
     private BigDecimal proteinPer100g;
 
     @Column(name = "phe_100g", nullable = false, precision = 8, scale = 3)
     private BigDecimal phePer100g;
 
-    // kcal_100g არის INT → Integer სწორია
+    // kcal_100g is INT -> Integer is correct
     @Column(name = "kcal_100g", nullable = false)
     private Integer kcalPer100g;
 
