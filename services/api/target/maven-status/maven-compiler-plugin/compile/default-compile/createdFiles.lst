@@ -1,7 +1,0 @@
-com\chubini\pku\api\products\FoodProduct$FoodProductBuilder.class
-com\chubini\pku\api\products\FoodProduct.class
-com\chubini\pku\api\products\FoodProductController.class
-com\chubini\pku\api\PkuApiApplication.class
-com\chubini\pku\api\config\OpenApiConfig.class
-com\chubini\pku\api\products\FoodProductUpsertDto.class
-com\chubini\pku\api\products\FoodProductRepository.class
