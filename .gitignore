@@ -31,24 +31,24 @@ replay_pid*
 *.pid
 
 # =========================
-# IDEs & Editors
+# IDE / Editors
 # =========================
 .idea/
 .vscode/
 *.iml
 
 # =========================
-# Node.js (თუ ოდესმე დაიმატებს ფრონტს)
+# Node.js (თუ შემდგომ დაემატება)
 # =========================
 node_modules/
 
 # =========================
-# OS-specific files
+# OS junk files
 # =========================
 .DS_Store
 Thumbs.db
 
 # =========================
-# Local test / junk files
+# Local docker/test files
 # =========================
 test-compose.yml
