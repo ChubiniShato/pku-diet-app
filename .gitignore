@@ -30,14 +30,25 @@ replay_pid*
 # Spring Boot specific
 *.pid
 
-# IDEs
+# =========================
+# IDEs & Editors
+# =========================
 .idea/
 .vscode/
 *.iml
 
-# Node.js (თუ ოდესმე დაემატება Frontend)
+# =========================
+# Node.js (თუ ოდესმე დაიმატებს ფრონტს)
+# =========================
 node_modules/
 
-# OS-specific
+# =========================
+# OS-specific files
+# =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# Local test / junk files
+# =========================
+test-compose.yml
