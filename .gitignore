@@ -20,6 +20,9 @@
 *.tar.gz
 *.rar
 
+# Environment variables
+.env
+
 # JVM crash logs
 hs_err_pid*
 replay_pid*
@@ -27,37 +30,14 @@ replay_pid*
 # Spring Boot specific
 *.pid
 
-# =========================
 # IDEs
-# =========================
-
-# IntelliJ IDEA
 .idea/
-*.iml
-out/
-
-# VS Code
 .vscode/
+*.iml
 
-# Eclipse
-.project
-.classpath
-.settings/
+# Node.js (თუ ოდესმე დაემატება Frontend)
+node_modules/
 
-# NetBeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-# =========================
-# OS Specific
-# =========================
-
-# macOS
+# OS-specific
 .DS_Store
-
-# Windows
 Thumbs.db
