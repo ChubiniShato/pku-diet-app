@@ -20,6 +20,9 @@
 *.tar.gz
 *.rar
 
+# Environment variables
+.env
+
 # JVM crash logs
 hs_err_pid*
 replay_pid*
@@ -28,36 +31,24 @@ replay_pid*
 *.pid
 
 # =========================
-# IDEs
+# IDE / Editors
 # =========================
-
-# IntelliJ IDEA
 .idea/
-*.iml
-out/
-
-# VS Code
 .vscode/
-
-# Eclipse
-.project
-.classpath
-.settings/
-
-# NetBeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+*.iml
 
 # =========================
-# OS Specific
+# Node.js (თუ შემდგომ დაემატება)
 # =========================
+node_modules/
 
-# macOS
+# =========================
+# OS junk files
+# =========================
 .DS_Store
-
-# Windows
 Thumbs.db
+
+# =========================
+# Local docker/test files
+# =========================
+test-compose.yml

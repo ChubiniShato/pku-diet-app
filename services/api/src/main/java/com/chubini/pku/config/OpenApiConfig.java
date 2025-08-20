@@ -1,4 +1,4 @@
-package com.chubini.pku.api.config;
+package com.chubini.pku.config;
 
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;

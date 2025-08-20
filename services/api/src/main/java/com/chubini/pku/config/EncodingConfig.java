@@ -1,4 +1,4 @@
-package main.java.com.chubini.pku.config;
+package com.chubini.pku.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

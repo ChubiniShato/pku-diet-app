@@ -1,37 +1,73 @@
 # PKU Diet App
 
-A Spring Boot application for managing PKU (Phenylketonuria) diet planning with support for Georgian text and UTF-8 encoding.
+A web application to support dietary management for **Phenylketonuria (PKU)** patients.  
+The backend provides product management APIs, CSV data import, UTF-8 encoding support, and database migrations.
 
-## UTF-8 Encoding Setup
+---
 
-This application is configured to properly handle Georgian text and other Unicode characters. The following configurations ensure proper UTF-8 encoding:
+## ✨ Features
+- Upload food products via CSV
+- Manage products through REST API
+- UTF-8 encoding support (multilingual data)
+- Centralized exception handling
+- Flyway database migrations (schema & data)
+- Dockerized API service
 
-### Database Configuration
-- PostgreSQL connection uses UTF-8 encoding
-- Hibernate configured for UTF-8 character encoding
-- Database tables support Unicode text
+---
 
-### Application Configuration
-- Spring Boot configured with UTF-8 message converters
-- Docker container set with UTF-8 environment variables
-- File encoding set to UTF-8
+## 🛠 Tech Stack
+- **Java 21**
+- **Spring Boot**
+- **Maven**
+- **Flyway** (database migrations)
+- **Docker**
+- **PostgreSQL / H2 (for dev/test)**
 
-### For Developers
-When adding Georgian text or other Unicode content:
-1. Ensure all source files are saved with UTF-8 encoding
-2. Use proper Unicode escape sequences if needed
-3. Test text display in both development and production environments
+---
 
-## Running the Application
+## 🚀 Getting Started
 
+### Prerequisites
+- Java 21  
+- Maven  
+- Docker (optional, for containerized run)  
+
+### Run locally
 ```bash
-# Using Docker Compose
-docker-compose up
+# clone the repository
+git clone https://github.com/ChubiniShato/pku-diet-app.git
+cd pku-diet-app/services/api
 
-# Using Maven
+# build
+mvn clean install
+
+# run
 mvn spring-boot:run
 ```
 
-## Database Migrations
+### Run with Docker
+```bash
+docker build -t pku-diet-app .
+docker run -p 8080:8080 pku-diet-app
+```
 
-The application uses Flyway for database migrations. All SQL files are saved with UTF-8 encoding to support Georgian text.
+---
+
+## 📡 API Endpoints (examples)
+
+- `GET /products` → List all products  
+- `GET /products/{id}` → Get product by ID  
+- `POST /products/upload` → Upload CSV with products  
+
+---
+
+## 🖼 Future Improvements
+- Authentication & Authorization (JWT / OAuth2)
+- Frontend UI (React or Angular)
+- Reporting & analytics module
+- Docker Compose setup for full stack
+
+---
+
+## 👤 Author
+Developed by [**ChubiniShato**](https://github.com/ChubiniShato)
