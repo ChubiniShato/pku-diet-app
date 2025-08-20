@@ -1,7 +1,7 @@
-package main.java.com.chubini.pku.config;
+package com.chubini.pku.config;
 
-import main.java.com.chubini.pku.products.ProductNotFoundException;
-import main.java.com.chubini.pku.products.ProductUploadException;
+import com.chubini.pku.products.ProductNotFoundException;
+import com.chubini.pku.products.ProductUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,4 +1,4 @@
-package main.java.com.chubini.pku.products;
+package com.chubini.pku.products;
 
 public class ProductNotFoundException extends RuntimeException {
     

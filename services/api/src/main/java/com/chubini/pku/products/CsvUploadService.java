@@ -1,4 +1,4 @@
-package main.java.com.chubini.pku.products;
+package com.chubini.pku.products;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -16,12 +16,12 @@ import java.util.List;
 @Service
 public class CsvUploadService {
 
-    public List<FoodProduct> parseCsvFile(MultipartFile file) throws IOException {
+    public List<Product> parseCsvFile(MultipartFile file) throws IOException {
         return parseCsvBytes(file.getBytes());
     }
     
-    public List<FoodProduct> parseCsvBytes(byte[] csvData) throws IOException {
-        List<FoodProduct> products = new ArrayList<>();
+    public List<Product> parseCsvBytes(byte[] csvData) throws IOException {
+        List<Product> products = new ArrayList<>();
         
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(csvData);
              InputStreamReader reader = new InputStreamReader(inputStream);
@@ -29,14 +29,18 @@ public class CsvUploadService {
             
             for (CSVRecord record : csvParser) {
                 try {
-                    FoodProduct product = FoodProduct.builder()
-                            .name(record.get("name"))
-                            .unit(record.get("unit"))
-                            .proteinPer100g(parseBigDecimal(record.get("proteinPer100g")))
-                            .phePer100g(parseBigDecimal(record.get("phePer100g")))
-                            .kcalPer100g(parseInteger(record.get("kcalPer100g")))
+                    Product product = Product.builder()
+                            .productName(record.get("name"))
                             .category(record.get("category"))
-                            .isActive(true)
+                            .phenylalanine(parseBigDecimal(record.get("phenylalanine")))
+                            .leucine(parseBigDecimal(record.get("leucine")))
+                            .tyrosine(parseBigDecimal(record.get("tyrosine")))
+                            .methionine(parseBigDecimal(record.get("methionine")))
+                            .kilojoules(parseInteger(record.get("kilojoules")))
+                            .kilocalories(parseInteger(record.get("kilocalories")))
+                            .protein(parseBigDecimal(record.get("protein")))
+                            .carbohydrates(parseBigDecimal(record.get("carbohydrates")))
+                            .fats(parseBigDecimal(record.get("fats")))
                             .build();
                     
                     products.add(product);

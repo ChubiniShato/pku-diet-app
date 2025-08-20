@@ -1,0 +1,6 @@
+services:
+  test:
+    image: alpine
+    environment:
+      TEST_VAR: ${DB_NAME}
+      DB_NAME: ${DB_NAME}

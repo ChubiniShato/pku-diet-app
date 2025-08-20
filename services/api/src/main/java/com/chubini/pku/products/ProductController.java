@@ -1,4 +1,4 @@
-package main.java.com.chubini.pku.products;
+package com.chubini.pku.products;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,11 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RestController
 @RequestMapping("/api/v1/products")
 @Tag(name = "Food Products", description = "CRUD operations for PKU diet food products")
-public class FoodProductController {
+public class ProductController {
 
-    private final FoodProductService productService;
+    private final ProductService productService;
 
-    public FoodProductController(FoodProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -33,7 +33,7 @@ public class FoodProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
     })
-    public Page<FoodProduct> list(
+    public Page<Product> list(
             @Parameter(description = "Search query for product names") @RequestParam(defaultValue = "") String query,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
@@ -46,10 +46,10 @@ public class FoodProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved product"),
         @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<FoodProduct> getById(
+    public ResponseEntity<Product> getById(
             @Parameter(description = "Product UUID") @PathVariable UUID id) {
         try {
-            FoodProduct product = productService.getProductById(id);
+            Product product = productService.getProductById(id);
             return ResponseEntity.ok(product);
         } catch (ProductNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -62,8 +62,8 @@ public class FoodProductController {
         @ApiResponse(responseCode = "200", description = "Successfully created product"),
         @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<FoodProduct> create(@Valid @RequestBody FoodProductUpsertDto dto) {
-        FoodProduct product = productService.createProduct(dto);
+    public ResponseEntity<Product> create(@Valid @RequestBody ProductUpsertDto dto) {
+        Product product = productService.createProduct(dto);
         return ResponseEntity.ok(product);
     }
 
@@ -74,11 +74,11 @@ public class FoodProductController {
         @ApiResponse(responseCode = "404", description = "Product not found"),
         @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<FoodProduct> update(
+    public ResponseEntity<Product> update(
             @Parameter(description = "Product UUID") @PathVariable UUID id, 
-            @Valid @RequestBody FoodProductUpsertDto dto) {
+            @Valid @RequestBody ProductUpsertDto dto) {
         try {
-            FoodProduct product = productService.updateProduct(id, dto);
+            Product product = productService.updateProduct(id, dto);
             return ResponseEntity.ok(product);
         } catch (ProductNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -101,24 +101,8 @@ public class FoodProductController {
         }
     }
 
-    @PatchMapping("/{id}/toggle-status")
-    @Operation(summary = "Toggle product status", description = "Toggle the active/inactive status of a product")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully toggled status"),
-        @ApiResponse(responseCode = "404", description = "Product not found")
-    })
-    public ResponseEntity<FoodProduct> toggleStatus(
-            @Parameter(description = "Product UUID") @PathVariable UUID id) {
-        try {
-            FoodProduct product = productService.toggleProductStatus(id);
-            return ResponseEntity.ok(product);
-        } catch (ProductNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/categories")
-    @Operation(summary = "Get all active categories", description = "Retrieve list of all active product categories")
+    @Operation(summary = "Get all categories", description = "Retrieve list of all product categories")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved categories")
     public ResponseEntity<List<String>> getCategories() {
         return ResponseEntity.ok(productService.getAllCategories());
@@ -130,7 +114,7 @@ public class FoodProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
     })
-    public Page<FoodProduct> getByCategory(
+    public Page<Product> getByCategory(
             @Parameter(description = "Product category") @PathVariable String category,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
@@ -143,23 +127,11 @@ public class FoodProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
     })
-    public Page<FoodProduct> getLowPheProducts(
+    public Page<Product> getLowPheProducts(
             @Parameter(description = "Maximum PHE per 100g") @RequestParam Double maxPhe,
             @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
         return productService.getLowPheProducts(maxPhe, page, size);
-    }
-
-    @GetMapping("/active")
-    @Operation(summary = "Get active products", description = "Get paginated list of only active products")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
-        @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
-    })
-    public Page<FoodProduct> getActiveProducts(
-            @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
-        return productService.getActiveProducts(page, size);
     }
 
     @PostMapping("/upload-csv")
