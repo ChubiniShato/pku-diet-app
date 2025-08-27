@@ -1,4 +1,4 @@
-package com.chubini.pku.api;
+package com.chubini.pku;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,3 +13,6 @@ public class PkuApiApplication {
         SpringApplication.run(PkuApiApplication.class, args);
     }
 }
+
+
+
