@@ -36,10 +36,10 @@ public class Product {
     private BigDecimal methionine;
 
     @Column(name = "kilojoules")
-    private Integer kilojoules;
+    private BigDecimal kilojoules;
 
     @Column(name = "kilocalories")
-    private Integer kilocalories;
+    private BigDecimal kilocalories;
 
     @Column(name = "protein")
     private BigDecimal protein;

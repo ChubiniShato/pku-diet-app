@@ -1,7 +1,7 @@
 package com.chubini.pku.products;
 
+import com.chubini.pku.validation.FileValidationService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,9 +22,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProductController {
 
     private final ProductService productService;
+    private final FileValidationService fileValidationService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, FileValidationService fileValidationService) {
         this.productService = productService;
+        this.fileValidationService = fileValidationService;
     }
 
     @GetMapping
@@ -138,13 +140,20 @@ public class ProductController {
     @Operation(summary = "Upload products from CSV", description = "Upload multiple products from a CSV file")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully uploaded products"),
-        @ApiResponse(responseCode = "400", description = "Invalid CSV format or data")
+        @ApiResponse(responseCode = "400", description = "Invalid CSV format or data"),
+        @ApiResponse(responseCode = "413", description = "File too large"),
+        @ApiResponse(responseCode = "415", description = "Unsupported file type")
     })
     public ResponseEntity<String> uploadCsv(
             @Parameter(description = "CSV file with product data") @RequestParam("file") MultipartFile file) {
         try {
+            // Validate file before processing
+            fileValidationService.validateFile(file);
+            
             String result = productService.uploadProductsFromCsv(file.getBytes());
             return ResponseEntity.ok(result);
+        } catch (ProductUploadException e) {
+            return ResponseEntity.badRequest().body("File validation error: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error uploading CSV: " + e.getMessage());
         }
