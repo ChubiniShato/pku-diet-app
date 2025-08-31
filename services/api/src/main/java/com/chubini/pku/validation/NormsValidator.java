@@ -26,11 +26,13 @@ public class NormsValidator {
 
   /** Validate a menu day against norm prescription */
   public ValidationResult validate(NormPrescription norm, MenuDay menuDay) {
-    log.debug("Validating menu day {} against norm prescription {}", menuDay.getId(), norm.getId());
-
     if (norm == null || menuDay == null) {
+      log.debug(
+          "Validation skipped - null inputs: norm={}, menuDay={}", norm != null, menuDay != null);
       return ValidationResult.ok();
     }
+
+    log.debug("Validating menu day {} against norm prescription {}", menuDay.getId(), norm.getId());
 
     // Calculate planned and consumed totals
     NutritionCalculator.DayTotals planned = nutritionCalculator.calculatePlannedTotals(menuDay);
