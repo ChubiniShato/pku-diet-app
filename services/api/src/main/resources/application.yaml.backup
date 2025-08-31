@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/pku?characterEncoding=UTF-8&useUnicode=true}
+    username: ${DB_USER:pku}
+    password: ${DB_PASSWORD:pku}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+        connection:
+          characterEncoding: UTF-8
+          useUnicode: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    validate-on-migrate: false
+    clean-on-validation-error: true
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  
+# Custom app configuration      
+app:
+  upload:
+    max-file-size: 10MB
+    max-request-size: 10MB
+    allowed-mime-types:
+      - text/csv
+      - application/csv
+      - text/plain
+    allowed-extensions:
+      - .csv
+      - .txt
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+      show-components: always
+  health:
+    db:
+      enabled: true

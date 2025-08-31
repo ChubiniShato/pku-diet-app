@@ -33,7 +33,41 @@ app:
       - .csv
       - .txt
 
+# Integration test configuration
+app:
+  upload:
+    max-file-size: 1MB
+    max-request-size: 1MB
+    allowed-mime-types:
+      - text/csv
+      - application/csv
+      - text/plain
+      - image/jpeg
+      - image/png
+      - image/webp
+    allowed-extensions:
+      - .csv
+      - .txt
+      - .jpg
+      - .jpeg
+      - .png
+      - .webp
+
+# Mock external services for integration tests
+off-api:
+  enabled: false
+  base-url: http://mock
+fcm:
+  enabled: false
+sendgrid:
+  enabled: false
+twilio:
+  enabled: false
+s3:
+  enabled: false
+
 logging:
   level:
     com.chubini.pku: DEBUG
     org.springframework.security: DEBUG
+    org.testcontainers: DEBUG

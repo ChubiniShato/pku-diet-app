@@ -14,54 +14,54 @@ import jakarta.servlet.MultipartConfigElement;
 @ConfigurationProperties(prefix = "app.upload")
 public class FileUploadConfig {
 
-    private DataSize maxFileSize = DataSize.ofMegabytes(10); // 10MB default
-    private DataSize maxRequestSize = DataSize.ofMegabytes(10); // 10MB default
-    private String[] allowedMimeTypes = {"text/csv", "application/csv", "text/plain"};
-    private String[] allowedExtensions = {".csv", ".txt"};
+  private DataSize maxFileSize = DataSize.ofMegabytes(10); // 10MB default
+  private DataSize maxRequestSize = DataSize.ofMegabytes(10); // 10MB default
+  private String[] allowedMimeTypes = {"text/csv", "application/csv", "text/plain"};
+  private String[] allowedExtensions = {".csv", ".txt"};
 
-    @Bean
-    public MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setMaxFileSize(maxFileSize);
-        factory.setMaxRequestSize(maxRequestSize);
-        return factory.createMultipartConfig();
-    }
+  @Bean
+  public MultipartConfigElement multipartConfigElement() {
+    MultipartConfigFactory factory = new MultipartConfigFactory();
+    factory.setMaxFileSize(maxFileSize);
+    factory.setMaxRequestSize(maxRequestSize);
+    return factory.createMultipartConfig();
+  }
 
-    @Bean
-    public MultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
-    }
+  @Bean
+  public MultipartResolver multipartResolver() {
+    return new StandardServletMultipartResolver();
+  }
 
-    // Getters and setters for configuration properties
-    public DataSize getMaxFileSize() {
-        return maxFileSize;
-    }
+  // Getters and setters for configuration properties
+  public DataSize getMaxFileSize() {
+    return maxFileSize;
+  }
 
-    public void setMaxFileSize(DataSize maxFileSize) {
-        this.maxFileSize = maxFileSize;
-    }
+  public void setMaxFileSize(DataSize maxFileSize) {
+    this.maxFileSize = maxFileSize;
+  }
 
-    public DataSize getMaxRequestSize() {
-        return maxRequestSize;
-    }
+  public DataSize getMaxRequestSize() {
+    return maxRequestSize;
+  }
 
-    public void setMaxRequestSize(DataSize maxRequestSize) {
-        this.maxRequestSize = maxRequestSize;
-    }
+  public void setMaxRequestSize(DataSize maxRequestSize) {
+    this.maxRequestSize = maxRequestSize;
+  }
 
-    public String[] getAllowedMimeTypes() {
-        return allowedMimeTypes;
-    }
+  public String[] getAllowedMimeTypes() {
+    return allowedMimeTypes;
+  }
 
-    public void setAllowedMimeTypes(String[] allowedMimeTypes) {
-        this.allowedMimeTypes = allowedMimeTypes;
-    }
+  public void setAllowedMimeTypes(String[] allowedMimeTypes) {
+    this.allowedMimeTypes = allowedMimeTypes;
+  }
 
-    public String[] getAllowedExtensions() {
-        return allowedExtensions;
-    }
+  public String[] getAllowedExtensions() {
+    return allowedExtensions;
+  }
 
-    public void setAllowedExtensions(String[] allowedExtensions) {
-        this.allowedExtensions = allowedExtensions;
-    }
+  public void setAllowedExtensions(String[] allowedExtensions) {
+    this.allowedExtensions = allowedExtensions;
+  }
 }
