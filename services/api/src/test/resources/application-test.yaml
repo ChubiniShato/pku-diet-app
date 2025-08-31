@@ -19,21 +19,10 @@ spring:
     user:
       name: test
       password: test
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
-# Test-specific file upload limits
-app:
-  upload:
-    max-file-size: 1MB
-    max-request-size: 1MB
-    allowed-mime-types:
-      - text/csv
-      - application/csv
-      - text/plain
-    allowed-extensions:
-      - .csv
-      - .txt
-
-# Integration test configuration
+# Test configuration
 app:
   upload:
     max-file-size: 1MB
@@ -52,6 +41,12 @@ app:
       - .jpeg
       - .png
       - .webp
+  security:
+    jwt:
+      secret: test-secret-key-for-testing-must-be-at-least-256-bits-long
+      expiration: 86400000
+    cors:
+      allowed-origins: http://localhost:3000,http://localhost:5173
 
 # Mock external services for integration tests
 off-api:

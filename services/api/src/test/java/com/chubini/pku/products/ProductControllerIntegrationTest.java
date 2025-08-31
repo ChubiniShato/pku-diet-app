@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureWebMvc
 @ActiveProfiles("test")
 @Transactional
-@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+@org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(addFilters = false)
 public class ProductControllerIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
@@ -44,7 +44,13 @@ public class ProductControllerIntegrationTest {
                 "category": "Test Category",
                 "phenylalanine": 10.5,
                 "protein": 5.0,
-                "kilocalories": 100.0
+                "kilocalories": 100.0,
+                "carbohydrates": 15.0,
+                "fats": 2.0,
+                "kilojoules": 418.0,
+                "leucine": 0.8,
+                "methionine": 0.3,
+                "tyrosine": 0.5
             }
             """;
 
