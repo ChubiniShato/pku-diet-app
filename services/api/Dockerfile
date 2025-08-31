@@ -6,14 +6,18 @@ RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests dependency:go-offl
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests package
 
-# --- Run stage (JRE only) ---
-FROM eclipse-temurin:21-jre
+# --- Run stage (Distroless for security) ---
+FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
-RUN useradd -ms /bin/bash appuser
 COPY --from=build /workspace/target/api-0.0.1-SNAPSHOT.jar app.jar
-USER appuser
+COPY --from=build /workspace/target/openapi.json /app/static/openapi.json
+
+# Create non-root user (distroless images handle this differently)
+USER 65534:65534
+
 EXPOSE 8080
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=50.0 -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Duser.language=en -Duser.country=US"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=50.0 -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Duser.language=en -Duser.country=US -Djava.security.egd=file:/dev/./urandom"
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
-ENTRYPOINT ["sh","-c","exec java $JAVA_OPTS -jar /app/app.jar"]
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

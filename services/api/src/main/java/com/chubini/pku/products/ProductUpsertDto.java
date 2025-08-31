@@ -1,7 +1,8 @@
 package com.chubini.pku.products;
 
-import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
+
+import jakarta.validation.constraints.*;
 
 public record ProductUpsertDto(
     @NotBlank String productName,
@@ -14,5 +15,4 @@ public record ProductUpsertDto(
     @NotNull @DecimalMin("0.0") BigDecimal kilocalories,
     @NotNull @DecimalMin("0.0") BigDecimal protein,
     @NotNull @DecimalMin("0.0") BigDecimal carbohydrates,
-    @NotNull @DecimalMin("0.0") BigDecimal fats
-) {}
+    @NotNull @DecimalMin("0.0") BigDecimal fats) {}

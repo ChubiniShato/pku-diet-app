@@ -9,10 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.chubini.pku")
 @EnableJpaRepositories("com.chubini.pku")
 public class PkuApiApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(PkuApiApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(PkuApiApplication.class, args);
+  }
 }
-
-
-

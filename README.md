@@ -42,10 +42,15 @@ A comprehensive web application to support dietary management for **Phenylketonu
 - **Java 21** with Spring Boot 3.3.2
 - **PostgreSQL** with Flyway migrations
 - **Maven** for dependency management
-- **Docker** with health checks
+- **Docker** with distroless images and health checks
+- **Testcontainers** for integration testing
+- **k6** for performance testing
 - **MapStruct** for DTO mapping
 - **Swagger/OpenAPI** for API documentation
-- **JUnit 5** for testing
+- **JUnit 5** + **Failsafe** for testing
+- **OWASP Dependency Check** for security scanning
+- **Spotless** for code formatting
+- **GitHub Actions** for CI/CD
 
 ---
 
@@ -92,7 +97,23 @@ java -jar target/api-0.0.1-SNAPSHOT.jar
 ### Running Tests
 ```bash
 cd services/api
+
+# Unit tests only
 mvn test
+
+# Integration tests with Testcontainers
+mvn verify -Pintegration
+
+# All tests (unit + integration)
+mvn verify
+
+# Run with OWASP Dependency Check
+mvn org.owasp:dependency-check-maven:check
+
+# Performance tests (requires k6)
+cd ../..
+chmod +x perf/run-perf-tests.sh
+./perf/run-perf-tests.sh http://localhost:8080
 ```
 
 ---
@@ -175,6 +196,52 @@ JWT_EXPIRATION=86400
 MAIL_HOST=smtp.gmail.com
 MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD=your-app-password
+```
+
+---
+
+## 🔄 CI/CD Pipeline
+
+The project includes comprehensive CI/CD with GitHub Actions:
+
+### Continuous Integration (`.github/workflows/ci.yml`)
+- **Triggers**: Push/PR to main/develop branches
+- **Unit Tests**: `mvn test` with JUnit 5
+- **Integration Tests**: `mvn verify -Pintegration` with Testcontainers + PostgreSQL
+- **Security Scan**: OWASP Dependency Check (CVSS > 7 fails build)
+- **Code Quality**: Spotless formatting validation
+- **Docker Build**: Multi-stage build with distroless image
+- **Artifacts**: Test reports, OpenAPI spec, security reports
+
+### Continuous Deployment (`.github/workflows/release.yml`)
+- **Triggers**: Git tags (`v*`)
+- **Build & Test**: Full test suite + integration tests
+- **Docker Release**: Build and push to GitHub Container Registry
+- **Release Creation**: Automated GitHub release with changelog
+- **OpenAPI Export**: JSON spec uploaded as release asset
+
+### Quality Gates
+```bash
+# Run all quality checks locally
+cd services/api
+mvn clean verify -Pintegration
+mvn spotless:check
+mvn org.owasp:dependency-check-maven:check
+
+# Format code
+mvn spotless:apply
+```
+
+### Performance Testing
+```bash
+# Install k6 and run performance tests
+npm install -g k6  # or follow: https://k6.io/docs/get-started/installation/
+
+# Run against local environment
+./perf/run-perf-tests.sh http://localhost:8080
+
+# Run specific test
+k6 run perf/k6/menu-generation-test.js
 ```
 
 ---

@@ -1,0 +1,188 @@
+{
+  "app": {
+    "title": "ФКУ Диетическое Приложение",
+    "description": "Управляйте своей диетой при фенилкетонурии с лёгкостью"
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "day": "День",
+    "week": "Неделя",
+    "products": "Продукты",
+    "dishes": "Блюда",
+    "pantry": "Кладовая",
+    "scan": "Сканировать",
+    "share": "Поделиться",
+    "critical": "Критичное",
+    "profile": "Профиль",
+    "settings": "Настройки"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "add": "Добавить",
+    "search": "Поиск"
+  },
+  "api": {
+    "testConnection": "Тест API соединения",
+    "testing": "Тестирование...",
+    "status": {
+      "up": "API работает",
+      "down": "API не работает"
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Панель управления",
+      "subtitle": "Ваш ежедневный обзор ФАЛ"
+    },
+    "day": {
+      "title": "Вид дня",
+      "subtitle": "Подробное отслеживание ежедневного питания"
+    },
+    "week": {
+      "title": "Вид недели",
+      "subtitle": "Планирование питания на неделю"
+    },
+    "products": {
+      "title": "Продукты",
+      "subtitle": "Просмотр базы данных продуктов питания"
+    },
+    "dishes": {
+      "title": "Блюда",
+      "subtitle": "Ваши сохранённые рецепты и блюда"
+    },
+    "pantry": {
+      "title": "Кладовая",
+      "subtitle": "Управление запасами продуктов"
+    },
+    "scan": {
+      "title": "Сканирование",
+      "subtitle": "Сканирование этикеток продуктов"
+    },
+    "share": {
+      "title": "Поделиться",
+      "subtitle": "Делитесь блюдами и рецептами"
+    },
+    "critical": {
+      "title": "Критические Факты",
+      "subtitle": "Мониторинг и управление критическими диетическими событиями",
+      "filters": {
+        "title": "Фильтры Критических Фактов",
+        "activeFilters": "активных фильтров",
+        "exportCsv": "Экспорт CSV",
+        "exporting": "Экспортирование...",
+        "status": "Статус",
+        "allFacts": "Все Факты",
+        "unresolvedOnly": "Только Неразрешённые",
+        "resolvedOnly": "Только Разрешённые",
+        "from": "От",
+        "to": "До",
+        "clearAll": "Очистить Всё",
+        "factTypes": "Типы Фактов",
+        "severityLevels": "Уровни Серьёзности",
+        "sources": "Источники"
+      },
+      "table": {
+        "title": "Критические Факты",
+        "showing": "Показаны",
+        "of": "из",
+        "facts": "факты",
+        "noFacts": "Критические факты не найдены",
+        "noFactsDesc": "Нет критических фактов, соответствующих вашим текущим фильтрам",
+        "date": "Дата",
+        "type": "Тип",
+        "severity": "Серьёзность",
+        "delta": "Дельта",
+        "context": "Контекст",
+        "status": "Статус",
+        "actions": "Действия",
+        "details": "Детали",
+        "hide": "Скрыть",
+        "resolve": "Разрешить",
+        "unresolve": "Сделать Неразрешённым",
+        "processing": "Обработка...",
+        "resolved": "Разрешён",
+        "unresolved": "Неразрешён"
+      },
+      "details": {
+        "deltaDetails": "Детали Дельты",
+        "contextDetails": "Детали Контекста",
+        "timestamps": "Временные Метки",
+        "expected": "Ожидалось",
+        "actual": "Фактически",
+        "difference": "Разница",
+        "threshold": "Порог",
+        "source": "Источник",
+        "meal": "Приём пищи",
+        "product": "Продукт",
+        "dish": "Блюдо",
+        "quantity": "Количество",
+        "created": "Создано",
+        "resolved": "Разрешено",
+        "notes": "Заметки"
+      },
+      "types": {
+        "pheBreach": "Превышение ФАЛ",
+        "proteinDeficiency": "Дефицит Белка",
+        "calorieExcess": "Избыток Калорий",
+        "calorieDeficiency": "Дефицит Калорий",
+        "micronutrientDeficiency": "Дефицит Микронутриентов",
+        "medicationInteraction": "Взаимодействие Лекарств",
+        "allergenExposure": "Экспозиция Аллергенов",
+        "forbiddenIngredient": "Запрещённый Ингредиент",
+        "safetyWarning": "Предупреждение Безопасности",
+        "dietaryViolation": "Диетическое Нарушение"
+      },
+      "severity": {
+        "critical": "Критический",
+        "high": "Высокий",
+        "medium": "Средний",
+        "low": "Низкий"
+      },
+      "sources": {
+        "dailyValidation": "Ежедневная Валидация",
+        "mealEntry": "Ввод Приёма Пищи",
+        "productScan": "Сканирование Продукта",
+        "manualEntry": "Ручной Ввод",
+        "automatedCheck": "Автоматическая Проверка",
+        "healthcareProvider": "Медицинский Работник",
+        "systemAlert": "Системное Предупреждение"
+      },
+      "summary": {
+        "totalFacts": "Всего Фактов",
+        "unresolved": "Неразрешённые",
+        "critical": "Критические",
+        "highPriority": "Высокий Приоритет",
+        "recentFacts": "Недавние Критические Факты"
+      },
+      "export": {
+        "complete": "Экспорт Завершён",
+        "downloaded": "Загружено",
+        "as": "как"
+      },
+      "actions": {
+        "factResolved": "Факт Разрешён",
+        "factResolvedDesc": "Критический факт отмечен как разрешённый",
+        "factUnresolved": "Факт Неразрешён",
+        "factUnresolvedDesc": "Критический факт отмечен как неразрешённый"
+      },
+      "navigation": {
+        "criticalAlert": "Критическое Предупреждение",
+        "criticalAlerts": "Критические Предупреждения"
+      }
+    },
+    "profile": {
+      "title": "Профиль",
+      "subtitle": "Ваша личная информация"
+    },
+    "settings": {
+      "title": "Настройки",
+      "subtitle": "Настройки приложения"
+    }
+  }
+}
