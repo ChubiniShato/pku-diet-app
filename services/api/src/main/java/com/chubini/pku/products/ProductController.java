@@ -1,6 +1,9 @@
 package com.chubini.pku.products;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.chubini.pku.validation.FileValidationService;
@@ -40,12 +43,20 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
       })
-  public Page<Product> list(
+  public Page<ProductDto> list(
+      @Parameter(description = "Language code (ka, ru, en)") @RequestParam(required = false)
+          String lang,
+      @Parameter(description = "Accept-Language header for fallback")
+          @RequestHeader(value = "Accept-Language", required = false)
+          String acceptLang,
       @Parameter(description = "Search query for product names") @RequestParam(defaultValue = "")
           String query,
       @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
       @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
-    return productService.getAllProducts(query, page, size);
+
+    // Use explicit lang parameter or fall back to Accept-Language header
+    String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+    return productService.listLocalized(language, query, page, size);
   }
 
   @GetMapping("/{id}")
@@ -135,11 +146,18 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
       })
-  public Page<Product> getByCategory(
+  public Page<ProductDto> getByCategory(
+      @Parameter(description = "Language code (ka, ru, en)") @RequestParam(required = false)
+          String lang,
+      @Parameter(description = "Accept-Language header for fallback")
+          @RequestHeader(value = "Accept-Language", required = false)
+          String acceptLang,
       @Parameter(description = "Product category") @PathVariable String category,
       @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
       @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
-    return productService.getProductsByCategory(category, page, size);
+
+    String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+    return productService.getProductsByCategoryLocalized(language, category, page, size);
   }
 
   @GetMapping("/low-phe")
@@ -151,11 +169,18 @@ public class ProductController {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved products"),
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
       })
-  public Page<Product> getLowPheProducts(
+  public Page<ProductDto> getLowPheProducts(
+      @Parameter(description = "Language code (ka, ru, en)") @RequestParam(required = false)
+          String lang,
+      @Parameter(description = "Accept-Language header for fallback")
+          @RequestHeader(value = "Accept-Language", required = false)
+          String acceptLang,
       @Parameter(description = "Maximum PHE per 100g") @RequestParam Double maxPhe,
       @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
       @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
-    return productService.getLowPheProducts(maxPhe, page, size);
+
+    String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+    return productService.getLowPheProductsLocalized(language, maxPhe, page, size);
   }
 
   @PostMapping("/upload-csv")
@@ -182,6 +207,74 @@ public class ProductController {
       return ResponseEntity.badRequest().body("File validation error: " + e.getMessage());
     } catch (Exception e) {
       return ResponseEntity.badRequest().body("Error uploading CSV: " + e.getMessage());
+    }
+  }
+
+  @PostMapping("/upload-translations")
+  @Operation(
+      summary = "Upload translations from CSV",
+      description = "Upload product translations from a UTF-8 CSV file with multi-language support")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Successfully uploaded translations"),
+        @ApiResponse(responseCode = "400", description = "Invalid CSV format or data"),
+        @ApiResponse(responseCode = "413", description = "File too large"),
+        @ApiResponse(responseCode = "415", description = "Unsupported file type")
+      })
+  public ResponseEntity<Map<String, Object>> uploadTranslations(
+      @Parameter(description = "Language code (ka, ru, en)") @RequestParam String locale,
+      @Parameter(description = "CSV file with translation data") @RequestPart("file")
+          MultipartFile file) {
+
+    try {
+      // Validate file before processing
+      fileValidationService.validateFile(file);
+
+      List<String> errors = productService.uploadTranslations(locale, file.getBytes());
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("locale", locale);
+      response.put("status", errors.isEmpty() ? "ok" : "partial");
+      response.put("errors", errors);
+      response.put(
+          "message",
+          errors.isEmpty()
+              ? "All translations uploaded successfully"
+              : "Upload completed with " + errors.size() + " errors");
+
+      return ResponseEntity.ok(response);
+
+    } catch (IOException e) {
+      Map<String, Object> response = new HashMap<>();
+      response.put("locale", locale);
+      response.put("status", "error");
+      response.put("errors", List.of("File processing error: " + e.getMessage()));
+      return ResponseEntity.badRequest().body(response);
+    } catch (Exception e) {
+      Map<String, Object> response = new HashMap<>();
+      response.put("locale", locale);
+      response.put("status", "error");
+      response.put("errors", List.of("Upload error: " + e.getMessage()));
+      return ResponseEntity.badRequest().body(response);
+    }
+  }
+
+  @GetMapping("/{id}/locales")
+  @Operation(
+      summary = "Get available locales for product",
+      description = "Get list of available translation locales for a specific product")
+  @ApiResponses(
+      value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved locales"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
+      })
+  public ResponseEntity<List<String>> getAvailableLocales(
+      @Parameter(description = "Product UUID") @PathVariable UUID id) {
+    try {
+      List<String> locales = productService.getAvailableLocales(id);
+      return ResponseEntity.ok(locales);
+    } catch (Exception e) {
+      return ResponseEntity.notFound().build();
     }
   }
 }

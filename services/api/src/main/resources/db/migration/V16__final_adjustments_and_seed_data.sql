@@ -59,7 +59,9 @@ LEFT JOIN "custom_product" cp ON pi.custom_product_id = cp.id
 WHERE pi.is_available = true
     AND pi.expiry_date IS NOT NULL;
 
--- Insert sample patient profile for testing
+-- Test patient data disabled for production
+-- Real patients should be created via API: POST /api/v1/patients
+/*
 INSERT INTO "patient_profile" (
     "id", "name", "birth_date", "weight_kg", "height_cm", "activity_level", "region"
 ) VALUES (
@@ -71,8 +73,11 @@ INSERT INTO "patient_profile" (
     'MODERATE',
     'US'
 ) ON CONFLICT (id) DO NOTHING;
+*/
 
--- Insert sample norm prescription
+-- Insert sample norm prescription - disabled for production
+-- Real prescriptions should be created via API: POST /api/v1/patients/{id}/norms
+/*
 INSERT INTO "norm_prescription" (
     "patient_id", 
     "phe_limit_mg_per_day", 
@@ -86,8 +91,11 @@ INSERT INTO "norm_prescription" (
     1800.0, -- 1800 kcal minimum
     65.0    -- 65g fat maximum
 ) ON CONFLICT ON CONSTRAINT "unique_active_prescription_per_patient" DO NOTHING;
+*/
 
--- Insert default notification preferences for the test patient
+-- Insert default notification preferences for the test patient - disabled for production
+-- Real notification preferences should be created via API: POST /api/v1/patients/{id}/notifications
+/*
 INSERT INTO "notification_preference" (
     "patient_id", "notification_type", "channel", "is_enabled", "frequency"
 ) VALUES 
@@ -96,8 +104,11 @@ INSERT INTO "notification_preference" (
     ('550e8400-e29b-41d4-a716-446655440000', 'PANTRY_EXPIRY', 'EMAIL', true, 'DAILY'),
     ('550e8400-e29b-41d4-a716-446655440000', 'MEAL_REMINDER', 'PUSH', false, 'IMMEDIATE')
 ON CONFLICT ON CONSTRAINT "unique_patient_type_channel" DO NOTHING;
+*/
 
--- Insert some common allergens for the test patient (gluten sensitivity)
+-- Insert some common allergens for the test patient - disabled for production
+-- Real patient allergens should be created via API: POST /api/v1/patients/{id}/allergens
+/*
 INSERT INTO "patient_allergen" (
     "patient_id", "allergen_id", "severity", "notes"
 ) VALUES (
@@ -106,8 +117,11 @@ INSERT INTO "patient_allergen" (
     'MODERATE',
     'Diagnosed with gluten sensitivity'
 ) ON CONFLICT ON CONSTRAINT "unique_patient_allergen" DO NOTHING;
+*/
 
--- Insert some sample pantry items
+-- Insert some sample pantry items - disabled for production
+-- Real pantry items should be created via API: POST /api/v1/patients/{id}/pantry
+/*
 INSERT INTO "pantry_item" (
     "patient_id", "product_id", "item_type", "quantity_grams", 
     "purchase_date", "expiry_date", "location"
@@ -129,6 +143,7 @@ INSERT INTO "pantry_item" (
     CURRENT_DATE + INTERVAL '3 days',
     'FRIDGE'
 ) ON CONFLICT DO NOTHING;
+*/
 
 -- Create function to calculate menu entry nutritional values
 CREATE OR REPLACE FUNCTION calculate_menu_entry_nutrition()

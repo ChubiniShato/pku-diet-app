@@ -37,6 +37,10 @@ RUN chown -R appuser:appgroup /usr/share/nginx/html && \
     chown -R appuser:appgroup /var/log/nginx && \
     chown -R appuser:appgroup /etc/nginx/conf.d
 
+# Create nginx pid directory and set permissions
+RUN mkdir -p /run/nginx && \
+    chown -R appuser:appgroup /run/nginx
+
 # Switch to non-root user
 USER appuser
 

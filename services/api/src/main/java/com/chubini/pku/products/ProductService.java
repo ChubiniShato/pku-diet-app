@@ -1,6 +1,8 @@
 package com.chubini.pku.products;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -13,11 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
   private final ProductRepository repository;
+  private final ProductTranslationRepository translationRepository;
   private final CsvUploadService csvUploadService;
+  private final TranslationCsvService translationCsvService;
 
-  public ProductService(ProductRepository repository, CsvUploadService csvUploadService) {
+  public ProductService(
+      ProductRepository repository,
+      ProductTranslationRepository translationRepository,
+      CsvUploadService csvUploadService,
+      TranslationCsvService translationCsvService) {
     this.repository = repository;
+    this.translationRepository = translationRepository;
     this.csvUploadService = csvUploadService;
+    this.translationCsvService = translationCsvService;
   }
 
   // ... existing code ...
@@ -125,5 +135,93 @@ public class ProductService {
     } catch (Exception e) {
       throw new ProductUploadException("Error uploading CSV: " + e.getMessage());
     }
+  }
+
+  // ===== LOCALIZATION METHODS =====
+
+  /** Get localized product list with fallback to English */
+  @Transactional(readOnly = true)
+  public Page<ProductDto> listLocalized(String lang, String query, int page, int size) {
+    String normalizedLang = normalizeLang(lang);
+    return repository.findAllLocalized(normalizedLang, query, PageRequest.of(page, size));
+  }
+
+  /** Get localized products by category with fallback to English */
+  @Transactional(readOnly = true)
+  public Page<ProductDto> getProductsByCategoryLocalized(
+      String lang, String category, int page, int size) {
+    String normalizedLang = normalizeLang(lang);
+    return repository.findByCategoryLocalized(normalizedLang, category, PageRequest.of(page, size));
+  }
+
+  /** Get localized low PHE products with fallback to English */
+  @Transactional(readOnly = true)
+  public Page<ProductDto> getLowPheProductsLocalized(
+      String lang, Double maxPhe, int page, int size) {
+    String normalizedLang = normalizeLang(lang);
+    return repository.findByMaxPhePer100gLocalized(
+        normalizedLang, maxPhe, PageRequest.of(page, size));
+  }
+
+  /** Upload translations from CSV */
+  @Transactional
+  public List<String> uploadTranslations(String locale, byte[] csvBytes) throws IOException {
+    String normalizedLocale = normalizeLang(locale);
+
+    return translationCsvService.importTranslations(
+        csvBytes,
+        normalizedLocale,
+        code -> repository.findByProductCode(code),
+        (product, row) -> {
+          var existing =
+              translationRepository
+                  .findByProductIdAndLocale(product.getId(), normalizedLocale)
+                  .orElseGet(
+                      () -> {
+                        var translation = new ProductTranslation();
+                        translation.setProduct(product);
+                        translation.setLocale(normalizedLocale);
+                        return translation;
+                      });
+
+          existing.setProductName(row.name());
+          existing.setCategory(row.category());
+          translationRepository.save(existing);
+        });
+  }
+
+  /** Validate CSV headers for translation upload */
+  public List<String> validateTranslationCsv(byte[] csvBytes) throws IOException {
+    return translationCsvService.validateCsvHeaders(csvBytes);
+  }
+
+  /** Get all available locales for a product */
+  @Transactional(readOnly = true)
+  public List<String> getAvailableLocales(UUID productId) {
+    return translationRepository.findByProductId(productId).stream()
+        .map(ProductTranslation::getLocale)
+        .toList();
+  }
+
+  /** Normalize language code to supported locales */
+  private String normalizeLang(String lang) {
+    if (lang == null || lang.isBlank()) {
+      return "en";
+    }
+
+    String normalized = lang.toLowerCase(Locale.ROOT);
+
+    if (normalized.startsWith("ka")) {
+      return "ka";
+    }
+    if (normalized.startsWith("ru")) {
+      return "ru";
+    }
+    if (normalized.startsWith("en")) {
+      return "en";
+    }
+
+    // Default to English for unknown languages
+    return "en";
   }
 }

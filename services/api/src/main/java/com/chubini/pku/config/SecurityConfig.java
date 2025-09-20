@@ -64,6 +64,7 @@ public class SecurityConfig {
                         "/api/test/**",
                         "/api/debug/**",
                         "/api/v1/auth/**",
+                        "/api/v1/products/**",
                         "/error")
                     .permitAll()
 
