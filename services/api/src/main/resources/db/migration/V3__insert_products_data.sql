@@ -1,3 +1,13 @@
+-- Test data disabled for production - use CSV upload instead
+-- Products should be loaded via CSV upload API endpoint: POST /api/v1/products/upload-csv
+-- This allows for real Georgian food data instead of test English products
+
+-- Example CSV format:
+-- name,category,phenylalanine,leucine,tyrosine,methionine,kilojoules,kilocalories,protein,carbohydrates,fats
+-- ბოსტნეული,ბოსტნეული და სოკოები,2.4,144,48,29,93,22,2.4,2.6,0.1
+
+-- Commented out test data:
+/*
 INSERT INTO "products" ("category", "product_number", "product_name", "phenylalanine", "leucine", "tyrosine", "methionine", "kilojoules", "kilocalories", "protein", "carbohydrates", "fats") VALUES 
 ('Vegetables and Mushrooms', 1, 'Artichoke', 2.4, 144, 48, 29, 93, 22, 2.4, 2.6, 0.1),
 ('Vegetables and Mushrooms', 2, 'Eggplant', 52, 77, 40, 11, 72, 17, 1.2, 2, 0.2),
@@ -19,3 +29,4 @@ INSERT INTO "products" ("category", "product_number", "product_name", "phenylala
 ('Potato Products', 8, 'Duck Fat', 0, 0, 0, 0, 3698, 833, 0, 0, 99.9),
 ('Potato Products', 9, 'Cocoa Butter', 0, 0, 0, 0, 3768, 900, 0, 0, 99.9),
 ('Potato Products', 10, 'Palmin Coconut Oil', 0, 0, 0, 0, 3700, 900, 0, 0, 100);
+*/

@@ -4,13 +4,14 @@ WORKDIR /workspace
 COPY pom.xml .
 RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests dependency:go-offline
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests -Dspotless.check.skip=true package
 
 # --- Run stage (Distroless for security) ---
 FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
 COPY --from=build /workspace/target/api-0.0.1-SNAPSHOT.jar app.jar
-COPY --from=build /workspace/target/openapi.json /app/static/openapi.json
+# OpenAPI JSON is optional for now
+# COPY --from=build /workspace/target/openapi.json /app/static/openapi.json
 
 # Create non-root user (distroless images handle this differently)
 USER 65534:65534

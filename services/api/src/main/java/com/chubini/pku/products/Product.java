@@ -1,6 +1,7 @@
 package com.chubini.pku.products;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -22,11 +23,17 @@ public class Product {
   @Column(name = "product_number")
   private Integer productNumber;
 
+  @Column(name = "product_code", unique = true, nullable = false)
+  private String productCode;
+
   @Column(name = "category")
   private String category;
 
   @Column(name = "product_name", nullable = false)
   private String productName;
+
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private List<ProductTranslation> translations;
 
   @Column(name = "phenylalanine")
   private BigDecimal phenylalanine;

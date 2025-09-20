@@ -15,6 +15,10 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 server:
   port: 8080
@@ -85,19 +89,23 @@ app:
 
   # File upload configuration
   upload:
-    max-file-size: ${UPLOAD_MAX_FILE_SIZE:10MB}
-    max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:10MB}
+    max-file-size: ${UPLOAD_MAX_FILE_SIZE:20MB}
+    max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:20MB}
     allowed-mime-types:
       - image/jpeg
       - image/png
       - text/csv
       - text/plain
+      - application/vnd.ms-excel
+      - application/csv
     allowed-extensions:
       - .jpg
       - .jpeg
       - .png
       - .csv
       - .txt
+
+# Multipart configuration merged into main spring section above
 
 logging:
   level:
