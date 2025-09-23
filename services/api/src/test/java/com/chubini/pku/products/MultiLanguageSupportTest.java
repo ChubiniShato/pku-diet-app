@@ -125,6 +125,24 @@ class MultiLanguageSupportTest {
   }
 
   @Test
+  void testNormalizeLang_Ukrainian() {
+    ProductService service =
+        new ProductService(
+            productRepository, translationRepository, csvUploadService, translationCsvService);
+
+    try {
+      var method = ProductService.class.getDeclaredMethod("normalizeLang", String.class);
+      method.setAccessible(true);
+
+      assertEquals("uk", method.invoke(service, "uk"));
+      assertEquals("uk", method.invoke(service, "uk-UA"));
+      assertEquals("uk", method.invoke(service, "Ukrainian"));
+    } catch (Exception e) {
+      fail("Failed to test normalizeLang method: " + e.getMessage());
+    }
+  }
+
+  @Test
   void testListLocalized_WithTranslation() {
     // Mock repository to return localized data
     ProductDto expectedDto =

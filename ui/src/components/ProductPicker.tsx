@@ -17,7 +17,7 @@ export const ProductPicker: React.FC<ProductPickerProps> = ({
   onSelect,
   excludeIds = [],
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [filters, setFilters] = useState<ProductSearchParams>({
@@ -26,7 +26,7 @@ export const ProductPicker: React.FC<ProductPickerProps> = ({
   })
 
   const { data: productsResponse, isLoading } = useProducts(filters)
-  const { data: categories = [] } = useProductCategories()
+  const { data: categories = [] } = useProductCategories(i18n.language)
 
   const handleSearch = () => {
     setFilters({

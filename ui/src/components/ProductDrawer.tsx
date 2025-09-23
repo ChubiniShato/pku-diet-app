@@ -14,11 +14,15 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [servingSize, setServingSize] = useState<number>(100)
   const [viewMode, setViewMode] = useState<'per100g' | 'perServing'>('per100g')
 
-  const { data: product, isLoading, error } = useProduct(productId || '', !!productId && isOpen)
+  // Try localized first, fallback to non-localized if it fails
+  const { data: product, isLoading, error } = useProduct(productId || '', !!productId && isOpen, i18n.language)
+  const { data: fallbackProduct } = useProduct(productId || '', !!productId && isOpen && !!error)
+  
+  const displayProduct = product || fallbackProduct
 
   const formatNutrient = (value?: number, serving: number = 100): string => {
     if (value === null || value === undefined) return '-'
@@ -58,7 +62,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">
-              Product Details
+              {t('common.productDetails')}
             </h2>
             <button
               onClick={onClose}
@@ -82,7 +86,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <p className="text-red-800">Failed to load product details</p>
+              <p className="text-red-800">{t('common.failedToLoad')}</p>
             </div>
           )}
 
@@ -91,7 +95,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
               {/* Product Info */}
               <div className="mb-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  {product.productName}
+                  {product.name}
                 </h3>
                 <div className="flex items-center space-x-4 text-sm text-gray-600">
                   <span>{product.category}</span>
@@ -113,7 +117,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
-                      Per 100g
+                      {t('common.per100g')}
                     </button>
                     <button
                       onClick={() => setViewMode('perServing')}
@@ -123,14 +127,14 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
-                      Per Serving
+                      {t('common.perServing')}
                     </button>
                   </div>
                   
                   {viewMode === 'perServing' && (
                     <div className="flex items-center space-x-2">
                       <label htmlFor="serving-size" className="text-sm text-gray-600">
-                        Serving size:
+                        {t('common.servingSize')}
                       </label>
                       <input
                         id="serving-size"
@@ -150,13 +154,13 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
               {/* PHE Highlight */}
               <div className={`${getPheBackground(product.phenylalanine, servingSize)} rounded-lg p-4 mb-6`}>
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-medium text-gray-700">Phenylalanine</span>
+                  <span className="text-lg font-medium text-gray-700">{t('common.phenylalanine')}</span>
                   <div className="text-right">
                     <span className={`text-2xl font-bold ${getPheColor(product.phenylalanine, servingSize)}`}>
                       {formatNutrient(product.phenylalanine, servingSize)} mg
                     </span>
                     <p className="text-sm text-gray-500">
-                      {viewMode === 'per100g' ? 'per 100g' : `per ${servingSize}g serving`}
+                      {viewMode === 'per100g' ? t('common.per100gText') : `${t('common.perServingText')} ${servingSize}г`}
                     </p>
                   </div>
                 </div>
@@ -164,11 +168,11 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
 
               {/* Macronutrients */}
               <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Macronutrients</h4>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">{t('common.macronutrients')}</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Protein</span>
+                      <span className="text-gray-600">{t('common.protein')}</span>
                       <span className="text-lg font-semibold text-gray-900">
                         {formatNutrient(product.protein, servingSize)}g
                       </span>
@@ -176,7 +180,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Carbohydrates</span>
+                      <span className="text-gray-600">{t('common.carbohydrates')}</span>
                       <span className="text-lg font-semibold text-gray-900">
                         {formatNutrient(product.carbohydrates, servingSize)}g
                       </span>
@@ -184,7 +188,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Fats</span>
+                      <span className="text-gray-600">{t('common.fats')}</span>
                       <span className="text-lg font-semibold text-gray-900">
                         {formatNutrient(product.fats, servingSize)}g
                       </span>
@@ -192,7 +196,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Calories</span>
+                      <span className="text-gray-600">{t('common.calories')}</span>
                       <span className="text-lg font-semibold text-gray-900">
                         {formatNutrient(product.kilocalories, servingSize)} kcal
                       </span>
@@ -203,28 +207,28 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
 
               {/* Amino Acids */}
               <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Amino Acids</h4>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">{t('common.aminoAcids')}</h4>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Phenylalanine</span>
+                    <span className="text-gray-600">{t('common.phenylalanine')}</span>
                     <span className="font-medium text-gray-900">
                       {formatNutrient(product.phenylalanine, servingSize)} mg
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Leucine</span>
+                    <span className="text-gray-600">{t('common.leucine')}</span>
                     <span className="font-medium text-gray-900">
                       {formatNutrient(product.leucine, servingSize)} mg
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Tyrosine</span>
+                    <span className="text-gray-600">{t('common.tyrosine')}</span>
                     <span className="font-medium text-gray-900">
                       {formatNutrient(product.tyrosine, servingSize)} mg
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Methionine</span>
+                    <span className="text-gray-600">{t('common.methionine')}</span>
                     <span className="font-medium text-gray-900">
                       {formatNutrient(product.methionine, servingSize)} mg
                     </span>
@@ -235,11 +239,11 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
               {/* Energy */}
               {product.kilojoules && (
                 <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Energy</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4">{t('common.energy')}</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Kilojoules</span>
+                        <span className="text-gray-600">{t('common.kilojoules')}</span>
                         <span className="text-lg font-semibold text-gray-900">
                           {formatNutrient(product.kilojoules, servingSize)} kJ
                         </span>
@@ -247,7 +251,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                     </div>
                     <div className="bg-gray-50 rounded-lg p-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Kilocalories</span>
+                        <span className="text-gray-600">{t('common.kilocalories')}</span>
                         <span className="text-lg font-semibold text-gray-900">
                           {formatNutrient(product.kilocalories, servingSize)} kcal
                         </span>

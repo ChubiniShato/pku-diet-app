@@ -14,7 +14,7 @@ const navigation = [
 ]
 
 export const AppHeader: React.FC = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const location = useLocation()
   const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [showUserMenu, setShowUserMenu] = useState(false)
@@ -82,6 +82,13 @@ export const AppHeader: React.FC = () => {
 
           {/* Right side - Authentication & Language */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Current language badge */}
+            <span
+              className="px-2 py-1 text-xs font-semibold rounded-md bg-gray-100 text-gray-700 border border-gray-200"
+              title={i18n.language}
+            >
+              {(i18n.language || 'en').slice(0, 2).toUpperCase()}
+            </span>
             <LanguageSwitcher />
             
             {/* Authentication Section */}

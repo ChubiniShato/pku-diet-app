@@ -3,8 +3,9 @@
 export interface Product {
   id: string
   productNumber?: number
+  productCode?: string
   category: string
-  productName: string
+  name: string // API returns 'name', not 'productName'
   phenylalanine?: number
   leucine?: number
   tyrosine?: number

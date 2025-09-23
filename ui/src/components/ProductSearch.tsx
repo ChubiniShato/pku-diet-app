@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useProductCategories } from '@/lib/api/products'
 import { Button } from './Button'
 import type { ProductSearchParams } from '@/lib/types'
 
@@ -13,12 +12,9 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   filters,
   onFiltersChange,
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [localQuery, setLocalQuery] = useState(filters.query || '')
   const [localMaxPhe, setLocalMaxPhe] = useState(filters.maxPhe?.toString() || '')
-
-  // Fetch categories for the dropdown
-  const { data: categories = [] } = useProductCategories()
 
   const handleSearch = () => {
     onFiltersChange({
@@ -42,14 +38,6 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
     }
   }
 
-  const handleCategoryChange = (category: string) => {
-    onFiltersChange({
-      ...filters,
-      category: category === '' ? undefined : category,
-      page: 0, // Reset to first page when filtering
-    })
-  }
-
   const handleClearFilters = () => {
     setLocalQuery('')
     setLocalMaxPhe('')
@@ -68,14 +56,14 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
       <h2 className="text-lg font-medium text-gray-900 mb-4">
-        {t('common.search')} & Filter
+        {t('common.search')} & {t('common.filter')}
       </h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {/* Search Query */}
         <div>
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-            Product Name
+            {t('common.productName')}
           </label>
           <input
             id="search"
@@ -83,35 +71,15 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
             value={localQuery}
             onChange={(e) => setLocalQuery(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Search products..."
+            placeholder={t('common.searchProducts')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
-        </div>
-
-        {/* Category Filter */}
-        <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-            Category
-          </label>
-          <select
-            id="category"
-            value={filters.category || ''}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">All Categories</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
         </div>
 
         {/* Low PHE Toggle */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Low PHE Filter
+            {t('common.lowPheFilter')}
           </label>
           <div className="flex items-center h-10">
             <label className="flex items-center cursor-pointer">
@@ -129,7 +97,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
         {/* Max PHE Filter */}
         <div>
           <label htmlFor="maxPhe" className="block text-sm font-medium text-gray-700 mb-1">
-            Custom Max PHE (mg/100g)
+            {t('common.customMaxPhe')}
           </label>
           <input
             id="maxPhe"
@@ -139,7 +107,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
             value={localMaxPhe}
             onChange={(e) => setLocalMaxPhe(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="e.g. 150"
+            placeholder={t('common.maxPheExample')}
             disabled={filters.maxPhe === 100}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
@@ -158,7 +126,7 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
             onClick={handleClearFilters}
             variant="secondary"
           >
-            Clear
+            {t('common.clear')}
           </Button>
         </div>
       </div>
@@ -166,20 +134,20 @@ export const ProductSearch: React.FC<ProductSearchProps> = ({
       {/* Active Filters Display */}
       {(filters.query || filters.category || filters.maxPhe) && (
         <div className="flex flex-wrap gap-2">
-          <span className="text-sm text-gray-600">Active filters:</span>
+          <span className="text-sm text-gray-600">{t('common.activeFilters')}</span>
           {filters.query && (
             <span className="inline-flex items-center px-2 py-1 rounded-md bg-blue-100 text-blue-800 text-sm">
-              Query: "{filters.query}"
+              {t('common.query')}: "{filters.query}"
             </span>
           )}
           {filters.category && (
             <span className="inline-flex items-center px-2 py-1 rounded-md bg-green-100 text-green-800 text-sm">
-              Category: {filters.category}
+              {t('common.category')}: {filters.category}
             </span>
           )}
           {filters.maxPhe && (
             <span className="inline-flex items-center px-2 py-1 rounded-md bg-yellow-100 text-yellow-800 text-sm">
-              Max PHE: ≤{filters.maxPhe}mg
+              {t('common.maxPhe')}: ≤{filters.maxPhe}mg
             </span>
           )}
         </div>

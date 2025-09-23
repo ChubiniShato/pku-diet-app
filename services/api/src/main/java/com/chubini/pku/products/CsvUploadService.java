@@ -27,6 +27,13 @@ public class CsvUploadService {
         InputStreamReader reader = new InputStreamReader(inputStream);
         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
 
+      // Detect optional product code header if present
+      boolean hasProductCode =
+          csvParser.getHeaderMap().keySet().stream()
+              .anyMatch(h -> h != null && h.trim().equalsIgnoreCase("product_code"));
+
+      int generatedIndex = 1;
+
       for (CSVRecord record : csvParser) {
         try {
           Product product =
@@ -43,6 +50,17 @@ public class CsvUploadService {
                   .carbohydrates(parseBigDecimal(record.get("carbohydrates")))
                   .fats(parseBigDecimal(record.get("fats")))
                   .build();
+
+          // Set product code from CSV when provided; otherwise generate a sequential code
+          if (hasProductCode) {
+            String code = record.get("product_code");
+            if (code != null && !code.isBlank()) {
+              product.setProductCode(code.trim());
+            }
+          }
+          if (product.getProductCode() == null || product.getProductCode().isBlank()) {
+            product.setProductCode(String.format("PRD%04d", generatedIndex++));
+          }
 
           products.add(product);
         } catch (Exception e) {

@@ -2,6 +2,8 @@ package com.chubini.pku.products;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +24,7 @@ public class ProductTranslation {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "product_id", nullable = false)
+  @JsonBackReference
   private Product product;
 
   @Column(nullable = false, length = 8)

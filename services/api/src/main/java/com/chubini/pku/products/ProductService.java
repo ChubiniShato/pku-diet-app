@@ -47,6 +47,15 @@ public class ProductService {
         .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
   }
 
+  /** Get localized product by ID with fallback to English */
+  @Transactional(readOnly = true)
+  public ProductDto getProductByIdLocalized(UUID id, String lang) {
+    String normalizedLang = normalizeLang(lang);
+    return repository
+        .findByIdLocalized(normalizedLang, id)
+        .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+  }
+
   public Product createProduct(ProductUpsertDto dto) {
     Product product =
         Product.builder()
@@ -118,6 +127,13 @@ public class ProductService {
     return repository.findAllCategories();
   }
 
+  /** Get distinct categories localized to provided language with fallback to English */
+  @Transactional(readOnly = true)
+  public List<String> getAllCategoriesLocalized(String lang) {
+    String normalizedLang = normalizeLang(lang);
+    return repository.findAllCategoriesLocalized(normalizedLang);
+  }
+
   public Page<Product> getProductsByCategory(String category, int page, int size) {
     return repository.findByCategory(category, PageRequest.of(page, size));
   }
@@ -128,10 +144,36 @@ public class ProductService {
 
   public String uploadProductsFromCsv(byte[] csvData) {
     try {
-      // Convert byte array to MultipartFile-like structure
       List<Product> products = csvUploadService.parseCsvBytes(csvData);
-      repository.saveAll(products);
-      return "Successfully uploaded " + products.size() + " products";
+
+      int created = 0;
+      int updated = 0;
+
+      for (Product incoming : products) {
+        // Upsert by product_code to allow re-uploads without failing on uniques
+        var existingOpt = repository.findByProductCode(incoming.getProductCode());
+        if (existingOpt.isPresent()) {
+          Product existing = existingOpt.get();
+          existing.setProductName(incoming.getProductName());
+          existing.setCategory(incoming.getCategory());
+          existing.setPhenylalanine(incoming.getPhenylalanine());
+          existing.setLeucine(incoming.getLeucine());
+          existing.setTyrosine(incoming.getTyrosine());
+          existing.setMethionine(incoming.getMethionine());
+          existing.setKilojoules(incoming.getKilojoules());
+          existing.setKilocalories(incoming.getKilocalories());
+          existing.setProtein(incoming.getProtein());
+          existing.setCarbohydrates(incoming.getCarbohydrates());
+          existing.setFats(incoming.getFats());
+          repository.save(existing);
+          updated++;
+        } else {
+          repository.save(incoming);
+          created++;
+        }
+      }
+
+      return "Upload complete: created=" + created + ", updated=" + updated;
     } catch (Exception e) {
       throw new ProductUploadException("Error uploading CSV: " + e.getMessage());
     }
@@ -141,8 +183,17 @@ public class ProductService {
 
   /** Get localized product list with fallback to English */
   @Transactional(readOnly = true)
-  public Page<ProductDto> listLocalized(String lang, String query, int page, int size) {
+  public Page<ProductDto> listLocalized(
+      String lang, String query, String category, int page, int size) {
     String normalizedLang = normalizeLang(lang);
+
+    // If category is specified, use category-specific query
+    if (category != null && !category.isBlank()) {
+      return repository.findByCategoryLocalized(
+          normalizedLang, category, query, PageRequest.of(page, size));
+    }
+
+    // Otherwise, use general query
     return repository.findAllLocalized(normalizedLang, query, PageRequest.of(page, size));
   }
 
@@ -216,6 +267,9 @@ public class ProductService {
     }
     if (normalized.startsWith("ru")) {
       return "ru";
+    }
+    if (normalized.startsWith("uk")) {
+      return "uk";
     }
     if (normalized.startsWith("en")) {
       return "en";
