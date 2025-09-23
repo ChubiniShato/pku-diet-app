@@ -55,12 +55,21 @@ class ApiClient {
     const token = getAuthToken()
     const authHeaders = token ? { Authorization: `Bearer ${token}` } : {}
 
+    // Detect FormData to avoid forcing JSON content type
+    const isFormDataBody = typeof FormData !== 'undefined' && requestInit.body instanceof FormData
+
+    const mergedHeaders: Record<string, any> = {
+      ...(isFormDataBody ? {} : { 'Content-Type': 'application/json' }),
+      ...authHeaders,
+      ...(requestInit.headers as Record<string, any> | undefined),
+    }
+    // If header explicitly set to undefined or null, remove it
+    if (mergedHeaders['Content-Type'] == null) {
+      delete mergedHeaders['Content-Type']
+    }
+
     const requestConfig: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...requestInit.headers,
-      },
+      headers: mergedHeaders as HeadersInit,
       signal,
       ...requestInit,
     }
@@ -153,26 +162,29 @@ class ApiClient {
   }
 
   async post<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const bodyIsForm = typeof FormData !== 'undefined' && data instanceof FormData
     return this.request<T>(endpoint, {
       ...config,
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
+      body: bodyIsForm ? (data as BodyInit) : data ? JSON.stringify(data) : undefined,
     })
   }
 
   async put<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const bodyIsForm = typeof FormData !== 'undefined' && data instanceof FormData
     return this.request<T>(endpoint, {
       ...config,
       method: 'PUT',
-      body: data ? JSON.stringify(data) : undefined,
+      body: bodyIsForm ? (data as BodyInit) : data ? JSON.stringify(data) : undefined,
     })
   }
 
   async patch<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<T> {
+    const bodyIsForm = typeof FormData !== 'undefined' && data instanceof FormData
     return this.request<T>(endpoint, {
       ...config,
       method: 'PATCH',
-      body: data ? JSON.stringify(data) : undefined,
+      body: bodyIsForm ? (data as BodyInit) : data ? JSON.stringify(data) : undefined,
     })
   }
 

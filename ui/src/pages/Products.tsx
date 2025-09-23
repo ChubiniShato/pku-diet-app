@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { useProducts, useProductCategories } from '@/lib/api/products'
 import { ProductCard } from '@/components/ProductCard'
 import { ProductSearch } from '@/components/ProductSearch'
@@ -9,10 +10,13 @@ import { Pagination } from '@/components/Pagination'
 import type { ProductSearchParams } from '@/lib/types'
 
 export const Products: React.FC = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
   const [filters, setFilters] = useState<ProductSearchParams>({
     page: 0,
     size: 12,
+    // Start with no category to hide products until selection
+    category: undefined,
   })
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -25,10 +29,25 @@ export const Products: React.FC = () => {
     isLoading,
     error,
     isFetching,
-  } = useProducts(filters)
+  } = useProducts(filters, i18n.language)
+
+  // Load categories to render as buttons
+  const { data: categories = [] } = useProductCategories(i18n.language)
+  
+  // Sort categories alphabetically based on current language
+  const sortedCategories = [...categories].sort((a, b) => {
+    // Use locale-specific sorting
+    return a.localeCompare(b, i18n.language, { sensitivity: 'base' })
+  })
 
   const handleFiltersChange = (newFilters: ProductSearchParams) => {
     setFilters(newFilters)
+  }
+
+  const handleCategoryClick = (category: string) => {
+    // Navigate to category page instead of filtering on main page
+    const encodedCategory = encodeURIComponent(category)
+    navigate(`/products/category/${encodedCategory}`)
   }
 
   const handlePageChange = (page: number) => {
@@ -119,39 +138,83 @@ export const Products: React.FC = () => {
             </div>
           </div>
 
-          {/* Products Grid */}
-          {productsResponse.content.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-              {productsResponse.content.map((product) => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  onClick={() => handleProductClick(product.id)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="mx-auto h-12 w-12 text-gray-400">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+          {/* Category Buttons */}
+          {sortedCategories.length > 0 && (
+            <div className="mb-6">
+              <div className="grid grid-cols-5 gap-2 mb-2">
+                {/* All Products button in first position */}
+                <button
+                  onClick={() => navigate('/products/all')}
+                  className={`w-full px-4 py-3 min-h-[4rem] rounded-lg border text-sm font-medium ${
+                    !filters.category ? 'bg-gray-600 text-white border-gray-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                  }`}
+                >
+                  {t('common.allProducts')}
+                </button>
+                {/* First 4 categories */}
+                {sortedCategories.slice(0, 4).map((cat, index) => {
+                  const colors = [
+                    'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100',
+                    'bg-green-50 text-green-700 border-green-200 hover:bg-green-100',
+                    'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100',
+                    'bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100'
+                  ]
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => handleCategoryClick(cat)}
+                      className={`w-full px-4 py-3 min-h-[4rem] rounded-lg border text-sm font-medium ${colors[index]}`}
+                    >
+                      {cat}
+                    </button>
+                  )
+                })}
               </div>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No products found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Try adjusting your search filters or clear all filters to see all products.
-              </p>
+              <div className="grid grid-cols-5 gap-2 mb-2">
+                {sortedCategories.slice(4, 9).map((cat, index) => {
+                  const colors = [
+                    'bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-100',
+                    'bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100',
+                    'bg-teal-50 text-teal-700 border-teal-200 hover:bg-teal-100',
+                    'bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100',
+                    'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                  ]
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => handleCategoryClick(cat)}
+                      className={`w-full px-4 py-3 min-h-[4rem] rounded-lg border text-sm font-medium ${colors[index]}`}
+                    >
+                      {cat}
+                    </button>
+                  )
+                })}
+              </div>
+              <div className="grid grid-cols-5 gap-2 mb-2">
+                {sortedCategories.slice(9, 14).map((cat, index) => {
+                  const colors = [
+                    'bg-lime-50 text-lime-700 border-lime-200 hover:bg-lime-100',
+                    'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100',
+                    'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
+                    'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100',
+                    'bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100'
+                  ]
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => handleCategoryClick(cat)}
+                      className={`w-full px-4 py-3 min-h-[4rem] rounded-lg border text-sm font-medium ${colors[index]}`}
+                    >
+                      {cat}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
           )}
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={productsResponse.number}
-            totalPages={productsResponse.totalPages}
-            totalElements={productsResponse.totalElements}
-            pageSize={productsResponse.size}
-            onPageChange={handlePageChange}
-          />
+          {/* Products Grid - Hidden on main page */}
+          {/* Products will be shown on individual category pages */}
         </>
       )}
 

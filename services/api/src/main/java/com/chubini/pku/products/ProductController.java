@@ -44,34 +44,41 @@ public class ProductController {
         @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
       })
   public Page<ProductDto> list(
-      @Parameter(description = "Language code (ka, ru, en)") @RequestParam(required = false)
+      @Parameter(description = "Language code (ka, ru, en, uk)") @RequestParam(required = false)
           String lang,
       @Parameter(description = "Accept-Language header for fallback")
           @RequestHeader(value = "Accept-Language", required = false)
           String acceptLang,
       @Parameter(description = "Search query for product names") @RequestParam(defaultValue = "")
           String query,
+      @Parameter(description = "Category filter") @RequestParam(required = false) String category,
       @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
       @Parameter(description = "Page size") @RequestParam(defaultValue = "20") int size) {
 
     // Use explicit lang parameter or fall back to Accept-Language header
     String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
-    return productService.listLocalized(language, query, page, size);
+    return productService.listLocalized(language, query, category, page, size);
   }
 
   @GetMapping("/{id}")
   @Operation(
       summary = "Get food product by ID",
-      description = "Retrieve a specific food product by its UUID")
+      description = "Retrieve a specific food product by its UUID with optional localization")
   @ApiResponses(
       value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved product"),
         @ApiResponse(responseCode = "404", description = "Product not found")
       })
-  public ResponseEntity<Product> getById(
-      @Parameter(description = "Product UUID") @PathVariable UUID id) {
+  public ResponseEntity<ProductDto> getById(
+      @Parameter(description = "Product UUID") @PathVariable UUID id,
+      @Parameter(description = "Language code (ka, ru, en, uk)") @RequestParam(required = false)
+          String lang,
+      @Parameter(description = "Accept-Language header for fallback")
+          @RequestHeader(value = "Accept-Language", required = false)
+          String acceptLang) {
     try {
-      Product product = productService.getProductById(id);
+      String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+      ProductDto product = productService.getProductByIdLocalized(id, language);
       return ResponseEntity.ok(product);
     } catch (ProductNotFoundException e) {
       return ResponseEntity.notFound().build();
@@ -135,6 +142,22 @@ public class ProductController {
   @ApiResponse(responseCode = "200", description = "Successfully retrieved categories")
   public ResponseEntity<List<String>> getCategories() {
     return ResponseEntity.ok(productService.getAllCategories());
+  }
+
+  @GetMapping("/categories-localized")
+  @Operation(
+      summary = "Get localized categories",
+      description =
+          "Retrieve list of distinct product categories localized to requested language with fallback to English")
+  @ApiResponse(responseCode = "200", description = "Successfully retrieved categories")
+  public ResponseEntity<List<String>> getCategoriesLocalized(
+      @Parameter(description = "Language code (ka, ru, en, uk)") @RequestParam(required = false)
+          String lang,
+      @Parameter(description = "Accept-Language header for fallback")
+          @RequestHeader(value = "Accept-Language", required = false)
+          String acceptLang) {
+    String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+    return ResponseEntity.ok(productService.getAllCategoriesLocalized(language));
   }
 
   @GetMapping("/category/{category}")

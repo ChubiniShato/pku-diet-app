@@ -14,7 +14,7 @@ export const productKeys = {
   list: (params: ProductSearchParams) => [...productKeys.lists(), params] as const,
   details: () => [...productKeys.all, 'detail'] as const,
   detail: (id: string) => [...productKeys.details(), id] as const,
-  categories: () => [...productKeys.all, 'categories'] as const,
+  categories: (lang?: string) => [...productKeys.all, 'categories', { lang }] as const,
   lowPhe: (maxPhe: number, page?: number, size?: number) => 
     [...productKeys.all, 'low-phe', { maxPhe, page, size }] as const,
 }
@@ -30,6 +30,7 @@ export const productsApi = {
     const searchParams = new URLSearchParams()
     
     if (params.query) searchParams.append('query', params.query)
+    if (params.category) searchParams.append('category', params.category)
     if (params.page !== undefined) searchParams.append('page', params.page.toString())
     if (params.size !== undefined) searchParams.append('size', params.size.toString())
     if (params.sort) searchParams.append('sort', params.sort)
@@ -44,8 +45,15 @@ export const productsApi = {
     return apiClient.get<Product>(`/api/v1/products/${id}`)
   },
 
-  async getCategories(): Promise<string[]> {
-    return apiClient.get<string[]>('/api/v1/products/categories')
+  async getCategoriesLocalized(lang?: string): Promise<string[]> {
+    // Fallback to non-localized endpoint if localized fails
+    try {
+      const param = lang ? `?lang=${encodeURIComponent(lang)}` : ''
+      return await apiClient.get<string[]>(`/api/v1/products/categories-localized${param}`)
+    } catch (error) {
+      console.warn('Localized categories failed, falling back to basic categories:', error)
+      return await apiClient.get<string[]>('/api/v1/products/categories')
+    }
   },
 
   async getProductsByCategory(
@@ -83,40 +91,53 @@ export const productsApi = {
   async uploadCsv(file: File): Promise<string> {
     const formData = new FormData()
     formData.append('file', file)
-    
-    return apiClient.post<string>('/api/v1/products/upload-csv', formData, {
-      headers: {
-        // Remove Content-Type to let browser set it with boundary for FormData
-        'Content-Type': undefined as any,
-      },
-    })
+
+    // Let ApiClient detect FormData and send proper multipart boundaries
+    return apiClient.post<string>('/api/v1/products/upload-csv', formData)
   },
 }
 
 // Query Hooks
-export function useProducts(params: ProductSearchParams = {}) {
+export function useProducts(params: ProductSearchParams = {}, lang?: string) {
   return useQuery({
-    queryKey: productKeys.list(params),
-    queryFn: () => productsApi.getProducts(params),
+    queryKey: productKeys.list({ ...params, lang }),
+    queryFn: () => {
+      // Add lang parameter to API call
+      const searchParams = new URLSearchParams()
+      if (params.query) searchParams.append('query', params.query)
+      if (params.category) searchParams.append('category', params.category)
+      if (params.page !== undefined) searchParams.append('page', params.page.toString())
+      if (params.size !== undefined) searchParams.append('size', params.size.toString())
+      if (params.sort) searchParams.append('sort', params.sort)
+      if (lang) searchParams.append('lang', lang)
+      
+      const queryString = searchParams.toString()
+      const endpoint = `/api/v1/products${queryString ? `?${queryString}` : ''}`
+      
+      return apiClient.get<PageResponse<Product>>(endpoint)
+    },
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
 
-export function useProduct(id: string, enabled: boolean = true) {
+export function useProduct(id: string, enabled: boolean = true, lang?: string) {
   return useQuery({
-    queryKey: productKeys.detail(id),
-    queryFn: () => productsApi.getProduct(id),
+    queryKey: productKeys.detail(id + (lang ? `_${lang}` : '')),
+    queryFn: () => {
+      const param = lang ? `?lang=${encodeURIComponent(lang)}` : ''
+      return apiClient.get<Product>(`/api/v1/products/${id}${param}`)
+    },
     enabled: enabled && !!id,
     staleTime: 10 * 60 * 1000, // 10 minutes
   })
 }
 
-export function useProductCategories() {
+export function useProductCategories(lang?: string) {
   return useQuery({
-    queryKey: productKeys.categories(),
-    queryFn: () => productsApi.getCategories(),
-    staleTime: 30 * 60 * 1000, // 30 minutes
+    queryKey: productKeys.categories(lang),
+    queryFn: () => productsApi.getCategoriesLocalized(lang),
+    staleTime: 30 * 60 * 1000,
   })
 }
 

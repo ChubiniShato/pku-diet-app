@@ -4,6 +4,8 @@ import { Dashboard } from '@/pages/Dashboard'
 import { Day } from '@/pages/Day'
 import { Week } from '@/pages/Week'
 import { Products } from '@/pages/Products'
+import { CategoryProducts } from '@/pages/CategoryProducts'
+import { AllProducts } from '@/pages/AllProducts'
 import { Dishes } from '@/pages/Dishes'
 import { DishDetail } from '@/pages/DishDetail'
 import { Pantry } from '@/pages/Pantry'
@@ -92,6 +94,18 @@ export const AppRoutes: React.FC = () => {
       <Route path="/products" element={
         <AdminRoute>
           <Products />
+        </AdminRoute>
+      } />
+      
+      <Route path="/products/all" element={
+        <AdminRoute>
+          <AllProducts />
+        </AdminRoute>
+      } />
+      
+      <Route path="/products/category/:categoryName" element={
+        <AdminRoute>
+          <CategoryProducts />
         </AdminRoute>
       } />
     </Routes>

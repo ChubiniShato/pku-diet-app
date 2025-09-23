@@ -19,11 +19,39 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
   @Query("SELECT DISTINCT p.category FROM Product p ORDER BY p.category")
   List<String> findAllCategories();
 
+  // Localized distinct categories with fallback to English
+  @Query(
+      """
+    SELECT DISTINCT COALESCE(tReq.category, tEn.category, p.category)
+    FROM Product p
+    LEFT JOIN ProductTranslation tReq ON tReq.product = p AND tReq.locale = :lang
+    LEFT JOIN ProductTranslation tEn ON tEn.product = p AND tEn.locale = 'en'
+    ORDER BY COALESCE(tReq.category, tEn.category, p.category)
+    """)
+  List<String> findAllCategoriesLocalized(@Param("lang") String lang);
+
   @Query("SELECT p FROM Product p WHERE p.phenylalanine <= :maxPhe ORDER BY p.phenylalanine")
   Page<Product> findByMaxPhePer100g(@Param("maxPhe") Double maxPhe, Pageable pageable);
 
   // Find product by product code
   Optional<Product> findByProductCode(String productCode);
+
+  // Localized product by ID with fallback to English
+  @Query(
+      """
+    SELECT new com.chubini.pku.products.ProductDto(
+      p.id, p.productCode,
+      COALESCE(tReq.productName, tEn.productName, p.productName),
+      COALESCE(tReq.category, tEn.category, p.category),
+      p.phenylalanine, p.leucine, p.tyrosine, p.methionine,
+      p.kilojoules, p.kilocalories, p.protein, p.carbohydrates, p.fats
+    )
+    FROM Product p
+    LEFT JOIN ProductTranslation tReq ON tReq.product = p AND tReq.locale = :lang
+    LEFT JOIN ProductTranslation tEn ON tEn.product = p AND tEn.locale = 'en'
+    WHERE p.id = :id
+    """)
+  Optional<ProductDto> findByIdLocalized(@Param("lang") String lang, @Param("id") UUID id);
 
   // Localized product list with fallback to English
   @Query(
@@ -60,6 +88,28 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     """)
   Page<ProductDto> findByCategoryLocalized(
       @Param("lang") String lang, @Param("category") String category, Pageable pageable);
+
+  // Localized products by category with search query and fallback to English
+  @Query(
+      """
+    SELECT new com.chubini.pku.products.ProductDto(
+      p.id, p.productCode,
+      COALESCE(tReq.productName, tEn.productName, p.productName),
+      COALESCE(tReq.category, tEn.category, p.category),
+      p.phenylalanine, p.leucine, p.tyrosine, p.methionine,
+      p.kilojoules, p.kilocalories, p.protein, p.carbohydrates, p.fats
+    )
+    FROM Product p
+    LEFT JOIN ProductTranslation tReq ON tReq.product = p AND tReq.locale = :lang
+    LEFT JOIN ProductTranslation tEn ON tEn.product = p AND tEn.locale = 'en'
+    WHERE LOWER(COALESCE(tReq.category, tEn.category, p.category)) = LOWER(:category)
+    AND (:q IS NULL OR LOWER(COALESCE(tReq.productName, tEn.productName, p.productName)) LIKE LOWER(CONCAT('%', :q, '%')))
+    """)
+  Page<ProductDto> findByCategoryLocalized(
+      @Param("lang") String lang,
+      @Param("category") String category,
+      @Param("q") String query,
+      Pageable pageable);
 
   // Localized low PHE products with fallback to English
   @Query(

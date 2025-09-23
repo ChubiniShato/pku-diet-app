@@ -41,7 +41,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-1">
-              {product.productName}
+              {product.name}
             </h3>
             <p className="text-sm text-gray-600">{product.category}</p>
           </div>

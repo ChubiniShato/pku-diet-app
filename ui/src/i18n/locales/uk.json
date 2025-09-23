@@ -1,0 +1,120 @@
+{
+  "app": {
+    "title": "PKU Diet App",
+    "description": "Керуйте дієтою при фенілкетонурії легко"
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "day": "День",
+    "week": "Тиждень",
+    "products": "Продукти",
+    "dishes": "Страви",
+    "pantry": "Комора",
+    "scan": "Скан",
+    "share": "Поділитися",
+    "critical": "Критичне",
+    "profile": "Профіль",
+    "settings": "Налаштування",
+    "toggleMenu": "Перемкнути меню"
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "success": "Успіх",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "edit": "Редагувати",
+    "add": "Додати",
+    "search": "Пошук",
+    "goBack": "Назад",
+    "allProducts": "Усі продукти",
+    "back": "Назад",
+    "clear": "Очистити",
+    "filter": "Фільтр",
+    "productName": "Назва продукту",
+    "lowPheFilter": "Фільтр низького PHE",
+    "customMaxPhe": "Максимальний PHE (мг/100г)",
+    "searchProducts": "Пошук продуктів...",
+    "maxPheExample": "напр. 150",
+    "activeFilters": "Активні фільтри:",
+    "query": "Запит",
+    "category": "Категорія",
+    "maxPhe": "Макс PHE",
+    "productDetails": "Деталі продукту",
+    "per100g": "На 100г",
+    "perServing": "На порцію",
+    "servingSize": "Розмір порції:",
+    "phenylalanine": "Фенілаланін",
+    "macronutrients": "Макронутрієнти",
+    "protein": "Білки",
+    "carbohydrates": "Вуглеводи",
+    "fats": "Жири",
+    "calories": "Калорії",
+    "aminoAcids": "Амінокислоти",
+    "leucine": "Лейцин",
+    "tyrosine": "Тирозин",
+    "methionine": "Метіонін",
+    "energy": "Енергія",
+    "kilojoules": "Кілоджоулі",
+    "kilocalories": "Кілокалорії",
+    "per100gText": "на 100г",
+    "perServingText": "на порцію",
+    "failedToLoad": "Не вдалося завантажити деталі продукту"
+  },
+  "api": {
+    "testConnection": "Перевірити з'єднання API",
+    "testing": "Перевірка...",
+    "status": {
+      "up": "API ПРАЦЮЄ",
+      "down": "API НЕ ПРАЦЮЄ"
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Панель",
+      "subtitle": "Ваш щоденний огляд ПФЕ"
+    },
+    "products": {
+      "title": "Продукти",
+      "subtitle": "Перегляньте базу продуктів",
+      "upload": {
+        "title": "Режим адміністратора - Завантаження CSV",
+        "description": "Завантажте CSV для масового імпорту продуктів",
+        "selectFile": "Вибрати CSV файл",
+        "uploading": "Завантаження...",
+        "upload": "Завантажити",
+        "cancel": "Скасувати",
+        "success": "Завантажено успішно",
+        "error": "Помилка завантаження"
+      },
+      "drawer": {
+        "title": "Деталі продукту",
+        "per100g": "На 100 г",
+        "perServing": "На порцію",
+        "servingSize": "Розмір порції",
+        "macronutrients": "Макронутрієнти",
+        "aminoAcids": "Амінокислоти",
+        "energy": "Енергія"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Вхід",
+      "subtitle": "Увійдіть до свого облікового запису",
+      "username": "Ім'я користувача",
+      "password": "Пароль",
+      "signIn": "Увійти",
+      "signingIn": "Вхід..."
+    }
+  },
+  "roles": {
+    "admin": "Адміністратор",
+    "healthcare_provider": "Медичний працівник",
+    "patient": "Пацієнт",
+    "user": "Користувач"
+  }
+}
+
+

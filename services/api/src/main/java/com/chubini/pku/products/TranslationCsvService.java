@@ -29,10 +29,24 @@ public class TranslationCsvService {
   /** Resolve headers from CSV, supporting multiple languages */
   private Headers resolveHeaders(Map<String, Integer> headerMap) {
     String code =
-        pick(headerMap, "product_code", "code", "პროდუქტის კოდი", "код продукта", "productcode");
+        pick(
+            headerMap,
+            "product_code",
+            "code",
+            "პროდუქტის კოდი",
+            "код продукта",
+            "код товару",
+            "productcode");
     String name =
-        pick(headerMap, "name", "product_name", "პროდუქტის დასახელება", "название", "productname");
-    String category = pick(headerMap, "category", "კატეგორია", "категория", "cat");
+        pick(
+            headerMap,
+            "name",
+            "product_name",
+            "პროდუქტის დასახელება",
+            "название",
+            "назва",
+            "productname");
+    String category = pick(headerMap, "category", "კატეგორია", "категория", "категорія", "cat");
 
     return new Headers(code, name, category);
   }
