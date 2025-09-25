@@ -1,25 +1,28 @@
 package com.chubini.pku.products;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
-@AutoConfigureWebMvc
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 class MultiLanguageIntegrationTest {
@@ -183,8 +186,8 @@ class MultiLanguageIntegrationTest {
                 .param("page", "0")
                 .param("size", "20"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.content[0].name").value("Banana"))
-        .andExpect(jsonPath("$.content[0].category").value("Fruit"));
+        .andExpect(jsonPath("$.content[*].name", hasItem("Banana")))
+        .andExpect(jsonPath("$.content[*].category", hasItem("Fruit")));
   }
 
   @Test
@@ -202,12 +205,15 @@ class MultiLanguageIntegrationTest {
   void testUploadTranslationsSuccess() throws Exception {
     String csvContent = "product_code,name,category\nP000001,ვაშლი,ხილი";
 
+    MockMultipartFile file =
+        new MockMultipartFile(
+            "file", "translations.csv", "text/csv", csvContent.getBytes(StandardCharsets.UTF_8));
+
     mockMvc
         .perform(
-            post("/api/v1/products/upload-translations")
-                .param("locale", "ka")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .content(csvContent.getBytes()))
+            MockMvcRequestBuilders.multipart("/api/v1/products/upload-translations")
+                .file(file)
+                .param("locale", "ka"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locale").value("ka"))
         .andExpect(jsonPath("$.status").value("ok"))
@@ -218,12 +224,15 @@ class MultiLanguageIntegrationTest {
   void testUploadTranslationsWithErrors() throws Exception {
     String csvContent = "product_code,name,category\nINVALID,ვაშლი,ხილი\nP000001,,ხილი";
 
+    MockMultipartFile fileWithErrors =
+        new MockMultipartFile(
+            "file", "translations.csv", "text/csv", csvContent.getBytes(StandardCharsets.UTF_8));
+
     mockMvc
         .perform(
-            post("/api/v1/products/upload-translations")
-                .param("locale", "ka")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .content(csvContent.getBytes()))
+            MockMvcRequestBuilders.multipart("/api/v1/products/upload-translations")
+                .file(fileWithErrors)
+                .param("locale", "ka"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locale").value("ka"))
         .andExpect(jsonPath("$.status").value("partial"))

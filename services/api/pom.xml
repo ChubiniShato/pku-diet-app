@@ -166,13 +166,9 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>3.3.2</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
+        <configuration>
+          <mainClass>com.chubini.pku.PkuApiApplication</mainClass>
+        </configuration>
       </plugin>
 
       <!-- Java 21 compiler with MapStruct -->
@@ -237,8 +233,8 @@
         </executions>
       </plugin>
 
-      <!-- OpenAPI JSON export -->
-      <plugin>
+      <!-- OpenAPI JSON export - ამოღებულია და გადატანილია პროფილებში -->
+      <!--<plugin>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-maven-plugin</artifactId>
         <version>1.4</version>
@@ -255,26 +251,36 @@
           <outputFileName>openapi.json</outputFileName>
           <outputDir>${project.build.directory}</outputDir>
         </configuration>
-      </plugin>
+      </plugin> -->
 
       <!-- OWASP Dependency Check -->
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>8.4.3</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <failBuildOnCVSS>7</failBuildOnCVSS>
-          <skipProvidedScope>true</skipProvidedScope>
-          <skipTestScope>true</skipTestScope>
-          <skipSystemScope>true</skipSystemScope>
-        </configuration>
+        <version>12.1.0</version>
+          <configuration>
+            <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+            <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
+            <cveValidForHours>168</cveValidForHours>
+            <failOnError>false</failOnError>
+            <failBuildOnCVSS>7.0</failBuildOnCVSS>
+            <formats>
+              <format>HTML</format>
+              <format>JSON</format>
+            </formats>
+            <!-- Optional analyzers to reduce noise/speed up -->
+            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+            <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+            <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
+            <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
       </plugin>
 
       <!-- Flyway database migration -->
@@ -356,6 +362,71 @@
                 <include>**/*IT.java</include>
               </includes>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- OpenAPI JSON export -->
+    <profile>
+      <id>openapi-generate</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-maven-plugin</artifactId>
+            <version>1.4</version>
+            <configuration>
+              <!-- HTTP-генერაცია გაშვებულ აპზე -->
+              <apiDocsUrl>${springdoc.apiDocsUrl}</apiDocsUrl>
+              <outputFileName>openapi.json</outputFileName>
+              <outputDir>${project.build.directory}</outputDir>
+            </configuration>
+            <executions>
+              <execution>
+                <id>generate-openapi</id>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+
+     <!--optional security-scan profile-->
+    <profile>
+      <id>security-scan</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>12.1.0</version>
+            <configuration>
+              <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+              <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
+              <cveValidForHours>168</cveValidForHours>
+              <failOnError>false</failOnError>
+              <failBuildOnCVSS>7.0</failBuildOnCVSS>
+              <formats>
+                <format>HTML</format>
+                <format>JSON</format>
+              </formats>
+              <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+              <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+              <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
+              <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

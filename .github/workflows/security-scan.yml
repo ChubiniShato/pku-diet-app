@@ -1,0 +1,33 @@
+name: Security Scan (OWASP Dependency-Check)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  owasp-dependency-check-placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java setup
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Placeholder reminder
+        run: |
+          echo "TODO: Enable full OWASP Dependency-Check run when NVD_API_KEY is configured."
+          echo "To enable: set repository secret NVD_API_KEY and replace this step with Maven run:"
+          echo "  mvn -B -q -f services/api clean verify -Psecurity-scan \"-Dnvd.api.key=$NVD_API_KEY\""
+
+      # Example of the future real job (commented):
+      # - name: OWASP Dependency-Check
+      #   working-directory: services/api
+      #   env:
+      #     NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      #   run: |
+      #     mvn -B clean verify -Psecurity-scan "-Dnvd.api.key=$NVD_API_KEY"
+
+
