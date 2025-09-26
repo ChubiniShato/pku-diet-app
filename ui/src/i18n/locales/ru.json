@@ -14,7 +14,8 @@
     "share": "Поделиться",
     "critical": "Критичное",
     "profile": "Профиль",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "adminPanel": "Админ панель"
   },
   "common": {
     "loading": "Загрузка...",
@@ -25,6 +26,7 @@
     "delete": "Удалить",
     "edit": "Редактировать",
     "add": "Добавить",
+    "addDish": "Добавить блюдо",
     "search": "Поиск",
     "allProducts": "Все продукты",
     "back": "Назад",
@@ -68,10 +70,93 @@
       "down": "API не работает"
     }
   },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "Загрузка CSV файла",
+        "subtitle": "Перетащите CSV файл сюда или нажмите кнопку"
+      },
+      "browseFiles": "Выбрать файл",
+      "upload": "Загрузить",
+      "uploading": "Загрузка...",
+      "errors": {
+        "invalidType": "Разрешены только CSV файлы",
+        "fileTooLarge": "Файл слишком большой. Максимум {maxSize}МБ"
+      }
+    },
+    "productRequest": {
+      "title": "Запрос на добавление продукта",
+      "productName": "Название продукта",
+      "productNamePlaceholder": "Введите название продукта",
+      "productType": "Тип продукта",
+      "rawProduct": "Сырой продукт (овощи, фрукты, зерновые)",
+      "processedProduct": "Комбинированный/Готовый продукт (произведенные закуски, напитки, еда)",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "description": "Описание",
+      "descriptionPlaceholder": "Подробное описание продукта",
+      "pheContent": "Содержание ФАЛ",
+      "pheContentPlaceholder": "напр. 15.5",
+      "proteinContent": "Содержание белка",
+      "proteinContentPlaceholder": "напр. 2.3",
+      "sourceLink": "Ссылка на источник",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "Укажите валидную ссылку на источник, где вы нашли информацию о питании",
+      "productImages": "Фотографии документации продукта",
+      "dragDropImages": "Перетащите изображения сюда или нажмите кнопку",
+      "imageRequirements": "Максимум 5 изображений, каждое до 5МБ",
+      "selectImages": "Выбрать изображения",
+      "selectedImages": "Выбранные изображения",
+      "notes": "Дополнительные заметки",
+      "validation": {
+        "productNameRequired": "Название продукта обязательно",
+        "categoryRequired": "Категория обязательна",
+        "descriptionRequired": "Описание обязательно",
+        "imagesRequired": "Фотографии документации обязательны для комбинированных продуктов"
+      },
+      "notesPlaceholder": "Заметки для администратора",
+      "submit": "Отправить запрос",
+      "submitting": "Отправка...",
+      "success": "Запрос успешно отправлен!",
+      "error": "Ошибка при отправке запроса"
+    },
+    "dishRequest": {
+      "title": "Запрос на добавление блюда",
+      "dishName": "Название блюда",
+      "dishNamePlaceholder": "Введите название блюда",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "cuisine": "Кухня",
+      "selectCuisine": "Выберите кухню",
+      "description": "Описание",
+      "descriptionPlaceholder": "Введите описание блюда",
+      "recipeProject": "Проект рецепта",
+      "recipeProjectPlaceholder": "Введите подробное описание рецепта, ингредиенты и способ приготовления",
+      "recipeProjectHelp": "Укажите полные детали рецепта, количество ингредиентов и шаги приготовления",
+      "notes": "Заметки",
+      "notesPlaceholder": "Дополнительная информация",
+      "submit": "Отправить запрос",
+      "submitting": "Отправка..."
+    }
+  },
   "pages": {
     "dashboard": {
       "title": "Панель управления",
-      "subtitle": "Ваш ежедневный обзор ФАЛ"
+      "subtitle": "Ваш ежедневный обзор ФАЛ",
+      "welcome": "Добро пожаловать",
+      "welcomeMessage": "Добро пожаловать в PKU Diet App. Начните отслеживать свое ежедневное питание."
+    },
+    "adminPanel": {
+      "title": "Админ панель",
+      "subtitle": "Управление системой и просмотр запросов",
+      "pendingRequests": "Ожидающие запросы",
+      "productRequests": "Запросы продуктов",
+      "dishRequests": "Запросы блюд",
+      "noRequestsYet": "Запросов пока нет",
+      "viewAll": "Показать все",
+      "csvUpload": "Загрузка CSV",
+      "uploadProductsCsv": "Загрузить CSV продуктов",
+      "uploadDishesCsv": "Загрузить CSV блюд"
     },
     "day": {
       "title": "Вид дня",
@@ -83,11 +168,64 @@
     },
     "products": {
       "title": "Продукты",
-      "subtitle": "Просмотр базы данных продуктов питания"
+      "subtitle": "Просмотр базы данных продуктов питания",
+      "addProduct": "Добавить продукт"
+    },
+    "productNew": {
+      "title": "Добавить новый продукт",
+      "subtitle": "Введите все пищевые характеристики продукта",
+      "basicInfo": "Основная информация",
+      "productName": "Название продукта",
+      "productNamePlaceholder": "напр. Яблоко",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "description": "Описание",
+      "descriptionPlaceholder": "Подробное описание продукта",
+      "aminoAcids": "Аминокислоты",
+      "phenylalanine": "Фенилаланин",
+      "leucine": "Лейцин",
+      "tyrosine": "Тирозин",
+      "methionine": "Метионин",
+      "macronutrients": "Макронутриенты",
+      "protein": "Белки",
+      "carbohydrates": "Углеводы",
+      "fats": "Жиры",
+      "energy": "Энергия",
+      "kilocalories": "Килокалории",
+      "kilojoules": "Килоджоули",
+      "create": "Создать продукт",
+      "creating": "Создание...",
+      "success": "Продукт успешно создан!",
+      "error": "Ошибка при создании продукта"
     },
     "dishes": {
       "title": "Блюда",
-      "subtitle": "Ваши сохранённые рецепты и блюда"
+      "subtitle": "Ваши созданные рецепты и блюда",
+      "requestToAddToCommon": "Запрос на добавление блюда в общую базу",
+      "addToMyDishes": "Добавить блюдо в мои блюда",
+      "requestTitle": "Запрос на добавление блюда в общую базу",
+      "submitRequest": "Отправить запрос",
+      "categories": {
+        "all": "Все",
+        "filterBy": "Фильтр:",
+        "suggested": "Рекомендуемые блюда",
+        "myDishes": "Мои созданные блюда",
+        "ukrainian": "Украинские блюда",
+        "georgian": "Грузинские блюда", 
+        "caucasian": "Кавказские блюда",
+        "breakfast": "Завтрак",
+        "lunch": "Обед",
+        "dinner": "Ужин",
+        "snacks": "Перекусы",
+        "georgianCuisine": "Грузинская кухня",
+        "ukrainianCuisine": "Украинская кухня",
+        "caucasianCuisine": "Кавказская кухня",
+        "russianCuisine": "Русская кухня",
+        "europeanCuisine": "Европейская кухня",
+        "asianCuisine": "Азиатская кухня",
+        "mediterraneanCuisine": "Средиземноморская кухня",
+        "americanCuisine": "Американская кухня"
+      }
     },
     "pantry": {
       "title": "Кладовая",

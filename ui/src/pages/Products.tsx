@@ -5,13 +5,19 @@ import { useProducts, useProductCategories } from '@/lib/api/products'
 import { ProductCard } from '@/components/ProductCard'
 import { ProductSearch } from '@/components/ProductSearch'
 import { ProductDrawer } from '@/components/ProductDrawer'
-import { CsvUpload } from '@/components/CsvUpload'
+import { ProductRequest } from '@/components/ProductRequest'
 import { Pagination } from '@/components/Pagination'
+import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
+import { useAuth } from '@/contexts/AuthContext'
+import { toast } from '@/lib/toast'
 import type { ProductSearchParams } from '@/lib/types'
 
 export const Products: React.FC = () => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [filters, setFilters] = useState<ProductSearchParams>({
     page: 0,
     size: 12,
@@ -20,6 +26,7 @@ export const Products: React.FC = () => {
   })
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [showProductRequest, setShowProductRequest] = useState(false)
 
   // Check if admin mode is enabled via URL parameter
   const isAdminMode = new URLSearchParams(window.location.search).get('admin') === '1'
@@ -64,6 +71,12 @@ export const Products: React.FC = () => {
     setSelectedProductId(null)
   }
 
+  const handleProductRequest = async (requestData: any) => {
+    // TODO: Implement API call to submit product request
+    console.log('Product request submitted:', requestData)
+    toast.success(t('components.productRequest.success'))
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -75,8 +88,39 @@ export const Products: React.FC = () => {
         </p>
       </div>
 
-      {/* CSV Upload (Admin Only) */}
-      <CsvUpload isVisible={isAdminMode} />
+      {/* Help Button */}
+      <HelpButton page="products" />
+
+
+      {/* Admin Add Product Button */}
+      {user?.role === 'ADMIN' && (
+        <div className="mb-6 flex items-center gap-3">
+          <Tooltip content="Add new product with complete nutrition data">
+            <Button
+              variant="success"
+              size="md"
+              onClick={() => navigate('/products/new')}
+            >
+              {t('pages.products.addProduct')}
+            </Button>
+          </Tooltip>
+        </div>
+      )}
+
+      {/* Product Request Button (USER/PATIENT Only) */}
+      {(user?.role === 'USER' || user?.role === 'PATIENT') && (
+        <div className="mb-6 flex items-center gap-3">
+          <Tooltip content="Request new products to be added to the database">
+            <Button
+              variant="primary"
+              onClick={() => setShowProductRequest(true)}
+              className="mb-4"
+            >
+              {t('components.productRequest.title')}
+            </Button>
+          </Tooltip>
+        </div>
+      )}
 
       {/* Search and Filters */}
       <ProductSearch
@@ -223,6 +267,13 @@ export const Products: React.FC = () => {
         productId={selectedProductId}
         isOpen={isDrawerOpen}
         onClose={handleCloseDrawer}
+      />
+
+      {/* Product Request Modal */}
+      <ProductRequest
+        isOpen={showProductRequest}
+        onClose={() => setShowProductRequest(false)}
+        onSubmit={handleProductRequest}
       />
     </div>
   )

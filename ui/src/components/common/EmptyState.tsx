@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 
 interface EmptyStateProps {
   icon?: React.ComponentType<{ className?: string }>
@@ -20,8 +19,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   action,
   className = '',
 }) => {
-  const { t } = useTranslation()
-
   return (
     <div
       className={`text-center py-12 px-4 ${className}`}

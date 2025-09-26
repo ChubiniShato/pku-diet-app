@@ -295,24 +295,25 @@
       "success": "Product created successfully!",
       "error": "Error creating product"
     },
-    "drawer": {
-      "title": "Product Details",
-      "per100g": "Per 100g",
-      "perServing": "Per Serving",
-      "servingSize": "Serving size",
-      "macronutrients": "Macronutrients",
-      "aminoAcids": "Amino Acids",
-      "energy": "Energy"
-    },
-    "upload": {
-      "title": "Admin Mode - CSV Upload",
-      "description": "Upload a CSV file to bulk import products",
-      "selectFile": "Select CSV file",
-      "uploading": "Uploading...",
-      "upload": "Upload",
-      "cancel": "Cancel",
-      "success": "Upload successful",
-      "error": "Upload failed"
+      "drawer": {
+        "title": "Product Details",
+        "per100g": "Per 100g",
+        "perServing": "Per Serving",
+        "servingSize": "Serving size",
+        "macronutrients": "Macronutrients",
+        "aminoAcids": "Amino Acids",
+        "energy": "Energy"
+      },
+      "upload": {
+        "title": "Admin Mode - CSV Upload",
+        "description": "Upload a CSV file to bulk import products",
+        "selectFile": "Select CSV file",
+        "uploading": "Uploading...",
+        "upload": "Upload",
+        "cancel": "Cancel",
+        "success": "Upload successful",
+        "error": "Upload failed"
+      }
     },
     "dishes": {
       "title": "Dishes",

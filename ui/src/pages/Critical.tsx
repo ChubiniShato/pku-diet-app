@@ -142,7 +142,7 @@ export const Critical: React.FC = () => {
           filters={filters}
           onFiltersChange={handleFiltersChange}
           onExport={handleExport}
-          isExporting={exportMutation.isLoading}
+          isExporting={exportMutation.isPending}
         />
 
         {/* Table */}

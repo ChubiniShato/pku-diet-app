@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.chubini.pku.products.IntelligentProductMatcher;
 import com.chubini.pku.products.Product;
 import com.chubini.pku.products.ProductRepository;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class DishCsvUploadService {
 
   private final ProductRepository productRepository;
+  private final IntelligentProductMatcher intelligentMatcher;
 
   public List<Dish> parseDishCsvFile(MultipartFile file) throws IOException {
     return parseDishCsvBytes(file.getBytes());
@@ -156,24 +158,10 @@ public class DishCsvUploadService {
     }
   }
 
-  /** Find product by name (case-insensitive, partial match) */
+  /** Find product by name using intelligent matching */
   private Optional<Product> findProductByName(String name) {
-    List<Product> products = productRepository.findAll();
-
-    // Try exact match first
-    for (Product product : products) {
-      if (product.getProductName().equalsIgnoreCase(name.trim())) {
-        return Optional.of(product);
-      }
-    }
-
-    // Try partial match
-    for (Product product : products) {
-      if (product.getProductName().toLowerCase().contains(name.toLowerCase().trim())) {
-        return Optional.of(product);
-      }
-    }
-
-    return Optional.empty();
+    return intelligentMatcher
+        .findBestMatch(name)
+        .map(IntelligentProductMatcher.ProductMatchResult::getProduct);
   }
 }

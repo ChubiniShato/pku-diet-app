@@ -14,7 +14,8 @@
     "share": "გაზიარება",
     "critical": "კრიტიკული",
     "profile": "პროფილი",
-    "settings": "პარამეტრები"
+    "settings": "პარამეტრები",
+    "adminPanel": "ადმინის პანელი"
   },
   "common": {
     "loading": "იტვირთება...",
@@ -25,6 +26,7 @@
     "delete": "წაშლა",
     "edit": "რედაქტირება",
     "add": "დამატება",
+    "addDish": "კერძის დამატება",
     "search": "ძიება",
     "allProducts": "ყველა პროდუქტი",
     "back": "უკან",
@@ -68,10 +70,93 @@
       "down": "API არ მუშაობს"
     }
   },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "CSV ფაილის ატვირთვა",
+        "subtitle": "გადაიტანეთ CSV ფაილი აქ ან დააჭირეთ ღილაკს"
+      },
+      "browseFiles": "ფაილის არჩევა",
+      "upload": "ატვირთვა",
+      "uploading": "იტვირთება...",
+      "errors": {
+        "invalidType": "მხოლოდ CSV ფაილები დაშვებულია",
+        "fileTooLarge": "ფაილი ძალიან დიდია. მაქსიმუმ {maxSize}MB"
+      }
+    },
+    "productRequest": {
+      "title": "პროდუქტის დამატების მოთხოვნა",
+      "productName": "პროდუქტის სახელი",
+      "productNamePlaceholder": "შეიყვანეთ პროდუქტის სახელი",
+      "productType": "პროდუქტის ტიპი",
+      "rawProduct": "ნედლი პროდუქტი (ბოსტნეული, ხილი, მარცვლეული)",
+      "processedProduct": "კომბინირებული/მზა პროდუქტი (წარმოებული სნექი, სასმელი, საჭმელი)",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "პროდუქტის დეტალური აღწერა",
+      "pheContent": "PHE შემცველობა",
+      "pheContentPlaceholder": "მაგ. 15.5",
+      "proteinContent": "ცილების შემცველობა",
+      "proteinContentPlaceholder": "მაგ. 2.3",
+      "sourceLink": "წყაროს ლინკი",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "მიუთითეთ ვალიდური წყაროს ლინკი, სადაც ნახავთ ნუტრიციულ ინფორმაციას",
+      "productImages": "პროდუქტის დოკუმენტაციის ფოტოები",
+      "dragDropImages": "გადაიტანეთ ფოტოები აქ ან დააჭირეთ ღილაკს",
+      "imageRequirements": "მაქსიმუმ 5 ფოტო, თითოეული 5MB-მდე",
+      "selectImages": "ფოტოების არჩევა",
+      "selectedImages": "არჩეული ფოტოები",
+      "notes": "დამატებითი შენიშვნები",
+      "validation": {
+        "productNameRequired": "პროდუქტის სახელი სავალდებულოა",
+        "categoryRequired": "კატეგორია სავალდებულოა",
+        "descriptionRequired": "აღწერა სავალდებულოა",
+        "imagesRequired": "კომბინირებული პროდუქტისთვის დოკუმენტაციის ფოტოები სავალდებულოა"
+      },
+      "notesPlaceholder": "შენიშვნები ადმინისთვის",
+      "submit": "მოთხოვნის გაგზავნა",
+      "submitting": "იგზავნება...",
+      "success": "მოთხოვნა წარმატებით გაიგზავნა!",
+      "error": "შეცდომა მოთხოვნის გაგზავნისას"
+    },
+    "dishRequest": {
+      "title": "კერძის დამატების მოთხოვნა",
+      "dishName": "კერძის სახელი",
+      "dishNamePlaceholder": "შეიყვანეთ კერძის სახელი",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "cuisine": "სამზარეულო",
+      "selectCuisine": "აირჩიეთ სამზარეულო",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "შეიყვანეთ კერძის აღწერა",
+      "recipeProject": "რეცეპტის პროექტი",
+      "recipeProjectPlaceholder": "შეიყვანეთ რეცეპტის დეტალური აღწერა, ინგრედიენტები და მომზადების წესი",
+      "recipeProjectHelp": "მიუთითეთ რეცეპტის სრული აღწერა, ინგრედიენტების რაოდენობა და მომზადების ნაბიჯები",
+      "notes": "შენიშვნები",
+      "notesPlaceholder": "დამატებითი ინფორმაცია",
+      "submit": "მოთხოვნის გაგზავნა",
+      "submitting": "გაგზავნა..."
+    }
+  },
   "pages": {
     "dashboard": {
       "title": "მთავარი გვერდი",
-      "subtitle": "თქვენი ყოველდღიური PHE მიმოხილვა"
+      "subtitle": "თქვენი ყოველდღიური PHE მიმოხილვა",
+      "welcome": "მოგესალმებით",
+      "welcomeMessage": "PKU Diet აპლიკაციაში. დაიწყეთ თქვენი ყოველდღიური კვების თვალყურის დევნება."
+    },
+    "adminPanel": {
+      "title": "ადმინის პანელი",
+      "subtitle": "სისტემის მართვა და მოთხოვნების გადახედვა",
+      "pendingRequests": "მოლოდინის მოთხოვნები",
+      "productRequests": "პროდუქტების მოთხოვნები",
+      "dishRequests": "კერძების მოთხოვნები",
+      "noRequestsYet": "ჯერ არ არის მოთხოვნები",
+      "viewAll": "ყველას ნახვა",
+      "csvUpload": "CSV ატვირთვა",
+      "uploadProductsCsv": "პროდუქტების CSV-ის ატვირთვა",
+      "uploadDishesCsv": "კერძების CSV-ის ატვირთვა"
     },
     "day": {
       "title": "დღის ხედი",
@@ -83,11 +168,64 @@
     },
     "products": {
       "title": "პროდუქტები",
-      "subtitle": "საკვები პროდუქტების ბაზის დათვალიერება"
+      "subtitle": "საკვები პროდუქტების ბაზის დათვალიერება",
+      "addProduct": "პროდუქტის დამატება"
+    },
+    "productNew": {
+      "title": "ახალი პროდუქტის დამატება",
+      "subtitle": "შეიყვანეთ პროდუქტის ყველა ნუტრიციული მახასიათებელი",
+      "basicInfo": "ძირითადი ინფორმაცია",
+      "productName": "პროდუქტის სახელი",
+      "productNamePlaceholder": "მაგ. ვაშლი",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "პროდუქტის დეტალური აღწერა",
+      "aminoAcids": "ამინომჟავები",
+      "phenylalanine": "ფენილალანინი",
+      "leucine": "ლეიცინი",
+      "tyrosine": "ტიროზინი",
+      "methionine": "მეთიონინი",
+      "macronutrients": "მაკრონუტრიენტები",
+      "protein": "ცილები",
+      "carbohydrates": "ნახშირწყლები",
+      "fats": "ცხიმები",
+      "energy": "ენერგია",
+      "kilocalories": "კილოკალორიები",
+      "kilojoules": "კილოჯოულები",
+      "create": "პროდუქტის შექმნა",
+      "creating": "იქმნება...",
+      "success": "პროდუქტი წარმატებით შეიქმნა!",
+      "error": "შეცდომა პროდუქტის შექმნისას"
     },
     "dishes": {
       "title": "კერძები",
-      "subtitle": "თქვენი შენახული რეცეპტები და კერძები"
+      "subtitle": "თქვენი შენახული რეცეპტები და კერძები",
+      "requestToAddToCommon": "საერთო ბაზაში კერძის დამატების მოთხოვნა",
+      "addToMyDishes": "კერძის დამატება ჩემს კერძებში",
+      "requestTitle": "კერძის დამატების მოთხოვნა საერთო ბაზაში",
+      "submitRequest": "მოთხოვნის გაგზავნა",
+      "categories": {
+        "all": "ყველა კერძი",
+        "filterBy": "ფილტრი",
+        "suggested": "შემოთავაზებული კერძები",
+        "myDishes": "ჩემი შექმნილი კერძები",
+        "ukrainian": "უკრაინული კერძები",
+        "georgian": "ქართული კერძები",
+        "caucasian": "კავკასიური კერძები",
+        "breakfast": "საუზმე",
+        "lunch": "სადილი",
+        "dinner": "ვახშამი",
+        "snacks": "სნეკები",
+        "georgianCuisine": "ქართული სამზარეულო",
+        "ukrainianCuisine": "უკრაინული სამზარეულო",
+        "caucasianCuisine": "კავკასიური სამზარეულო",
+        "russianCuisine": "რუსული სამზარეულო",
+        "europeanCuisine": "ევროპული სამზარეულო",
+        "asianCuisine": "აზიური სამზარეულო",
+        "mediterraneanCuisine": "მედიტერანული სამზარეულო",
+        "americanCuisine": "ამერიკული სამზარეულო"
+      }
     },
     "pantry": {
       "title": "საწყობი",

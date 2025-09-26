@@ -3,10 +3,12 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryProvider } from '@/providers/QueryProvider'
 import { AccessibilityProvider } from '@/components/accessibility/AccessibilityProvider'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { HelpProvider } from '@/contexts/HelpContext'
 import { AppHeader } from '@/components/AppHeader'
 import { AppRoutes } from '@/components/AppRoutes'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ToastContainer } from '@/components/ToastContainer'
+import { HelpModal } from '@/components/HelpModal'
 import '@/i18n/config'
 
 // Inner app component that handles auth events
@@ -33,6 +35,7 @@ const AppContent: React.FC = () => {
         <AppRoutes />
       </main>
       <ToastContainer />
+      <HelpModal />
     </div>
   )
 }
@@ -44,7 +47,9 @@ function App() {
         <AccessibilityProvider>
           <BrowserRouter>
             <AuthProvider>
-              <AppContent />
+              <HelpProvider>
+                <AppContent />
+              </HelpProvider>
             </AuthProvider>
           </BrowserRouter>
         </AccessibilityProvider>
