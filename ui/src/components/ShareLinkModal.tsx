@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { useCreateShareLink } from '@/lib/api/consents'
 import { Button } from './Button'
 import { toast } from '@/lib/toast/toast'
-import type { ShareScope, ShareLinkCreateRequest, ShareLinkResponse } from '@/lib/types'
+import type { ShareLinkCreateRequest, ShareLinkResponse } from '@/lib/types'
+import { ShareScope } from '@/lib/types'
 
 interface ShareLinkModalProps {
   isOpen: boolean
@@ -345,9 +346,9 @@ export const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
                 <Button 
                   onClick={handleCreate} 
                   variant="primary"
-                  disabled={createMutation.isLoading}
+                  disabled={createMutation.isPending}
                 >
-                  {createMutation.isLoading ? 'Creating...' : 'Create Share Link'}
+                  {createMutation.isPending ? 'Creating...' : 'Create Share Link'}
                 </Button>
               </div>
             </>

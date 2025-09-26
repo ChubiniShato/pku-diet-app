@@ -13,6 +13,10 @@ const navigation = [
   { key: 'scan', path: '/scan' },
 ]
 
+const adminNavigation = [
+  { key: 'adminPanel', path: '/admin' },
+]
+
 export const AppHeader: React.FC = () => {
   const { t, i18n } = useTranslation()
   const location = useLocation()
@@ -38,7 +42,25 @@ export const AppHeader: React.FC = () => {
 
           {/* Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => {
+            {/* Admin Navigation - Show first for ADMIN users */}
+            {user?.role === 'ADMIN' && adminNavigation.map((item) => {
+              const isActive = location.pathname === item.path
+              return (
+                <Link
+                  key={item.key}
+                  to={item.path}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-red-600 bg-red-50'
+                      : 'text-red-700 hover:text-red-600 hover:bg-red-50'
+                  }`}
+                >
+                  {t(`navigation.${item.key}`)}
+                </Link>
+              )
+            })}
+            {/* Regular Navigation - Hide Dashboard for ADMIN users */}
+            {navigation.filter(item => !(user?.role === 'ADMIN' && item.key === 'dashboard')).map((item) => {
               const isActive = location.pathname === item.path
               return (
                 <Link
@@ -160,8 +182,26 @@ export const AppHeader: React.FC = () => {
         {showMobileMenu && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 bg-white">
-              {/* Mobile Navigation Links */}
-              {navigation.map((item) => {
+              {/* Admin Mobile Navigation - Show first for ADMIN users */}
+              {user?.role === 'ADMIN' && adminNavigation.map((item) => {
+                const isActive = location.pathname === item.path
+                return (
+                  <Link
+                    key={item.key}
+                    to={item.path}
+                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                      isActive
+                        ? 'text-red-600 bg-red-50'
+                        : 'text-red-700 hover:text-red-600 hover:bg-red-50'
+                    }`}
+                    onClick={() => setShowMobileMenu(false)}
+                  >
+                    {t(`navigation.${item.key}`)}
+                  </Link>
+                )
+              })}
+              {/* Mobile Navigation Links - Hide Dashboard for ADMIN users */}
+              {navigation.filter(item => !(user?.role === 'ADMIN' && item.key === 'dashboard')).map((item) => {
                 const isActive = location.pathname === item.path
                 return (
                   <Link

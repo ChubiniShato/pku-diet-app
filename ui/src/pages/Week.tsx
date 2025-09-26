@@ -6,6 +6,8 @@ import { useCriticalFactsForDateRange } from '@/lib/api/criticalFacts'
 import { WeekCalendar } from '@/components/WeekCalendar'
 import { GenerationControls, type GenerationOptions } from '@/components/GenerationControls'
 import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
 import { toast } from '@/lib/toast/toast'
 import type { MenuDay } from '@/lib/types'
 
@@ -208,6 +210,9 @@ export const Week: React.FC = () => {
         </div>
       </div>
 
+      {/* Help Button */}
+      <HelpButton page="week" />
+
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
         {/* Main Content - Week Calendar */}
         <div className="xl:col-span-3">
@@ -232,14 +237,14 @@ export const Week: React.FC = () => {
                 
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {days.reduce((acc, day) => acc + day.slots.reduce((slotAcc, slot) => slotAcc + slot.entries.length, 0), 0)}
+                    {days.reduce((acc, day) => acc + day.meals.reduce((mealAcc, meal) => mealAcc + meal.entries.length, 0), 0)}
                   </div>
                   <div className="text-sm text-gray-500">Total Meals</div>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900">
-                    {days.filter(day => day.emergencyMode).length}
+                    {days.filter(day => day.emergencyMode === true).length}
                   </div>
                   <div className="text-sm text-gray-500">Emergency Days</div>
                 </div>
@@ -260,8 +265,8 @@ export const Week: React.FC = () => {
           <GenerationControls
             onGenerateWeek={handleGenerateWeek}
             onGenerateDay={handleGenerateDay}
-            isGeneratingWeek={generateWeekMutation.isLoading}
-            isGeneratingDay={generateDayMutation.isLoading}
+            isGeneratingWeek={generateWeekMutation.isPending}
+            isGeneratingDay={generateDayMutation.isPending}
             selectedDate={selectedDate}
           />
         </div>

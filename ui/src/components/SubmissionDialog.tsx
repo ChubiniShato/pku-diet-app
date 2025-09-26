@@ -271,9 +271,9 @@ export const SubmissionDialog: React.FC<SubmissionDialogProps> = ({
                 <Button 
                   onClick={handleSubmit}
                   variant="primary"
-                  disabled={submitMutation.isLoading}
+                  disabled={submitMutation.isPending}
                 >
-                  {submitMutation.isLoading ? 'Submitting...' : 'Submit to Catalog'}
+                  {submitMutation.isPending ? 'Submitting...' : 'Submit to Catalog'}
                 </Button>
               </div>
             </>

@@ -287,7 +287,7 @@ export const ShareLinkManager: React.FC<ShareLinkManagerProps> = ({
                         onClick={() => handleRevoke(link.id)}
                         variant="danger"
                         size="sm"
-                        disabled={revokeMutation.isLoading}
+                        disabled={revokeMutation.isPending}
                       >
                         Revoke
                       </Button>

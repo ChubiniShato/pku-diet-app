@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.chubini.pku.products.IntelligentProductMatcher;
 import com.chubini.pku.products.Product;
 import com.chubini.pku.products.ProductRepository;
 
@@ -22,6 +23,7 @@ public class DishService {
 
   private final DishRepository dishRepository;
   private final ProductRepository productRepository;
+  private final IntelligentProductMatcher intelligentMatcher;
 
   public Page<Dish> getAllDishes(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
@@ -201,24 +203,17 @@ public class DishService {
             + "g");
   }
 
-  /** Find product by name (for ingredient matching) */
+  /** Find product by name using intelligent matching */
   public Optional<Product> findProductByName(String name) {
-    // Try exact match first
-    List<Product> products = productRepository.findAll();
-    for (Product product : products) {
-      if (product.getProductName().equalsIgnoreCase(name.trim())) {
-        return Optional.of(product);
-      }
-    }
+    return intelligentMatcher
+        .findBestMatch(name)
+        .map(IntelligentProductMatcher.ProductMatchResult::getProduct);
+  }
 
-    // Try partial match
-    for (Product product : products) {
-      if (product.getProductName().toLowerCase().contains(name.toLowerCase().trim())) {
-        return Optional.of(product);
-      }
-    }
-
-    return Optional.empty();
+  /** Find products with intelligent matching and return detailed results */
+  public List<IntelligentProductMatcher.ProductMatchResult> findProductsIntelligently(
+      String name, int maxResults) {
+    return intelligentMatcher.findProductsIntelligently(name, maxResults);
   }
 
   /** Generate CSV template with all available products for dish creation */

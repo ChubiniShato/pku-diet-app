@@ -8,6 +8,8 @@ import { NutrientTotalsBar } from '@/components/NutrientTotalsBar'
 import { ValidationBanner } from '@/components/ValidationBanner'
 import { SnackSuggestions } from '@/components/SnackSuggestions'
 import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
 import { toast } from '@/lib/toast/toast'
 import type { Product, Dish, MenuEntry, MenuValidationResult, SnackSuggestion } from '@/lib/types'
 
@@ -109,18 +111,18 @@ export const Day: React.FC = () => {
 
   const handleAddSuggestion = async (suggestion: SnackSuggestion) => {
     // Find or create a snack slot
-    let snackSlot = day?.slots.find(slot => slot.slotType.toLowerCase() === 'snack')
+    let snackSlot = day?.meals.find(meal => meal.type.toLowerCase() === 'snack')
     
     if (!snackSlot) {
       // For now, add to the first available slot or create an extra slot
-      snackSlot = day?.slots.find(slot => slot.slotType.toLowerCase() === 'supper') || day?.slots[0]
+      snackSlot = day?.meals.find(meal => meal.type.toLowerCase() === 'dinner') || day?.meals[0]
     }
 
     if (!snackSlot) return
 
     try {
       await createEntryMutation.mutateAsync({
-        slotId: snackSlot.id,
+        mealId: snackSlot.id,
         itemType: suggestion.itemType,
         itemId: suggestion.itemId,
         quantity: suggestion.quantity,
@@ -203,22 +205,29 @@ export const Day: React.FC = () => {
                 {criticalFacts.length} Critical Alert{criticalFacts.length !== 1 ? 's' : ''}
               </Link>
             )}
-            <Button
-              onClick={() => setShowSuggestions(!showSuggestions)}
-              variant="secondary"
-            >
-              {showSuggestions ? 'Hide' : 'Show'} Suggestions
-            </Button>
-            <Button
-              onClick={handleValidate}
-              variant="primary"
-              disabled={validateMutation.isLoading}
-            >
-              {validateMutation.isLoading ? 'Validating...' : 'Validate Menu'}
-            </Button>
+            <Tooltip content="Get suggestions for low-PHE snacks based on your remaining daily allowance">
+              <Button
+                onClick={() => setShowSuggestions(!showSuggestions)}
+                variant="secondary"
+              >
+                {showSuggestions ? 'Hide' : 'Show'} Suggestions
+              </Button>
+            </Tooltip>
+            <Tooltip content="Validate your daily menu against PKU requirements">
+              <Button
+                onClick={handleValidate}
+                variant="primary"
+                disabled={validateMutation.isPending}
+              >
+                {validateMutation.isPending ? 'Validating...' : 'Validate Menu'}
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </div>
+
+      {/* Help Button */}
+      <HelpButton page="day" />
 
       {/* Validation Banner */}
       {validationResult && (
@@ -233,10 +242,10 @@ export const Day: React.FC = () => {
         <div className="xl:col-span-3 space-y-6">
           {/* Meal Slots */}
           <div className="space-y-6">
-            {day.slots.map((slot) => (
+            {day.meals.map((meal) => (
               <SlotCard
-                key={slot.id}
-                slot={slot}
+                key={meal.id}
+                slot={meal}
                 onAddProduct={handleAddProduct}
                 onAddDish={handleAddDish}
                 onUpdateEntry={handleUpdateEntry}

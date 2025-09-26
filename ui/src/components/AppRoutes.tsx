@@ -14,6 +14,8 @@ import { Share } from '@/pages/Share'
 import { Critical } from '@/pages/Critical'
 import { Profile } from '@/pages/Profile'
 import { Settings } from '@/pages/Settings'
+import { AdminPanel } from '@/pages/AdminPanel'
+import { ProductNew } from '@/pages/ProductNew'
 import { Login } from '@/pages/Login'
 import { ProtectedRoute, AdminRoute } from '@/components/ProtectedRoute'
 
@@ -90,22 +92,35 @@ export const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Admin Only Routes */}
-      <Route path="/products" element={
+      {/* Admin Routes - Admin only */}
+      <Route path="/admin" element={
         <AdminRoute>
-          <Products />
+          <AdminPanel />
         </AdminRoute>
+      } />
+
+      {/* Products Routes - All authenticated users */}
+      <Route path="/products" element={
+        <ProtectedRoute>
+          <Products />
+        </ProtectedRoute>
       } />
       
       <Route path="/products/all" element={
-        <AdminRoute>
+        <ProtectedRoute>
           <AllProducts />
-        </AdminRoute>
+        </ProtectedRoute>
       } />
       
       <Route path="/products/category/:categoryName" element={
-        <AdminRoute>
+        <ProtectedRoute>
           <CategoryProducts />
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/products/new" element={
+        <AdminRoute>
+          <ProductNew />
         </AdminRoute>
       } />
     </Routes>

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { PantryTable } from '@/components/PantryTable'
 import { BudgetCard } from '@/components/BudgetCard'
 import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
 import type { PantryFilters } from '@/lib/types'
 
 export const Pantry: React.FC = () => {
@@ -51,6 +53,9 @@ export const Pantry: React.FC = () => {
           {t('pages.pantry.subtitle')}
         </p>
       </div>
+
+      {/* Help Button */}
+      <HelpButton page="pantry" />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Main Content */}

@@ -35,6 +35,7 @@ export const DishDetail: React.FC = () => {
   const solveMassMutation = useSolveMass()
 
   const isNewDish = id === 'new'
+  const isRequestMode = window.location.search.includes('request=true')
 
   // Initialize form data when dish loads
   useEffect(() => {
@@ -180,6 +181,49 @@ export const DishDetail: React.FC = () => {
     }
   }
 
+  const handleSubmitRequest = async () => {
+    if (!dishName.trim()) {
+      toast.error('Validation Error', 'Dish name is required')
+      return
+    }
+
+    if (ingredients.length === 0) {
+      toast.error('Validation Error', 'At least one ingredient is required')
+      return
+    }
+
+    try {
+      // TODO: Implement API call to submit dish request
+      const requestData = {
+        dishName: dishName.trim(),
+        description: dishDescription.trim() || undefined,
+        category: dishCategory.trim() || undefined,
+        servings,
+        ingredients: ingredients.map(ing => ({
+          productId: ing.productId,
+          productName: ing.productName,
+          quantity: ing.quantity,
+          unit: ing.unit,
+          phenylalanine: ing.phenylalanine,
+          protein: ing.protein,
+          calories: ing.calories,
+        })),
+        nutritionPerServing: {
+          phenylalanine: calculateTotals().phenylalaninePerServing,
+          protein: calculateTotals().proteinPerServing,
+          calories: calculateTotals().caloriesPerServing,
+        }
+      }
+
+      console.log('Dish request submitted:', requestData)
+      toast.success('Dish Request Submitted', 'Your dish request has been submitted successfully!')
+      navigate('/dishes')
+    } catch (error) {
+      console.error('Error submitting dish request:', error)
+      toast.error('Failed to submit dish request')
+    }
+  }
+
   const handleDelete = async () => {
     if (!id || isNewDish) return
 
@@ -292,7 +336,8 @@ export const DishDetail: React.FC = () => {
               ← Back to Dishes
             </Link>
             <h1 className="text-3xl font-bold text-gray-900">
-              {isNewDish ? 'Create New Dish' : dishName || 'Edit Dish'}
+              {isRequestMode ? 'Request Dish Addition to Common Database' : 
+               isNewDish ? 'Create New Dish' : dishName || 'Edit Dish'}
             </h1>
           </div>
           <div className="flex space-x-3">
@@ -300,26 +345,26 @@ export const DishDetail: React.FC = () => {
               onClick={handleScale} 
               variant="secondary" 
               size="sm"
-              disabled={scaleMutation.isLoading || isNewDish}
+              disabled={scaleMutation.isPending || isNewDish}
             >
-              {scaleMutation.isLoading ? 'Scaling...' : 'Scale'}
+              {scaleMutation.isPending ? 'Scaling...' : 'Scale'}
             </Button>
             <Button 
               onClick={handleSolveMass} 
               variant="secondary" 
               size="sm"
-              disabled={solveMassMutation.isLoading || isNewDish}
+              disabled={solveMassMutation.isPending || isNewDish}
             >
-              {solveMassMutation.isLoading ? 'Solving...' : 'Solve Mass'}
+              {solveMassMutation.isPending ? 'Solving...' : 'Solve Mass'}
             </Button>
             {!isNewDish && (
               <Button 
                 onClick={handleDelete} 
                 variant="danger" 
                 size="sm"
-                disabled={deleteMutation.isLoading}
+                disabled={deleteMutation.isPending}
               >
-                {deleteMutation.isLoading ? 'Deleting...' : 'Delete'}
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
               </Button>
             )}
           </div>
@@ -512,16 +557,26 @@ export const DishDetail: React.FC = () => {
 
           {/* Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <Button
-              onClick={handleSave}
-              variant="primary"
-              className="w-full"
-              disabled={updateMutation.isLoading || createMutation.isLoading}
-            >
-              {(updateMutation.isLoading || createMutation.isLoading) 
-                ? 'Saving...' 
-                : isNewDish ? 'Create Dish' : 'Save Changes'}
-            </Button>
+            {isRequestMode ? (
+              <Button
+                onClick={handleSubmitRequest}
+                variant="success"
+                className="w-full"
+              >
+                Submit Request
+              </Button>
+            ) : (
+              <Button
+                onClick={handleSave}
+                variant="primary"
+                className="w-full"
+                disabled={updateMutation.isPending || createMutation.isPending}
+              >
+                {(updateMutation.isPending || createMutation.isPending) 
+                  ? 'Saving...' 
+                  : isNewDish ? 'Create Dish' : 'Save Changes'}
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -5,6 +5,8 @@ import { ImageUploader } from '@/components/ImageUploader'
 import { LabelScanProcessor } from '@/components/LabelScanProcessor'
 import { SubmissionDialog } from '@/components/SubmissionDialog'
 import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
 import { toast } from '@/lib/toast/toast'
 import type { LabelScanResponse } from '@/lib/types'
 
@@ -81,6 +83,9 @@ export const Scan: React.FC = () => {
         </p>
       </div>
 
+      {/* Help Button */}
+      <HelpButton page="scan" />
+
       {/* Provider Status Warning */}
       {providerStatus?.fallbackMode && (
         <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-md p-4">
@@ -122,7 +127,7 @@ export const Scan: React.FC = () => {
                   onImagesChange={handleImagesChange}
                   maxFiles={5}
                   maxSizePerFile={10}
-                  disabled={createScanMutation.isLoading}
+                  disabled={createScanMutation.isPending}
                 />
               </div>
 
@@ -147,7 +152,7 @@ export const Scan: React.FC = () => {
                       onChange={(e) => setRegion(e.target.value)}
                       placeholder="e.g., USA, UK, Germany"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled={createScanMutation.isLoading}
+                      disabled={createScanMutation.isPending}
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Helps with language detection and regional product databases
@@ -165,7 +170,7 @@ export const Scan: React.FC = () => {
                       onChange={(e) => setBarcode(e.target.value)}
                       placeholder="e.g., 1234567890123"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      disabled={createScanMutation.isLoading}
+                      disabled={createScanMutation.isPending}
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Manual entry if barcode detection fails
@@ -189,10 +194,10 @@ export const Scan: React.FC = () => {
                   <Button
                     onClick={handleStartScan}
                     variant="primary"
-                    disabled={images.length === 0 || createScanMutation.isLoading}
+                    disabled={images.length === 0 || createScanMutation.isPending}
                     className="px-8"
                   >
-                    {createScanMutation.isLoading ? 'Processing...' : 'Start Scan'}
+                    {createScanMutation.isPending ? 'Processing...' : 'Start Scan'}
                   </Button>
                 </div>
               </div>

@@ -20,7 +20,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({ patientId }) => {
     isActive: true,
   })
 
-  const { data: budget, isLoading, error } = useBudget(patientId)
+  const { data: budget, isLoading } = useBudget(patientId)
   const updateMutation = useUpdateBudget()
   const createMutation = useCreateBudget()
 
@@ -269,9 +269,9 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({ patientId }) => {
             <Button
               onClick={handleSave}
               variant="primary"
-              disabled={updateMutation.isLoading || createMutation.isLoading}
+              disabled={updateMutation.isPending || createMutation.isPending}
             >
-              {(updateMutation.isLoading || createMutation.isLoading) 
+              {(updateMutation.isPending || createMutation.isPending) 
                 ? 'Saving...' 
                 : budget ? 'Update Budget' : 'Create Budget'}
             </Button>

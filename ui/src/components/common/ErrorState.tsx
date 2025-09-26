@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 
 interface ErrorStateProps {
   title?: string
@@ -16,8 +15,6 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   retryLabel,
   className = '',
 }) => {
-  const { t } = useTranslation()
-
   return (
     <div
       className={`text-center py-12 px-4 ${className}`}
@@ -36,7 +33,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       </div>
 
       <h3 className="text-lg font-medium text-gray-900 mb-2">
-        {title || t('common.error')}
+        {title || 'Error'}
       </h3>
 
       <p className="text-gray-500 mb-6 max-w-sm mx-auto">
@@ -78,8 +75,6 @@ export const CriticalFactsErrorState: React.FC<CriticalFactsErrorStateProps> = (
   onRetry,
   className,
 }) => {
-  const { t } = useTranslation()
-
   return (
     <ErrorState
       title="Unable to Load Critical Facts"

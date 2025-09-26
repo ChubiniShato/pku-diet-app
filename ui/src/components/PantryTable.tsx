@@ -294,9 +294,9 @@ export const PantryTable: React.FC<PantryTableProps> = ({
                 onClick={handleCreateItem}
                 variant="primary"
                 size="sm"
-                disabled={createMutation.isLoading}
+                disabled={createMutation.isPending}
               >
-                {createMutation.isLoading ? 'Adding...' : 'Add Item'}
+                {createMutation.isPending ? 'Adding...' : 'Add Item'}
               </Button>
             </div>
           </div>
@@ -444,7 +444,7 @@ export const PantryTable: React.FC<PantryTableProps> = ({
                           <button
                             onClick={() => handleUpdateItem(editingItem)}
                             className="text-green-600 hover:text-green-900"
-                            disabled={updateMutation.isLoading}
+                            disabled={updateMutation.isPending}
                           >
                             Save
                           </button>
@@ -466,7 +466,7 @@ export const PantryTable: React.FC<PantryTableProps> = ({
                           <button
                             onClick={() => handleDeleteItem(item.id)}
                             className="text-red-600 hover:text-red-900"
-                            disabled={deleteMutation.isLoading}
+                            disabled={deleteMutation.isPending}
                           >
                             Delete
                           </button>

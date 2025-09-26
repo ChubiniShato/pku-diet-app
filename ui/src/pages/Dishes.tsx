@@ -3,16 +3,53 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useDishes } from '@/lib/api/dishes'
 import { Button } from '@/components/Button'
+import { HelpButton } from '@/components/HelpButton'
+import { Tooltip } from '@/components/Tooltip'
 import { Pagination } from '@/components/Pagination'
+import { DishCategoryFilter, type DishCategory } from '@/components/DishCategoryFilter'
+import { useAuth } from '@/contexts/AuthContext'
+import { toast } from '@/lib/toast'
 import type { DishFilters } from '@/lib/types'
 
 export const Dishes: React.FC = () => {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const [filters, setFilters] = useState<DishFilters>({
     page: 0,
     size: 12,
   })
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<string>()
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>()
+  const [activeTab, setActiveTab] = useState<'suggested' | 'my-dishes'>('suggested')
+
+  // Define dish categories
+  const dishCategories: DishCategory[] = [
+    {
+      id: 'suggested',
+      name: t('pages.dishes.categories.suggested'),
+      subcategories: [
+        { id: 'georgian-cuisine', name: t('pages.dishes.categories.georgianCuisine'), count: 0 },
+        { id: 'ukrainian-cuisine', name: t('pages.dishes.categories.ukrainianCuisine'), count: 0 },
+        { id: 'caucasian-cuisine', name: t('pages.dishes.categories.caucasianCuisine'), count: 0 },
+        { id: 'russian-cuisine', name: t('pages.dishes.categories.russianCuisine'), count: 0 },
+        { id: 'european-cuisine', name: t('pages.dishes.categories.europeanCuisine'), count: 0 },
+        { id: 'asian-cuisine', name: t('pages.dishes.categories.asianCuisine'), count: 0 },
+        { id: 'mediterranean-cuisine', name: t('pages.dishes.categories.mediterraneanCuisine'), count: 0 },
+        { id: 'american-cuisine', name: t('pages.dishes.categories.americanCuisine'), count: 0 },
+      ]
+    },
+    {
+      id: 'my-dishes',
+      name: t('pages.dishes.categories.myDishes'),
+      subcategories: [
+        { id: 'breakfast', name: t('pages.dishes.categories.breakfast'), count: 0 },
+        { id: 'lunch', name: t('pages.dishes.categories.lunch'), count: 0 },
+        { id: 'dinner', name: t('pages.dishes.categories.dinner'), count: 0 },
+        { id: 'snacks', name: t('pages.dishes.categories.snacks'), count: 0 },
+      ]
+    }
+  ]
 
   const {
     data: dishesResponse,
@@ -42,11 +79,56 @@ export const Dishes: React.FC = () => {
     setFilters(prev => ({ ...prev, page }))
   }
 
+  const handleCategoryChange = (categoryId?: string, subcategoryId?: string) => {
+    setSelectedCategory(categoryId)
+    setSelectedSubcategory(subcategoryId)
+    
+    // Map cuisine subcategories to appropriate filter values
+    let filterCategory = categoryId
+    let filterSubcategory = subcategoryId
+    
+    if (categoryId === 'suggested' && subcategoryId) {
+      // Map cuisine subcategories to backend-compatible values
+      const cuisineMapping: { [key: string]: string } = {
+        'georgian-cuisine': 'georgian',
+        'ukrainian-cuisine': 'ukrainian',
+        'caucasian-cuisine': 'caucasian',
+        'russian-cuisine': 'russian',
+        'european-cuisine': 'european',
+        'asian-cuisine': 'asian',
+        'mediterranean-cuisine': 'mediterranean',
+        'american-cuisine': 'american',
+      }
+      filterSubcategory = cuisineMapping[subcategoryId] || subcategoryId
+    }
+    
+    setFilters(prev => ({
+      ...prev,
+      category: filterCategory,
+      subcategory: filterSubcategory,
+      page: 0,
+    }))
+  }
+
+  const handleTabChange = (tab: 'suggested' | 'my-dishes') => {
+    setActiveTab(tab)
+    setSelectedCategory(tab)
+    setSelectedSubcategory(undefined)
+    setFilters(prev => ({
+      ...prev,
+      category: tab,
+      subcategory: undefined,
+      page: 0,
+    }))
+  }
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch()
     }
   }
+
+
 
   const formatNutrient = (value?: number): string => {
     if (value === null || value === undefined) return '-'
@@ -63,42 +145,100 @@ export const Dishes: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {t('pages.dishes.title')}
-            </h1>
-            <p className="mt-2 text-gray-600">
-              {t('pages.dishes.subtitle')}
-            </p>
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {t('pages.dishes.title')}
+          </h1>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* Admin can still see the original Add Dish button */}
+            {user?.role === 'ADMIN' && (
+              <Tooltip content="Create new dish in the common database">
+                <Link to="/dishes/new">
+                  <Button variant="primary">
+                    {t('common.addDish')}
+                  </Button>
+                </Link>
+              </Tooltip>
+            )}
+            {(user?.role === 'USER' || user?.role === 'PATIENT') && (
+              <>
+                <Tooltip content="Submit dish to be added to the shared database">
+                  <Link to="/dishes/new?request=true">
+                    <Button 
+                      variant="success"
+                    >
+                      {t('pages.dishes.requestToAddToCommon')}
+                    </Button>
+                  </Link>
+                </Tooltip>
+                <Tooltip content="Create personal dish for your own use">
+                  <Link to="/dishes/new">
+                    <Button 
+                      variant="secondary"
+                    >
+                      {t('pages.dishes.addToMyDishes')}
+                    </Button>
+                  </Link>
+                </Tooltip>
+              </>
+            )}
           </div>
-          <Link to="/dishes/new">
-            <Button variant="primary">
-              {t('common.add')} Dish
-            </Button>
-          </Link>
         </div>
       </div>
 
-      {/* Search */}
+      {/* Help Button */}
+      <HelpButton page="dishes" />
+
+      {/* Search and Filters */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-        <div className="flex space-x-4">
-          <div className="flex-1">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Search dishes..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+        <div className="flex flex-col space-y-4">
+          {/* Search Row */}
+          <div className="flex space-x-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={t('common.searchProducts')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <Button onClick={handleSearch} variant="primary">
+              {t('common.search')}
+            </Button>
+            <Button onClick={handleClearSearch} variant="secondary">
+              {t('common.clear')}
+            </Button>
           </div>
-          <Button onClick={handleSearch} variant="primary">
-            {t('common.search')}
-          </Button>
-          <Button onClick={handleClearSearch} variant="secondary">
-            Clear
-          </Button>
+        </div>
+      </div>
+
+      {/* Category Buttons */}
+      <div className="flex justify-center mb-8">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+          <div className="flex space-x-1">
+            <button
+              onClick={() => handleTabChange('suggested')}
+              className={`px-6 py-3 text-sm font-medium rounded-md transition-colors ${
+                activeTab === 'suggested'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              {t('pages.dishes.categories.suggested')}
+            </button>
+            <button
+              onClick={() => handleTabChange('my-dishes')}
+              className={`px-6 py-3 text-sm font-medium rounded-md transition-colors ${
+                activeTab === 'my-dishes'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              {t('pages.dishes.categories.myDishes')}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -130,6 +270,45 @@ export const Dishes: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Subcategory Buttons - Always visible */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <div className="flex flex-wrap gap-3">
+          <span className="text-sm font-medium text-gray-700 mr-4">
+            {t('pages.dishes.categories.filterBy')}
+          </span>
+          {dishCategories
+            .find(cat => cat.id === activeTab)
+            ?.subcategories.map((subcategory) => (
+              <button
+                key={subcategory.id}
+                onClick={() => handleCategoryChange(activeTab, subcategory.id)}
+                className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                  selectedCategory === activeTab && selectedSubcategory === subcategory.id
+                    ? 'bg-blue-600 text-white border-blue-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                }`}
+              >
+                {subcategory.name}
+                {subcategory.count !== undefined && (
+                  <span className="ml-2 text-xs opacity-75">
+                    ({subcategory.count})
+                  </span>
+                )}
+              </button>
+            ))}
+          <button
+            onClick={() => handleCategoryChange(activeTab, undefined)}
+            className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+              selectedCategory === activeTab && !selectedSubcategory
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+            }`}
+          >
+            {t('pages.dishes.categories.all')}
+          </button>
+        </div>
+      </div>
 
       {/* Dishes Grid */}
       {dishesResponse && (
@@ -171,8 +350,8 @@ export const Dishes: React.FC = () => {
                     )}
                     <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
                       {dish.category && <span>{dish.category}</span>}
-                      <span>{dish.servings} serving{dish.servings !== 1 ? 's' : ''}</span>
-                      <span>{dish.ingredients.length} ingredient{dish.ingredients.length !== 1 ? 's' : ''}</span>
+                    <span>{dish.servings} serving{dish.servings !== 1 ? 's' : ''}</span>
+                    <span>{dish.ingredients.length} ingredient{dish.ingredients.length !== 1 ? 's' : ''}</span>
                     </div>
                   </div>
 
@@ -192,19 +371,19 @@ export const Dishes: React.FC = () => {
                       <div className="font-medium text-gray-900">
                         {formatNutrient(dish.totalProtein / dish.servings)}g
                       </div>
-                      <div className="text-gray-600">Protein</div>
+                    <div className="text-gray-600">Protein</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-medium text-gray-900">
+                      {formatNutrient(dish.totalCalories / dish.servings)}
                     </div>
-                    <div className="text-center">
-                      <div className="font-medium text-gray-900">
-                        {formatNutrient(dish.totalCalories / dish.servings)}
-                      </div>
-                      <div className="text-gray-600">kcal</div>
+                    <div className="text-gray-600">kcal</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="font-medium text-gray-900">
+                      {formatNutrient(dish.totalPhenylalanine)}mg
                     </div>
-                    <div className="text-center">
-                      <div className="font-medium text-gray-900">
-                        {formatNutrient(dish.totalPhenylalanine)}mg
-                      </div>
-                      <div className="text-gray-600">Total PHE</div>
+                    <div className="text-gray-600">Total PHE</div>
                     </div>
                   </div>
                 </Link>
@@ -224,7 +403,7 @@ export const Dishes: React.FC = () => {
               <div className="mt-6">
                 <Link to="/dishes/new">
                   <Button variant="primary">
-                    {t('common.add')} Dish
+                    {t('common.addDish')}
                   </Button>
                 </Link>
               </div>
@@ -243,6 +422,7 @@ export const Dishes: React.FC = () => {
           )}
         </>
       )}
+
     </div>
   )
 }
