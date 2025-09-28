@@ -1,24 +1,32 @@
-# --- Build stage (Maven + JDK) ---
+# ---- Build stage ----
 FROM maven:3.9.9-eclipse-temurin-21 AS build
-WORKDIR /workspace
-COPY pom.xml .
-RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests dependency:go-offline
-COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 mvn -q -e -DskipTests -Dspotless.check.skip=true package
+WORKDIR /src
+COPY pom.xml ./
+RUN --mount=type=cache,target=/root/.m2 mvn -q -DskipTests dependency:go-offline
 
-# --- Run stage (Distroless for security) ---
+COPY src ./src
+RUN --mount=type=cache,target=/root/.m2 mvn -q -DskipTests -Dspotless.check.skip=true -Dproject.build.outputTimestamp=2020-01-01T00:00:00Z package
+
+# ---- Runtime stage ----
 FROM gcr.io/distroless/java21-debian12
 WORKDIR /app
-COPY --from=build /workspace/target/api-0.0.1-SNAPSHOT.jar app.jar
-# OpenAPI JSON is optional for now
-# COPY --from=build /workspace/target/openapi.json /app/static/openapi.json
-
-# Create non-root user (distroless images handle this differently)
+COPY --from=build /src/target/*.jar /app/app.jar
 USER 65534:65534
-
 EXPOSE 8080
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=50.0 -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Duser.language=en -Duser.country=US -Djava.security.egd=file:/dev/./urandom"
-ENV LANG=C.UTF-8
-ENV LC_ALL=C.UTF-8
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# OCI Labels for traceability
+LABEL org.opencontainers.image.source="https://github.com/chubini/pku-diet-app"
+LABEL org.opencontainers.image.description="PKU Diet App API"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
+# JVM Tuning for containers
+ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75 \
+    -XX:+UseContainerSupport \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:HeapDumpPath=/tmp \
+    -XX:+ExitOnOutOfMemoryError \
+    -Dfile.encoding=UTF-8 \
+    -Duser.timezone=UTC \
+    -Djava.security.egd=file:/dev/./urandom"
+
+ENTRYPOINT ["java","-jar","/app/app.jar"]

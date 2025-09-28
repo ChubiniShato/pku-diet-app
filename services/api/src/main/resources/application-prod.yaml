@@ -2,8 +2,6 @@
 # Rev C compliant production hardening
 
 spring:
-  profiles:
-    active: prod
     
   # Database Configuration - Production Tuned
   datasource:
@@ -49,6 +47,19 @@ spring:
     out-of-order: false
     baseline-on-migrate: false
     
+  # Redis Configuration (Feature Toggle)
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
   # Lifecycle - Graceful Shutdown
   lifecycle:
     timeout-per-shutdown-phase: 30s
@@ -142,3 +153,8 @@ app:
   idempotency:
     enabled: true
     ttl-seconds: 3600            # 1 hour TTL for duplicate detection
+
+# PKU Application Configuration
+pku:
+  ratelimit:
+    distributed: ${PKU_RATELIMIT_DISTRIBUTED:false}  # Feature toggle for Redis

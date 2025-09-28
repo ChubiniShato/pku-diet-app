@@ -52,3 +52,10 @@ Thumbs.db
 # Local docker/test files
 # =========================
 test-compose.yml
+docker-compose.override.yml
+
+# =========================
+# Docker volumes
+# =========================
+pgdata/
+redisdata/

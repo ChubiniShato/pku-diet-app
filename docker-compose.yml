@@ -1,84 +1,59 @@
+version: "3.8"
 services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: ${DB_NAME:-pku}
-      POSTGRES_USER: ${DB_USER:-pku}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-pku}
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
-    ports:
-      - "${DB_PORT:-5432}:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./services/api/src/main/resources/db/migration:/docker-entrypoint-initdb.d
-    # Temporarily disable healthcheck for faster startup
-    # healthcheck:
-    #   test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-pku} -d ${DB_NAME:-pku}"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-    #   start_period: 30s
-    restart: unless-stopped
+      POSTGRES_DB: pku
+      POSTGRES_USER: pku
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pku}
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pku} -d ${POSTGRES_DB:-pku}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server","--save","60","1","--loglevel","warning"]
+    volumes: 
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   api:
     build:
-      context: ./services/api
+      context: services/api
       dockerfile: Dockerfile
-    environment:
-      # Database
-      DB_URL: ${DB_URL:-jdbc:postgresql://db:5432/pku?characterEncoding=UTF-8&useUnicode=true}
-      DB_USER: ${DB_USER:-pku}
-      DB_PASSWORD: ${DB_PASSWORD:-pku}
-      # Application
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
-      SERVER_PORT: 8080
-      # External services (mock-friendly)
-      FCM_ENABLED: ${FCM_ENABLED:-false}
-      SENDGRID_ENABLED: ${SENDGRID_ENABLED:-false}
-      TWILIO_ENABLED: ${TWILIO_ENABLED:-false}
-      OFF_API_ENABLED: ${OFF_API_ENABLED:-false}
-      S3_ENABLED: ${S3_ENABLED:-false}
-      # Defaults
-      REGION_DEFAULT: ${REGION_DEFAULT:-US}
-      LOCALE_DEFAULT: ${LOCALE_DEFAULT:-en_US}
-      WEEK_START_DEFAULT: ${WEEK_START_DEFAULT:-MONDAY}
     depends_on:
-      - db
-    ports:
-      - "${SERVER_PORT:-8080}:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-    restart: unless-stopped
-    volumes:
-      - ./logs:/app/logs
-
-  ui:
-    build:
-      context: ./ui
-      dockerfile: Dockerfile
-    environment:
-      # API Configuration
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api/v1}
-      # App Configuration
-      NODE_ENV: production
-    depends_on:
-      api:
+      db: 
         condition: service_healthy
-    ports:
-      - "${UI_PORT:-80}:80"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      redis: 
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod,docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pku
+      SPRING_DATASOURCE_USERNAME: pku
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pku}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      # JWT/Secrets პროდში მიეცემა secrets manager-იდან, აქ .env
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET:-change-me}
+    ports: 
+      - "8080:8080"
     restart: unless-stopped
-    profiles:
-      - fullstack  # Only start UI with fullstack profile
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
 
 volumes:
-  db_data:
+  pgdata:
+  redisdata:
