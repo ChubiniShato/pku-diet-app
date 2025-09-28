@@ -71,7 +71,12 @@ public class ProductControllerIntegrationTest {
     MockMultipartFile file =
         new MockMultipartFile("file", "products.csv", "text/csv", csvContent.getBytes());
 
-    mockMvc.perform(multipart("/api/v1/products/upload-csv").file(file)).andExpect(status().isOk());
+    mockMvc
+        .perform(
+            multipart("/api/v1/products/upload-csv")
+                .file(file)
+                .header("Idempotency-Key", "test-key-123"))
+        .andExpect(status().isOk());
   }
 
   @Test
@@ -81,7 +86,10 @@ public class ProductControllerIntegrationTest {
             "file", "products.txt", "application/pdf", "invalid content".getBytes());
 
     mockMvc
-        .perform(multipart("/api/v1/products/upload-csv").file(file))
+        .perform(
+            multipart("/api/v1/products/upload-csv")
+                .file(file)
+                .header("Idempotency-Key", "test-key-456"))
         .andExpect(status().isBadRequest())
         .andExpect(content().string(org.hamcrest.Matchers.containsString("File validation error")));
   }

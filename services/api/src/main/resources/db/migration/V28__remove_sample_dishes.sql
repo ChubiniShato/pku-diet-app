@@ -13,3 +13,4 @@ DELETE FROM "dish_ingredient" WHERE "dish_id" = 'b2c3d4e5-f6a7-4901-bcde-2345678
 DELETE FROM "dish_allergen" WHERE "dish_id" = 'a1b2c3d4-e5f6-7890-abcd-123456789abc';
 DELETE FROM "dish_allergen" WHERE "dish_id" = 'b2c3d4e5-f6a7-4901-bcde-234567890def';
 
+

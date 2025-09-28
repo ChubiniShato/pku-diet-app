@@ -204,6 +204,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
+          <!-- Fix Windows hostname duplicate class issue -->
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
           <!-- Temporarily skip failing business logic tests to unblock authentication PR -->
           <excludes>
             <exclude>**/ScoringEngineTest.java</exclude>

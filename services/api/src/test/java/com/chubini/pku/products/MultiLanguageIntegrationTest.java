@@ -213,7 +213,8 @@ class MultiLanguageIntegrationTest {
         .perform(
             MockMvcRequestBuilders.multipart("/api/v1/products/upload-translations")
                 .file(file)
-                .param("locale", "ka"))
+                .param("locale", "ka")
+                .header("Idempotency-Key", "test-translations-123"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locale").value("ka"))
         .andExpect(jsonPath("$.status").value("ok"))
@@ -232,7 +233,8 @@ class MultiLanguageIntegrationTest {
         .perform(
             MockMvcRequestBuilders.multipart("/api/v1/products/upload-translations")
                 .file(fileWithErrors)
-                .param("locale", "ka"))
+                .param("locale", "ka")
+                .header("Idempotency-Key", "test-translations-456"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locale").value("ka"))
         .andExpect(jsonPath("$.status").value("partial"))
