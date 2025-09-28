@@ -15,7 +15,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,6 +54,7 @@ public class SecurityConfig {
                     .requestMatchers(
                         "/actuator/health",
                         "/actuator/info",
+                        "/actuator/prometheus",
                         "/swagger-ui/**",
                         "/swagger-ui.html",
                         "/v3/api-docs/**",
@@ -66,7 +66,7 @@ public class SecurityConfig {
                         "/error")
                     .permitAll()
 
-                    // API endpoints - require authentication
+                    // API endpoints - require authentication (except public ones above)
                     .requestMatchers("/api/v1/**")
                     .authenticated()
 
@@ -74,8 +74,19 @@ public class SecurityConfig {
                     .anyRequest()
                     .authenticated())
         .authenticationProvider(authenticationProvider())
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        // TODO: Add security headers in PR#5 - temporarily removed due to Spring Security API compatibility
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .headers(
+            h ->
+                h.contentSecurityPolicy(
+                        c ->
+                            c.policyDirectives(
+                                "default-src 'self'; base-uri 'self'; img-src 'self' data:; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'"))
+                    .httpStrictTransportSecurity(
+                        hsts ->
+                            hsts.includeSubDomains(true).preload(true).maxAgeInSeconds(31536000))
+                    .referrerPolicy(r -> r.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                    .frameOptions(f -> f.deny())
+                    .contentTypeOptions(c -> c.and()));
 
     return http.build();
   }

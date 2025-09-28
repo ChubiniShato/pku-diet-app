@@ -272,6 +272,57 @@ npm install -g k6  # or follow: https://k6.io/docs/get-started/installation/
 k6 run perf/k6/menu-generation-test.js
 ```
 
+## 🚀 Observability Quickstart
+
+### 1. Start the Stack
+```bash
+# Start the complete observability stack
+docker compose -f docker-compose.observability.yml up -d
+
+# Check all services are running
+docker compose -f docker-compose.observability.yml ps
+```
+
+### 2. Verify Services
+```bash
+# Run health check script
+./scripts/health-check.sh
+
+# Or check manually:
+curl http://localhost:8080/actuator/health
+curl http://localhost:9090/api/v1/targets
+curl http://localhost:3000/login
+```
+
+### 3. Check Metrics
+- **API Metrics**: http://localhost:8080/actuator/prometheus
+- **Prometheus UI**: http://localhost:9090/targets
+- **Grafana**: http://localhost:3000 (admin/admin)
+
+### 4. Run Performance Tests
+```bash
+# Linux (with host network)
+docker run --rm -e BASE_URL=http://api:8080 \
+  --network host -v "$PWD/k6:/scripts" grafana/k6 run /scripts/load-test.js
+
+# macOS/Windows (without host network)
+docker run --rm -e BASE_URL=http://host.docker.internal:8080 \
+  -v "$PWD/k6:/scripts" grafana/k6 run /scripts/load-test.js
+
+# Local k6 installation
+k6 run k6/load-test.js
+```
+
+### 5. Monitor Performance
+- **Grafana**: Import dashboards from `ops/dashboards/`
+- **Prometheus**: Query metrics like `http_server_requests_seconds_count`
+- **SLOs**: p95 < 500ms, error rate < 1%
+
+### Troubleshooting
+- **Metrics not working**: Check `management.server.address: 0.0.0.0` in application-docker.yaml
+- **k6 volume issues**: Ensure `k6/load-test.js` exists and volume mapping is correct
+- **Grafana connection**: Verify datasource URL is `http://prometheus:9090`
+
 ---
 
 ## 🖼 Architecture

@@ -87,13 +87,12 @@ server:
 management:
   server:
     port: 8081
-    address: 127.0.0.1           # Critical: Bind to localhost only
+    address: 0.0.0.0           # Change from 127.0.0.1 to 0.0.0.0
   endpoints:
     web:
       base-path: /actuator
       exposure:
-        include: "health,info"    # Only essential endpoints
-  endpoint:
+        include: "health,info,metrics,prometheus"    # Essential + metrics endpoints  endpoint:
     health:
       probes:
         enabled: true
@@ -102,8 +101,8 @@ management:
           include: livenessState,diskSpace
         readiness:
           include: readinessState,db
-      show-details: "never"       # No internal details in prod
-      show-components: "never"
+      show-details: "when_authorized"  # Only for authorized users in prod
+      show-components: "when_authorized"
   health:
     livenessstate:
       enabled: true

@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: "classpath:application-base.yaml"
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/pku?characterEncoding=UTF-8&useUnicode=true}
     username: ${DB_USER:pku}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Console appender with simple formatting -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- File appender for production -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/pku-api.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>logs/pku-api.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <maxFileSize>100MB</maxFileSize>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Root logger configuration -->
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
+  </root>
+
+  <!-- Application specific loggers -->
+  <logger name="com.chubini.pku" level="INFO"/>
+  <logger name="org.springframework.web" level="WARN"/>
+  <logger name="org.hibernate" level="WARN"/>
+  <logger name="org.springframework.security" level="WARN"/>
+  
+  <!-- Micrometer metrics logging -->
+  <logger name="io.micrometer" level="INFO"/>
+  
+  <!-- Profile-specific configurations -->
+  <springProfile name="!prod">
+    <root level="DEBUG">
+      <appender-ref ref="STDOUT"/>
+    </root>
+  </springProfile>
+  
+  <springProfile name="prod">
+    <root level="INFO">
+      <appender-ref ref="STDOUT"/>
+      <appender-ref ref="FILE"/>
+    </root>
+  </springProfile>
+</configuration>

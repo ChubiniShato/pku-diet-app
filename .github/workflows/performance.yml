@@ -1,0 +1,48 @@
+name: Performance Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: [ 'services/api/**' ]
+  pull_request:
+    branches: [ main, develop ]
+    paths: [ 'services/api/**' ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: performance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start services
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.observability.yml up -d
+          sleep 30
+
+      - name: Wait for API
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:8080/actuator/health; do sleep 2; done'
+
+      - name: Get compose network
+        id: net
+        run: echo "name=$(docker network ls --format '{{.Name}}' | awk '/_default$/ {print $1; exit}')" >> $GITHUB_OUTPUT
+
+      - name: Run k6 tests
+        run: |
+          docker run --rm -v $PWD:/scripts -w /scripts \
+            --network ${{ steps.net.outputs.name }} \
+            grafana/k6:latest run scripts/perf/pku-smoke.js \
+            --env BASE_URL=http://api:8080
+
+      - name: Cleanup
+        if: always()
+        run: docker compose -f docker-compose.yml -f docker-compose.observability.yml down -v

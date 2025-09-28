@@ -1,0 +1,22 @@
+# Base configuration shared across all profiles
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: pku-api
+      environment: ${ENVIRONMENT:local}
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 0.1
+
+# Error handling configuration
+pku:
+  errors:
+    db:
+      as503: true  # Treat DB errors as 503 Service Unavailable
