@@ -208,8 +208,8 @@ class PantryAwareServiceTest {
         PriceEntry.builder()
             .product(testProduct)
             .itemType(PantryItem.ItemType.PRODUCT)
-            .pricePerUnit(BigDecimal.valueOf(1.00))
-            .unitSizeGrams(BigDecimal.valueOf(100))
+            .pricePerUnit(BigDecimal.valueOf(1.00)) // per 100g
+            .unitSizeGrams(BigDecimal.valueOf(100)) // 100g unit
             .build();
 
     when(priceRepository.findBestPriceForProduct(testProduct)).thenReturn(Optional.of(priceEntry));
@@ -219,7 +219,7 @@ class PantryAwareServiceTest {
         pantryAwareService.getCurrentCost(testProduct, BigDecimal.valueOf(100), testPatient);
 
     // Then
-    assertThat(cost).isEqualByComparingTo(BigDecimal.valueOf(10.00)); // 100 * 0.10
+    assertThat(cost).isEqualByComparingTo(BigDecimal.valueOf(1.00)); // 100g * (1.00/100g) = 1.00
   }
 
   @Test

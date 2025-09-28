@@ -5,12 +5,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.chubini.pku.menus.MealSlot;
 import com.chubini.pku.menus.MenuDay;
 import com.chubini.pku.menus.MenuDayRepository;
+import com.chubini.pku.menus.MenuEntry;
 import com.chubini.pku.patients.PatientProfile;
+import com.chubini.pku.products.Product;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -186,14 +190,42 @@ class VarietyEngineTest {
 
   // Helper methods to create test data
   private List<MenuDay> createMenuDaysWithItem(String itemName, LocalDate date) {
-    // This would create a MenuDay with MealSlots containing the specified item
-    // Simplified for testing - in reality would need full object graph
+    // Create a MenuDay with MealSlots containing the specified item
+    List<MealSlot> mealSlots = new ArrayList<>();
+
+    // Create a Product with the desired name
+    Product product =
+        Product.builder()
+            .id(UUID.randomUUID())
+            .productName(itemName)
+            .phenylalanine(BigDecimal.valueOf(100))
+            .protein(BigDecimal.valueOf(5))
+            .kilocalories(BigDecimal.valueOf(200))
+            .fats(BigDecimal.valueOf(2))
+            .category("vegetables")
+            .build();
+
+    MealSlot lunchSlot =
+        MealSlot.builder()
+            .id(UUID.randomUUID())
+            .slotName(MealSlot.SlotName.LUNCH)
+            .menuEntries(
+                List.of(
+                    MenuEntry.builder()
+                        .id(UUID.randomUUID())
+                        .entryType(MenuEntry.EntryType.PRODUCT)
+                        .product(product)
+                        .plannedServingGrams(BigDecimal.valueOf(100))
+                        .build()))
+            .build();
+    mealSlots.add(lunchSlot);
+
     MenuDay menuDay =
         MenuDay.builder()
             .id(UUID.randomUUID())
             .patient(testPatient)
             .date(date)
-            .mealSlots(new ArrayList<>())
+            .mealSlots(mealSlots)
             .build();
 
     return List.of(menuDay);
@@ -210,15 +242,48 @@ class VarietyEngineTest {
   private List<MenuDay> createWeekWithVariety() {
     List<MenuDay> days = new ArrayList<>();
     LocalDate startDate = testDate.minusDays(6);
+    String[] items = {"Apple", "Banana", "Orange", "Grape", "Strawberry", "Blueberry", "Cherry"};
 
     // Create 7 days with different items each day
     for (int i = 0; i < 7; i++) {
+      LocalDate dayDate = startDate.plusDays(i);
+
+      // Create meal slots with unique items
+      List<MealSlot> mealSlots = new ArrayList<>();
+
+      // Create a Product with the desired name
+      Product product =
+          Product.builder()
+              .id(UUID.randomUUID())
+              .productName(items[i])
+              .phenylalanine(BigDecimal.valueOf(50))
+              .protein(BigDecimal.valueOf(3))
+              .kilocalories(BigDecimal.valueOf(150))
+              .fats(BigDecimal.valueOf(1))
+              .category("fruits")
+              .build();
+
+      MealSlot lunchSlot =
+          MealSlot.builder()
+              .id(UUID.randomUUID())
+              .slotName(MealSlot.SlotName.LUNCH)
+              .menuEntries(
+                  List.of(
+                      MenuEntry.builder()
+                          .id(UUID.randomUUID())
+                          .entryType(MenuEntry.EntryType.PRODUCT)
+                          .product(product)
+                          .plannedServingGrams(BigDecimal.valueOf(100))
+                          .build()))
+              .build();
+      mealSlots.add(lunchSlot);
+
       MenuDay day =
           MenuDay.builder()
               .id(UUID.randomUUID())
               .patient(testPatient)
-              .date(startDate.plusDays(i))
-              .mealSlots(new ArrayList<>())
+              .date(dayDate)
+              .mealSlots(mealSlots)
               .build();
       days.add(day);
     }
@@ -232,12 +297,47 @@ class VarietyEngineTest {
 
     // Create 7 days with some repeated items within 2 days
     for (int i = 0; i < 7; i++) {
+      LocalDate dayDate = startDate.plusDays(i);
+
+      // Create meal slots with menu entries
+      List<MealSlot> mealSlots = new ArrayList<>();
+
+      // Add lunch slot with repeated items
+      if (i < 3) {
+        // Days 0, 1, 2: repeat "Potato" within 2 days (violation)
+        Product product =
+            Product.builder()
+                .id(UUID.randomUUID())
+                .productName("Potato")
+                .phenylalanine(BigDecimal.valueOf(100))
+                .protein(BigDecimal.valueOf(5))
+                .kilocalories(BigDecimal.valueOf(200))
+                .fats(BigDecimal.valueOf(2))
+                .category("vegetables")
+                .build();
+
+        MealSlot lunchSlot =
+            MealSlot.builder()
+                .id(UUID.randomUUID())
+                .slotName(MealSlot.SlotName.LUNCH)
+                .menuEntries(
+                    List.of(
+                        MenuEntry.builder()
+                            .id(UUID.randomUUID())
+                            .entryType(MenuEntry.EntryType.PRODUCT)
+                            .product(product)
+                            .plannedServingGrams(BigDecimal.valueOf(100))
+                            .build()))
+                .build();
+        mealSlots.add(lunchSlot);
+      }
+
       MenuDay day =
           MenuDay.builder()
               .id(UUID.randomUUID())
               .patient(testPatient)
-              .date(startDate.plusDays(i))
-              .mealSlots(new ArrayList<>())
+              .date(dayDate)
+              .mealSlots(mealSlots)
               .build();
       days.add(day);
     }

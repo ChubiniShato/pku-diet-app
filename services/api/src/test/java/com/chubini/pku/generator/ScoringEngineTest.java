@@ -63,7 +63,7 @@ class ScoringEngineTest {
             .fats(BigDecimal.valueOf(2))
             .build();
 
-    // Create test candidate
+    // Create test candidate with calculated nutrition values
     testCandidate =
         FoodCandidate.builder()
             .entryType(MenuEntry.EntryType.PRODUCT)
@@ -71,6 +71,11 @@ class ScoringEngineTest {
             .suggestedServingGrams(BigDecimal.valueOf(100))
             .costPerServing(BigDecimal.valueOf(2.50))
             .availableInPantry(false)
+            // Calculate nutrition for 100g serving
+            .calculatedPheMg(BigDecimal.valueOf(100)) // 100mg/100g * 100g / 100 = 100mg
+            .calculatedProteinG(BigDecimal.valueOf(5)) // 5g/100g * 100g / 100 = 5g
+            .calculatedKcal(200) // 200kcal/100g * 100g / 100 = 200kcal
+            .calculatedFatG(BigDecimal.valueOf(2)) // 2g/100g * 100g / 100 = 2g
             .build();
   }
 
@@ -105,6 +110,11 @@ class ScoringEngineTest {
             .suggestedServingGrams(BigDecimal.valueOf(100))
             .costPerServing(BigDecimal.valueOf(2.50))
             .availableInPantry(false)
+            // Calculate nutrition for 100g serving
+            .calculatedPheMg(BigDecimal.valueOf(500)) // 500mg/100g * 100g / 100 = 500mg
+            .calculatedProteinG(BigDecimal.valueOf(5)) // 5g/100g * 100g / 100 = 5g
+            .calculatedKcal(200) // 200kcal/100g * 100g / 100 = 200kcal
+            .calculatedFatG(BigDecimal.valueOf(2)) // 2g/100g * 100g / 100 = 2g
             .build();
 
     // When
@@ -114,8 +124,9 @@ class ScoringEngineTest {
         scoringEngine.calculateScore(
             highPheCandidate, testSlot, testNorm, BigDecimal.valueOf(25), 0);
 
-    // Then - high PHE should have lower (worse) score due to penalties
-    assertThat(highPheScore.compareTo(normalScore)).isLessThan(0);
+    // Then - high PHE should have higher penalty (worse score)
+    // Both candidates exceed 25% threshold, but highPhe has much higher excess
+    assertThat(highPheScore).isGreaterThan(normalScore); // Higher penalty = worse score
   }
 
   @Test
@@ -138,6 +149,11 @@ class ScoringEngineTest {
             .suggestedServingGrams(BigDecimal.valueOf(100))
             .costPerServing(BigDecimal.valueOf(2.50))
             .availableInPantry(false)
+            // Calculate nutrition for 100g serving
+            .calculatedPheMg(BigDecimal.valueOf(50)) // 50mg/100g * 100g / 100 = 50mg
+            .calculatedProteinG(BigDecimal.valueOf(25)) // 25g/100g * 100g / 100 = 25g
+            .calculatedKcal(200) // 200kcal/100g * 100g / 100 = 200kcal
+            .calculatedFatG(BigDecimal.valueOf(2)) // 2g/100g * 100g / 100 = 2g
             .build();
 
     // When
@@ -147,8 +163,9 @@ class ScoringEngineTest {
         scoringEngine.calculateScore(
             highProteinCandidate, testSlot, testNorm, BigDecimal.valueOf(25), 0);
 
-    // Then - high protein should have lower (worse) score due to penalties
-    assertThat(highProteinScore.compareTo(normalScore)).isLessThan(0);
+    // Then - high protein should have higher penalty (worse score)
+    // Both candidates exceed 25% threshold, but highProtein has much higher excess
+    assertThat(highProteinScore).isGreaterThan(normalScore); // Higher penalty = worse score
   }
 
   @Test
@@ -161,6 +178,11 @@ class ScoringEngineTest {
             .suggestedServingGrams(BigDecimal.valueOf(100))
             .costPerServing(BigDecimal.valueOf(15.00)) // Expensive
             .availableInPantry(false)
+            // Calculate nutrition for 100g serving (same as testCandidate)
+            .calculatedPheMg(BigDecimal.valueOf(100))
+            .calculatedProteinG(BigDecimal.valueOf(5))
+            .calculatedKcal(200)
+            .calculatedFatG(BigDecimal.valueOf(2))
             .build();
 
     // When
@@ -170,8 +192,9 @@ class ScoringEngineTest {
         scoringEngine.calculateScore(
             expensiveCandidate, testSlot, testNorm, BigDecimal.valueOf(25), 0);
 
-    // Then - expensive should have lower (worse) score due to cost penalty
-    assertThat(expensiveScore.compareTo(normalScore)).isLessThan(0);
+    // Then - expensive should have higher penalty (worse score) due to cost penalty
+    // Both candidates have cost penalties, but expensive has much higher cost percentage
+    assertThat(expensiveScore).isGreaterThan(normalScore); // Higher penalty = worse score
   }
 
   @Test
@@ -183,8 +206,8 @@ class ScoringEngineTest {
         scoringEngine.calculateScore(
             testCandidate, testSlot, testNorm, BigDecimal.valueOf(25), 1); // Recent repeat
 
-    // Then - repeat should have lower (worse) score due to repeat penalty
-    assertThat(repeatScore.compareTo(noRepeatScore)).isLessThan(0);
+    // Then - repeat should have higher (worse) score due to repeat penalty
+    assertThat(repeatScore).isGreaterThan(noRepeatScore);
   }
 
   @Test
@@ -211,6 +234,11 @@ class ScoringEngineTest {
             .costPerServing(BigDecimal.valueOf(2.50))
             .availableInPantry(true) // Available in pantry
             .pantryQuantityAvailable(BigDecimal.valueOf(500))
+            // Calculate nutrition for 100g serving (same as testCandidate)
+            .calculatedPheMg(BigDecimal.valueOf(100))
+            .calculatedProteinG(BigDecimal.valueOf(5))
+            .calculatedKcal(200)
+            .calculatedFatG(BigDecimal.valueOf(2))
             .build();
 
     // When
@@ -221,6 +249,6 @@ class ScoringEngineTest {
             pantryCandidate, testSlot, testNorm, BigDecimal.valueOf(25), 0);
 
     // Then - pantry item should have better score (pantry preference bonus)
-    assertThat(pantryScore.compareTo(normalScore)).isGreaterThanOrEqualTo(0);
+    assertThat(pantryScore).isLessThanOrEqualTo(normalScore);
   }
 }

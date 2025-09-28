@@ -46,8 +46,10 @@ public class NormsValidator {
     ValidationLevel level = getHighestSeverity(plannedResult.level(), consumedResult.level());
 
     Map<String, BigDecimal> combinedDeltas = new HashMap<>();
-    combinedDeltas.putAll(plannedResult.deltas());
-    combinedDeltas.putAll(consumedResult.deltas());
+    // Add planned deltas with "planned_" prefix
+    plannedResult.deltas().forEach((key, value) -> combinedDeltas.put("planned_" + key, value));
+    // Add consumed deltas with "consumed_" prefix
+    consumedResult.deltas().forEach((key, value) -> combinedDeltas.put("consumed_" + key, value));
 
     List<String> combinedMessages = new ArrayList<>();
     combinedMessages.addAll(plannedResult.messages());

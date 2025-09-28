@@ -43,6 +43,16 @@ management:
 pku:
   ratelimit:
     enabled: false
+  scoring:
+    minScore: 0
+    repeatPenalty: 1
+    proteinPenalty: 2
+    phePenalty: 2
+    pricePenalty: 1
+  variety:
+    lookbackDays: 7
+  pricing:
+    unit: kg
 
 security:
   jwt:

@@ -2,6 +2,7 @@ package com.chubini.pku.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -106,9 +107,14 @@ class NormsValidatorTest {
 
     // Then
     assertThat(result.level()).isEqualTo(ValidationResult.ValidationLevel.BREACH);
-    assertThat(result.deltas()).containsKey("phe");
-    assertThat(result.deltas().get("phe")).isEqualTo(new BigDecimal("50.00")); // 350 - 300
+    assertThat(result.deltas()).containsKey("planned_phe");
+    assertThat(result.deltas().get("planned_phe"))
+        .isEqualByComparingTo(new BigDecimal("50.00")); // 350 - 300
     assertThat(result.messages()).anyMatch(msg -> msg.contains("PHE") && msg.contains("exceeds"));
+
+    // Verify mock interactions
+    verify(nutritionCalculator).calculatePlannedTotals(any(MenuDay.class));
+    verify(nutritionCalculator).calculateConsumedTotals(any(MenuDay.class));
   }
 
   @Test
@@ -133,8 +139,9 @@ class NormsValidatorTest {
 
     // Then
     assertThat(result.level()).isEqualTo(ValidationResult.ValidationLevel.BREACH);
-    assertThat(result.deltas()).containsKey("protein");
-    assertThat(result.deltas().get("protein")).isEqualTo(new BigDecimal("3.00")); // 18 - 15
+    assertThat(result.deltas()).containsKey("planned_protein");
+    assertThat(result.deltas().get("planned_protein"))
+        .isEqualByComparingTo(new BigDecimal("3.00")); // 18 - 15
     assertThat(result.messages())
         .anyMatch(msg -> msg.contains("protein") && msg.contains("exceeds"));
   }
@@ -161,8 +168,9 @@ class NormsValidatorTest {
 
     // Then
     assertThat(result.level()).isEqualTo(ValidationResult.ValidationLevel.BREACH);
-    assertThat(result.deltas()).containsKey("kcal");
-    assertThat(result.deltas().get("kcal")).isEqualTo(new BigDecimal("-200.00")); // 1600 - 1800
+    assertThat(result.deltas()).containsKey("planned_kcal");
+    assertThat(result.deltas().get("planned_kcal"))
+        .isEqualByComparingTo(new BigDecimal("-200.00")); // 1600 - 1800
     assertThat(result.messages()).anyMatch(msg -> msg.contains("Calorie") && msg.contains("below"));
   }
 
@@ -189,8 +197,9 @@ class NormsValidatorTest {
 
     // Then
     assertThat(result.level()).isEqualTo(ValidationResult.ValidationLevel.WARN);
-    assertThat(result.deltas()).containsKey("fat");
-    assertThat(result.deltas().get("fat")).isEqualTo(new BigDecimal("10.00")); // 70 - 60
+    assertThat(result.deltas()).containsKey("planned_fat");
+    assertThat(result.deltas().get("planned_fat"))
+        .isEqualByComparingTo(new BigDecimal("10.00")); // 70 - 60
     assertThat(result.messages()).anyMatch(msg -> msg.contains("Fat") && msg.contains("exceeds"));
   }
 
