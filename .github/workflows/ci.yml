@@ -43,20 +43,28 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Run unit tests
-      run: ./mvnw test -q
+      run: |
+        cd services/api
+        mvn test -q
 
     - name: Run integration tests
-      run: ./mvnw verify -Pintegration -q
+      run: |
+        cd services/api
+        mvn verify -Pintegration -q
       env:
         DB_URL: jdbc:postgresql://localhost:5432/pku_test
         DB_USER: pku
         DB_PASSWORD: pku
 
     - name: Build application
-      run: ./mvnw package -DskipTests -q
+      run: |
+        cd services/api
+        mvn package -DskipTests -q
 
     - name: Generate OpenAPI spec
-      run: ./mvnw springdoc-openapi:generate -q
+      run: |
+        cd services/api
+        mvn springdoc-openapi:generate -q
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
@@ -96,7 +104,9 @@ jobs:
         cache: maven
 
     - name: Run OWASP Dependency Check
-      run: ./mvnw org.owasp:dependency-check-maven:check -q
+      run: |
+        cd services/api
+        mvn org.owasp:dependency-check-maven:check -q
       continue-on-error: true
 
     - name: Upload OWASP report
@@ -132,8 +142,10 @@ jobs:
 
     - name: Run integration tests against real services
       run: |
-        ./mvnw verify -Pintegration -q
-        DB_URL=jdbc:postgresql://localhost:5433/pku_test
+        cd services/api
+        mvn verify -Pintegration -q
+      env:
+        DB_URL: jdbc:postgresql://localhost:5433/pku_test
 
     - name: Cleanup
       if: always()
