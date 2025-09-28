@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests for rate limiting functionality according to Rev C rules. Tests unified
  * Bucket4j approach with route tiers and Idempotency-Key enforcement.
  */
+@Tag("it")
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
