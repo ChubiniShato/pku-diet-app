@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.chubini.pku.security.CustomUserDetailsService;
 import com.chubini.pku.security.JwtAuthenticationFilter;
-import com.chubini.pku.security.RateLimitingFilter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,18 +30,14 @@ public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthFilter;
   private final CustomUserDetailsService userDetailsService;
-  private final RateLimitingFilter rateLimitingFilter;
 
   @Value("${app.security.cors.allowed-origins}")
   private String allowedOrigins;
 
   public SecurityConfig(
-      JwtAuthenticationFilter jwtAuthFilter,
-      CustomUserDetailsService userDetailsService,
-      RateLimitingFilter rateLimitingFilter) {
+      JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService userDetailsService) {
     this.jwtAuthFilter = jwtAuthFilter;
     this.userDetailsService = userDetailsService;
-    this.rateLimitingFilter = rateLimitingFilter;
   }
 
   @Bean
@@ -77,11 +72,14 @@ public class SecurityConfig {
                     .anyRequest()
                     .authenticated())
         .authenticationProvider(authenticationProvider())
-        .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
+
+  // TODO: Add production security headers in future PR
+  // Production security headers will be implemented after resolving Spring Security API
+  // compatibility
 
   @Bean
   public PasswordEncoder passwordEncoder() {
