@@ -60,21 +60,33 @@ jobs:
           echo "Using network: $NETWORK"
 
       - name: Run K6 Smoke Test
+        env:
+          BASE_URL: http://api:8080
+          K6_OUTPUT: summary
+          K6_LOG_LEVEL: info
         run: |
           docker run --rm \
             --network ${{ steps.network.outputs.network }} \
             -v $PWD/testing/k6:/scripts \
-            --env-file /scripts/.env \
+            -e BASE_URL=http://api:8080 \
+            -e K6_OUTPUT=summary \
+            -e K6_LOG_LEVEL=info \
             grafana/k6:latest run /scripts/scripts/smoke.js \
             --env BASE_URL=http://api:8080
 
       - name: Run K6 Performance Tests (if available)
         if: hashFiles('perf/k6/*.js') != ''
+        env:
+          BASE_URL: http://api:8080
+          K6_OUTPUT: summary
+          K6_LOG_LEVEL: info
         run: |
           docker run --rm \
             --network ${{ steps.network.outputs.network }} \
             -v $PWD/perf:/scripts \
-            -v $PWD/testing/k6/.env:/scripts/.env \
+            -e BASE_URL=http://api:8080 \
+            -e K6_OUTPUT=summary \
+            -e K6_LOG_LEVEL=info \
             grafana/k6:latest run /scripts/k6/menu-generation-test.js \
             --env BASE_URL=http://api:8080
         continue-on-error: true
