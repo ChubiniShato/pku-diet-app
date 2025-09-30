@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
+import com.chubini.pku.BaseIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class MultiLanguageIntegrationTest {
+class MultiLanguageIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
