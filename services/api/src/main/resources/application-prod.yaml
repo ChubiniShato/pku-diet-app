@@ -8,8 +8,9 @@ spring:
     hikari:
       maximum-pool-size: 10
       minimum-idle: 2
-      connection-timeout: 20000
-      idle-timeout: 300000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
       keepalive-time: 300000      # 5 minutes keepalive
       validation-timeout: 5000    # Connection validation
       
@@ -83,38 +84,7 @@ server:
       max: 50
       min-spare: 10
 
-# Management - Secure Configuration
-management:
-  server:
-    port: 8081
-    address: 0.0.0.0           # Change from 127.0.0.1 to 0.0.0.0
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: "health,info,metrics,prometheus"    # Essential + metrics endpoints  endpoint:
-    health:
-      probes:
-        enabled: true
-      group:
-        liveness:
-          include: livenessState,diskSpace
-        readiness:
-          include: readinessState,db
-      show-details: "when_authorized"  # Only for authorized users in prod
-      show-components: "when_authorized"
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-  metrics:
-    tags:
-      application: pku-diet-api
-      environment: production
-    export:
-      prometheus:
-        enabled: true             # For internal monitoring only
+# Management configuration moved to application-base.yaml             # For internal monitoring only
 
 # Logging - Production Level
 logging:

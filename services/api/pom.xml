@@ -298,30 +298,18 @@
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
         <version>12.1.0</version>
-          <configuration>
-            <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
-            <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
-            <cveValidForHours>168</cveValidForHours>
-            <failOnError>false</failOnError>
-            <failBuildOnCVSS>7.0</failBuildOnCVSS>
-            <formats>
-              <format>HTML</format>
-              <format>JSON</format>
-            </formats>
-            <!-- Optional analyzers to reduce noise/speed up -->
-            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
-            <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
-            <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
-            <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
+        <configuration>
+          <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
+
 
       <!-- Flyway database migration -->
       <plugin>

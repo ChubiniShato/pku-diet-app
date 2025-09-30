@@ -11,17 +11,9 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: pku
-          POSTGRES_USER: pku
-          POSTGRES_PASSWORD: pku
-        ports: [ "5432:5432" ]
-        options: >-
-          --health-cmd="pg_isready -U pku -d pku"
-          --health-interval=5s --health-timeout=3s --health-retries=25
+    # Testcontainers-ს Docker სჭირდება; ubuntu-latest-ზე უკვე გაქვს docker daemon.
+    env:
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
     defaults:
       run:
@@ -33,31 +25,21 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: '21'
           cache: maven
 
-      - name: Print env
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          psql --version || true
+      - name: Docker info (debug)
+        run: docker info
 
-      - name: Run tests (unit + IT)
-        env:
-          SPRING_PROFILES_ACTIVE: test
-          # ტესტებისთვის JWT/Secrets დეფოლტები
-          SPRING_SECURITY_JWT_SECRET: "dummy-test-secret"
-          # DB (localhost, რადგან პორტი გამოშვებულია)
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/pku
-          SPRING_DATASOURCE_USERNAME: pku
-          SPRING_DATASOURCE_PASSWORD: pku
-        run: mvn -B -ntp -fae verify
+      - name: Build & Test (unit + integration via Testcontainers)
+        run: mvn -B -ntp verify
 
-      # ჩავაგდოთ რეპორტები, თუ რამე გაწითლდება
-      - name: Upload surefire/failsafe reports
+      - name: Upload test & DC reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: reports
           path: |
-            services/api/target/surefire-reports/**
-            services/api/target/failsafe-reports/**
+            target/surefire-reports/**
+            target/failsafe-reports/**
+            target/dependency-check/**
