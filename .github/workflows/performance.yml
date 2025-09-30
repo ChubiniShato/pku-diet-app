@@ -64,6 +64,7 @@ jobs:
           docker run --rm \
             --network ${{ steps.network.outputs.network }} \
             -v $PWD/testing/k6:/scripts \
+            --env-file /scripts/.env \
             grafana/k6:latest run /scripts/scripts/smoke.js \
             --env BASE_URL=http://api:8080
 
@@ -73,6 +74,7 @@ jobs:
           docker run --rm \
             --network ${{ steps.network.outputs.network }} \
             -v $PWD/perf:/scripts \
+            -v $PWD/testing/k6/.env:/scripts/.env \
             grafana/k6:latest run /scripts/k6/menu-generation-test.js \
             --env BASE_URL=http://api:8080
         continue-on-error: true
