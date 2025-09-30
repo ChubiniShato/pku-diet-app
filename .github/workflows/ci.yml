@@ -43,7 +43,7 @@ jobs:
         continue-on-error: false
 
       - name: Maven Enforcer (Dependency Convergence)
-        run: mvn -B enforcer:enforce
+        run: mvn -B enforcer:enforce@enforce-versions
 
   build-test:
     name: Build & Test

@@ -62,7 +62,7 @@ jobs:
           cache: maven
 
       - name: Verify dependency convergence
-        run: mvn -B enforcer:enforce
+        run: mvn -B enforcer:enforce@enforce-versions
 
       - name: Check for dependency updates
         run: mvn -B versions:display-dependency-updates
