@@ -49,8 +49,11 @@ services:
   k6:
     image: grafana/k6
     depends_on: [api]
-    env_file: [./testing/k6/.env]
-    command: ["run", "/scripts/smoke.js"]
+    environment:
+      - BASE_URL=http://api:8080
+      - K6_OUTPUT=summary
+      - K6_LOG_LEVEL=info
+    command: ["run", "/scripts/smoke.js", "--env", "BASE_URL=http://api:8080"]
     volumes:
       - ./testing/k6/scripts:/scripts
     networks:
