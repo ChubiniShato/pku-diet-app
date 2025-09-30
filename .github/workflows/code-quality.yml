@@ -1,0 +1,141 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'services/api/**/*.java'
+      - 'services/api/pom.xml'
+      - '.github/workflows/code-quality.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  spotless:
+    name: Code Formatting (Spotless)
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: services/api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Check code formatting
+        run: mvn -B spotless:check
+
+      - name: Generate formatting diff (on failure)
+        if: failure()
+        run: |
+          echo "::error::Code formatting issues detected. Run 'mvn spotless:apply' locally to fix."
+          mvn spotless:apply -DdryRun=true || true
+
+  dependency-check:
+    name: Dependency Analysis
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: services/api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Verify dependency convergence
+        run: mvn -B enforcer:enforce
+
+      - name: Check for dependency updates
+        run: mvn -B versions:display-dependency-updates
+        continue-on-error: true
+
+  code-metrics:
+    name: Code Metrics & Analysis
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: services/api
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Compile and analyze
+        run: mvn -B clean compile
+
+      - name: Check for TODO/FIXME without issue references
+        run: |
+          echo "Checking for TODO/FIXME without issue links..."
+          INVALID_TODOS=$(grep -r --include="*.java" -E "TODO|FIXME" src/ | grep -v "TODO(#" | grep -v "FIXME(#" || true)
+          if [ ! -z "$INVALID_TODOS" ]; then
+            echo "⚠️  Found TODOs without issue references:"
+            echo "$INVALID_TODOS"
+            echo "::warning::Please link TODOs to issues using format TODO(#123)"
+          fi
+
+      - name: Check file sizes
+        run: |
+          echo "Checking for oversized files (>350 lines)..."
+          LARGE_FILES=$(find src/main/java -name "*.java" -exec wc -l {} \; | awk '$1 > 350 {print $2, "has", $1, "lines"}')
+          if [ ! -z "$LARGE_FILES" ]; then
+            echo "⚠️  Large files detected:"
+            echo "$LARGE_FILES"
+            echo "::warning::Consider refactoring files larger than 350 lines"
+          fi
+
+  pr-labels:
+    name: PR Label Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Check PR labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(l => l.name);
+            const validLabels = ['feat', 'fix', 'refactor', 'test', 'chore', 'docs', 'perf'];
+            const hasValidLabel = labels.some(l => validLabels.includes(l));
+            
+            if (!hasValidLabel) {
+              core.warning('PR should have at least one label: feat, fix, refactor, test, chore, docs, or perf');
+            }
+
+      - name: Check PR title format
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = context.payload.pull_request.title;
+            const conventionalCommitPattern = /^(feat|fix|refactor|test|chore|docs|perf)(\(.+\))?: .+/;
+            
+            if (!conventionalCommitPattern.test(title)) {
+              core.setFailed('PR title must follow Conventional Commits format: type(scope): description');
+            }
