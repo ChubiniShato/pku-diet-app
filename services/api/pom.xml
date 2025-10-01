@@ -530,7 +530,6 @@
             <configuration>
               <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
               <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
-              <cveValidForHours>168</cveValidForHours>
               <failOnError>false</failOnError>
               <failBuildOnCVSS>7.0</failBuildOnCVSS>
               <formats>
