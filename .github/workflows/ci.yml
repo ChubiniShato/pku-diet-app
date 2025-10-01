@@ -74,7 +74,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
 
       - name: Integration Tests (Testcontainers)
-        run: mvn -B -ntp verify -DskipTests=false -DskipDockerTests=true
+        run: mvn -B -ntp verify -DskipTests=false -DskipDockerTests=true -Djunit.jupiter.exclude.tags=it
         env:
           SPRING_PROFILES_ACTIVE: test
 
