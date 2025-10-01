@@ -66,9 +66,9 @@ public class ProductControllerIntegrationTest {
   @Test
   public void testUploadValidCsv() throws Exception {
     String csvContent =
-        "name,category,phenylalanine,protein,kilocalories\n"
-            + "Apple,Fruit,1.0,0.3,52.0\n"
-            + "Banana,Fruit,1.2,1.1,89.0";
+        "name,category,phenylalanine,leucine,protein,kilocalories\n"
+            + "Apple,Fruit,1.0,0.1,0.3,52.0\n"
+            + "Banana,Fruit,1.2,0.2,1.1,89.0";
 
     MockMultipartFile file =
         new MockMultipartFile("file", "products.csv", "text/csv", csvContent.getBytes());
