@@ -69,12 +69,12 @@ jobs:
         run: docker info
 
       - name: Build & Unit Tests
-        run: mvn -B -ntp clean test
+        run: mvn -B -ntp clean test -DskipDockerTests=true
         env:
           SPRING_PROFILES_ACTIVE: test
 
       - name: Integration Tests (Testcontainers)
-        run: mvn -B -ntp verify -DskipTests=false
+        run: mvn -B -ntp verify -DskipTests=false -DskipDockerTests=true
         env:
           SPRING_PROFILES_ACTIVE: test
 
