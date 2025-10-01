@@ -83,9 +83,13 @@ jobs:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
 
       - name: Build & Unit Tests
-        run: mvn -B -ntp clean test -DskipDockerTests=true
         env:
           SPRING_PROFILES_ACTIVE: test
+        run: >
+          mvn -B -ntp clean test
+          -Djunit.jupiter.exclude.tags=it
+          -DskipDockerTests=true
+          -Dsurefire.printSummary=true
 
       - name: Integration Tests (Testcontainers)
         run: mvn -B -ntp verify -DskipTests=false -DskipDockerTests=true -Djunit.jupiter.exclude.tags=it
