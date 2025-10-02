@@ -1,15 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <!-- ✅ ყოველთვის 4.0.0 -->
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- ✅ Spring Boot parent 3.3.2 -->
+  <!-- ✅ Spring Boot parent — განახლებული პაჩ ვერსია -->
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.7</version> <!-- latest 3.3.x patch; adjusts Spring/Tomcat CVEs -->
     <relativePath/>
   </parent>
 
@@ -21,7 +21,41 @@
 
   <properties>
     <java.version>21</java.version>
+
+    <!-- ვერსიების ცენტრალიზაცია -->
+    <springdoc.version>2.6.0</springdoc.version>
+    <swagger.ui.version>5.18.3</swagger.ui.version>
+    <commons.lang3.version>3.15.0</commons.lang3.version>
+    <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <bucket4j.version>8.10.1</bucket4j.version>
+    <commons.csv.version>1.10.0</commons.csv.version>
+    <jjwt.version>0.12.6</jjwt.version>
+    <spotless.version>2.43.0</spotless.version>
+    <owasp.dc.version>12.1.0</owasp.dc.version>
+    <flyway.version>10.10.0</flyway.version>
+    <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+    <surefire.version>3.2.5</surefire.version>
+    <failsafe.version>3.2.5</failsafe.version>
+    <jacoco.version>0.8.12</jacoco.version>
+    <logstash.encoder.version>7.4</logstash.encoder.version>
   </properties>
+
+  <!-- Known CVEs fix: ახალი ვერსიების დაპინვა -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons.lang3.version}</version>
+      </dependency>
+      <!-- swagger-ui override springdoc-სთვის (DOMPurify CVEs) -->
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>swagger-ui</artifactId>
+        <version>${swagger.ui.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- Web & Validation -->
@@ -44,6 +78,7 @@
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
@@ -53,61 +88,48 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
+      <version>${flyway.version}</version>
     </dependency>
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-database-postgresql</artifactId>
+      <version>${flyway.version}</version>
     </dependency>
 
-    <!-- OpenAPI / Swagger UI -->
+    <!-- OpenAPI / Swagger UI (update) -->
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-      <version>2.5.0</version>
+      <version>${springdoc.version}</version>
     </dependency>
 
     <!-- CSV Processing -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
-      <version>1.10.0</version>
+      <version>${commons.csv.version}</version>
     </dependency>
 
     <!-- Rate Limiting -->
     <dependency>
       <groupId>com.bucket4j</groupId>
       <artifactId>bucket4j-core</artifactId>
-      <version>8.10.1</version>
+      <version>${bucket4j.version}</version>
     </dependency>
 
-    <!-- Redis (Optional - Feature Toggle) -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
-      <optional>true</optional>
-    </dependency>
+    <!-- Redis — ნაგულისხმევად ამოღებულია; პროფილში ჩაერთვება -->
+    <!-- intentionally removed here; see profile 'redis' -->
 
     <!-- Metrics + Tracing -->
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
-    <!-- OpenTelemetry tracing - temporarily disabled due to dependency conflicts -->
-    <!--
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-tracing-bridge-otel</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.opentelemetry</groupId>
-      <artifactId>opentelemetry-exporter-otlp</artifactId>
-      <version>1.37.0</version>
-    </dependency>
-    -->
+
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>7.4</version>
+      <version>${logstash.encoder.version}</version>
     </dependency>
 
     <!-- Lombok -->
@@ -117,53 +139,51 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- MapStruct for DTO mapping -->
+    <!-- MapStruct -->
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
-      <version>1.5.5.Final</version>
+      <version>${mapstruct.version}</version>
     </dependency>
 
-    <!-- Security for sharing features -->
+    <!-- Security -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
-    <!-- Mail support for notifications -->
+    <!-- Mail -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-mail</artifactId>
     </dependency>
 
-    <!-- JSON Web Tokens -->
+    <!-- JWT -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>0.12.6</version>
+      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>0.12.6</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>0.12.6</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
 
-    <!-- Cache support -->
+    <!-- Cache -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-cache</artifactId>
     </dependency>
 
-
-
-    <!-- H2 for testing and local development -->
+    <!-- H2 (test/local) -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -176,8 +196,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!-- Testcontainers for integration tests -->
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -195,24 +213,23 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>3.3.2</version>
         <configuration>
           <mainClass>com.chubini.pku.PkuApiApplication</mainClass>
         </configuration>
       </plugin>
 
-      <!-- Java 21 compiler with MapStruct -->
+      <!-- Java 21 compiler + MapStruct -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.13.0</version>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <release>21</release>
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>
-              <version>1.5.5.Final</version>
+              <version>${mapstruct.version}</version>
             </path>
             <path>
               <groupId>org.projectlombok</groupId>
@@ -232,18 +249,16 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
+        <version>${surefire.version}</version>
         <configuration>
           <includes>
             <include>**/*Test.java</include>
             <include>**/*Tests.java</include>
           </includes>
-          <!-- JUnit 5 tags: IT გამორიცხე -->
           <properties>
             <configurationParameters>junit.jupiter.exclude.tags=it</configurationParameters>
           </properties>
           <argLine>-Duser.timezone=UTC</argLine>
-          <!-- Fix Windows hostname duplicate class issue -->
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
         </configuration>
@@ -253,7 +268,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.2.5</version>
+        <version>${failsafe.version}</version>
         <executions>
           <execution>
             <goals>
@@ -273,38 +288,32 @@
         </executions>
       </plugin>
 
-      <!-- OpenAPI JSON export - ამოღებულია და გადატანილია პროფილებში -->
-      <!--<plugin>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-maven-plugin</artifactId>
-        <version>1.4</version>
-        <executions>
-          <execution>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>
-          <outputFileName>openapi.json</outputFileName>
-          <outputDir>${project.build.directory}</outputDir>
-        </configuration>
-      </plugin> -->
-
-      <!-- OWASP Dependency Check -->
+      <!-- OWASP Dependency-Check — ნაგულისხმევად გამორთული; ჩართე -P security-scan -->
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>12.1.0</version>
+        <version>${owasp.dc.version}</version>
         <configuration>
+          <!-- ❗ძველი პარამეტრები ამოღებულია: აღარ ვ იყენებთ 'analyzers' და 'cveValidForHours' -->
+          <skip>true</skip> <!-- default build-clean/verify-ზე არ იმუშავებს -->
           <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
-          <ossIndexAnalyzerEnabled>false</ossIndexAnalyzerEnabled>           
-          <connectionTimeout>60000</connectionTimeout>   <!-- 60s -->
-          <readTimeout>600000</readTimeout>              <!-- 10min -->
-          <cveValidForHours>72</cveValidForHours> 
-          <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+          <!-- analyzer toggles (საერთო default) -->
+          <ossIndexAnalyzerEnabled>false</ossIndexAnalyzerEnabled>
+          <retireJsAnalyzerEnabled>true</retireJsAnalyzerEnabled>
+          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+          <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+          <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
+          <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+          <!-- რეპორტის კონფიგი -->
+          <formats>
+            <format>HTML</format>
+            <format>JSON</format>
+          </formats>
+          <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
+          <failOnError>false</failOnError> <!-- უცაბედი შეცდომა რომ არ დაგამხოს -->
+          <failBuildOnCVSS>7.0</failBuildOnCVSS>
+          <connectionTimeout>60000</connectionTimeout>
+          <readTimeout>600000</readTimeout>
         </configuration>
         <executions>
           <execution>
@@ -315,12 +324,11 @@
         </executions>
       </plugin>
 
-
-      <!-- Flyway database migration -->
+      <!-- Flyway CLI (სურვილისამებრ) -->
       <plugin>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-maven-plugin</artifactId>
-        <version>10.10.0</version>
+        <version>${flyway.version}</version>
         <configuration>
           <url>${DB_URL:jdbc:postgresql://localhost:5432/pku}</url>
           <user>${DB_USER:pku}</user>
@@ -333,7 +341,7 @@
         </configuration>
       </plugin>
 
-      <!-- Maven Enforcer Plugin for version consistency -->
+      <!-- Maven Enforcer -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -360,11 +368,11 @@
         </executions>
       </plugin>
 
-      <!-- Spotless for code formatting -->
+      <!-- Spotless -->
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>2.43.0</version>
+        <version>${spotless.version}</version>
         <configuration>
           <java>
             <googleJavaFormat>
@@ -387,11 +395,11 @@
         </executions>
       </plugin>
 
-      <!-- JaCoCo for code coverage -->
+      <!-- JaCoCo -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.12</version>
+        <version>${jacoco.version}</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -440,6 +448,8 @@
 
   <!-- Maven profiles -->
   <profiles>
+
+    <!-- Integration-only run -->
     <profile>
       <id>integration</id>
       <properties>
@@ -451,9 +461,9 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire.version}</version>
             <configuration>
               <skipTests>${skip.unit.tests}</skipTests>
-              <!-- Ensure problematic tests are excluded in all environments -->
               <excludes>
                 <exclude>**/ScoringEngineTest.java</exclude>
                 <exclude>**/VarietyEngineTest.java</exclude>
@@ -465,6 +475,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${failsafe.version}</version>
             <configuration>
               <skipITs>${skip.integration.tests}</skipITs>
               <includes>
@@ -486,7 +497,6 @@
             <artifactId>springdoc-openapi-maven-plugin</artifactId>
             <version>1.4</version>
             <configuration>
-              <!-- HTTP-генერაცია გაშვებულ აპზე -->
               <apiDocsUrl>${springdoc.apiDocsUrl}</apiDocsUrl>
               <outputFileName>openapi.json</outputFileName>
               <outputDir>${project.build.directory}</outputDir>
@@ -504,7 +514,7 @@
       </build>
     </profile>
 
-    <!-- CI skip IT profile -->
+    <!-- CI skip IT -->
     <profile>
       <id>ci-skip-it</id>
       <properties>
@@ -515,6 +525,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
+            <version>${failsafe.version}</version>
             <configuration>
               <skipITs>${skipITs}</skipITs>
             </configuration>
@@ -523,7 +534,41 @@
       </build>
     </profile>
 
-     <!--optional security-scan profile-->
+    <!-- Redis არჩევით -->
+    <profile>
+      <id>redis</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.4.0</version>
+            <executions>
+              <execution>
+                <id>add-redis-source</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/main/java-redis</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Security scan profile: აქ რეალურად გაეშვება OWASP DC -->
     <profile>
       <id>security-scan</id>
       <build>
@@ -531,20 +576,26 @@
           <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>12.1.0</version>
+            <version>${owasp.dc.version}</version>
             <configuration>
+              <skip>false</skip>
               <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
-              <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
-              <failOnError>false</failOnError>
-              <failBuildOnCVSS>7.0</failBuildOnCVSS>
-              <formats>
-                <format>HTML</format>
-                <format>JSON</format>
-              </formats>
+              <!-- უარყოფითად იქცევა OSS Index (401/429) => ვთიშავთ -->
+              <ossIndexAnalyzerEnabled>false</ossIndexAnalyzerEnabled>
+              <retireJsAnalyzerEnabled>true</retireJsAnalyzerEnabled>
               <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
               <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
               <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
               <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+              <formats>
+                <format>HTML</format>
+                <format>JSON</format>
+              </formats>
+              <dataDirectory>${project.build.directory}/dependency-check</dataDirectory>
+              <failOnError>false</failOnError>
+              <failBuildOnCVSS>7.0</failBuildOnCVSS>
+              <connectionTimeout>60000</connectionTimeout>
+              <readTimeout>600000</readTimeout>
             </configuration>
             <executions>
               <execution>
