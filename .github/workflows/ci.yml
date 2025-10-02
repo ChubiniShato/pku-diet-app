@@ -119,6 +119,6 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Test Results
-          path: services/api/target/surefire-reports/*.xml,services/api/target/failsafe-reports/*.xml
+          path: services/api/target/surefire-reports/TEST-*.xml,services/api/target/failsafe-reports/TEST-*.xml
           reporter: java-junit
           fail-on-error: false
