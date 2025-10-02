@@ -70,4 +70,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     filterChain.doFilter(request, response);
   }
+
+  @Override
+  protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+    String p = request.getServletPath();
+    return p.startsWith("/actuator/health")
+        || p.equals("/actuator/info")
+        || p.equals("/actuator/prometheus")
+        || p.startsWith("/api/public/");
+  }
 }

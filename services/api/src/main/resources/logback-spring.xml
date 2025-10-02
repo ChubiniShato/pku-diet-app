@@ -7,11 +7,11 @@
     </encoder>
   </appender>
 
-  <!-- File appender for production -->
+  <!-- File appender for production - disabled in container -->
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>logs/pku-api.log</file>
+    <file>/tmp/pku-api.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>logs/pku-api.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>/tmp/pku-api.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>100MB</maxFileSize>
       <maxHistory>30</maxHistory>
       <totalSizeCap>3GB</totalSizeCap>
@@ -24,7 +24,6 @@
   <!-- Root logger configuration -->
   <root level="INFO">
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE"/>
   </root>
 
   <!-- Application specific loggers -->
@@ -47,6 +46,13 @@
     <root level="INFO">
       <appender-ref ref="STDOUT"/>
       <appender-ref ref="FILE"/>
+    </root>
+  </springProfile>
+  
+  <!-- Docker profile - console only, no file logging -->
+  <springProfile name="docker">
+    <root level="INFO">
+      <appender-ref ref="STDOUT"/>
     </root>
   </springProfile>
 </configuration>

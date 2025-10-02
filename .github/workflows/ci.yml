@@ -1,59 +1,109 @@
-name: ci
+name: CI - Build, Test & Quality
 
 on:
-  push: { branches: [ main, develop ] }
-  pull_request: { branches: [ main, develop ] }
+  push: 
+    branches: [ main, develop ]
+  pull_request: 
+    branches: [ main, develop ]
+  workflow_dispatch:  # Enable manual triggering
 
-permissions: { contents: read }
-concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }
+permissions: 
+  contents: read
+  checks: write
+
+concurrency: 
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false
 
 jobs:
-  build-test:
+  code-quality:
+    name: Code Quality Checks
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: services/api
 
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_DB: pku
-          POSTGRES_USER: pku
-          POSTGRES_PASSWORD: pku
-        ports: [ "5432:5432" ]
-        options: >-
-          --health-cmd="pg_isready -U pku -d pku"
-          --health-interval=5s --health-timeout=3s --health-retries=25
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Spotless Check (Google Java Format)
+        run: mvn -B spotless:check
+        continue-on-error: false
+
+      - name: Maven Enforcer (Dependency Convergence)
+        run: mvn -B enforcer:enforce@enforce-versions
+
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    needs: code-quality
 
     defaults:
       run:
         working-directory: services/api
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: '21'
           cache: maven
 
-      - name: Print env
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          psql --version || true
+      - name: Verify Docker
+        run: docker info
 
-      - name: Run tests (unit + IT)
+      - name: Cache OWASP DC data
+        uses: actions/cache@v4
+        with:
+          path: services/api/target/dependency-check
+          key: ${{ runner.os }}-dc-${{ hashFiles('services/api/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-dc-
+
+      - name: OWASP Dependency Check
+        continue-on-error: true
+        run: mvn -B -ntp -DskipTests org.owasp:dependency-check-maven:12.1.0:check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
+      - name: Build & Unit Tests
         env:
           SPRING_PROFILES_ACTIVE: test
-          # ტესტებისთვის JWT/Secrets დეფოლტები
-          SPRING_SECURITY_JWT_SECRET: "dummy-test-secret"
-          # DB (localhost, რადგან პორტი გამოშვებულია)
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/pku
-          SPRING_DATASOURCE_USERNAME: pku
-          SPRING_DATASOURCE_PASSWORD: pku
-        run: mvn -B -ntp -fae verify
+        run: >
+          mvn -B -ntp clean test
+          -Djunit.jupiter.exclude.tags=it
+          -DskipDockerTests=true
+          -Dsurefire.printSummary=true
 
-      # ჩავაგდოთ რეპორტები, თუ რამე გაწითლდება
-      - name: Upload surefire/failsafe reports
+      - name: Integration Tests (Testcontainers)
+        run: mvn -B -ntp verify -DskipTests=false -Djunit.jupiter.include.tags=it -DskipDockerTests=false
+        env:
+          SPRING_PROFILES_ACTIVE: test
+
+      - name: Generate JaCoCo Coverage Report
+        run: mvn -B jacoco:report
+
+      - name: Check Coverage Thresholds
+        run: mvn -B jacoco:check
+        continue-on-error: true
+
+      - name: Upload Test Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -61,3 +111,14 @@ jobs:
           path: |
             services/api/target/surefire-reports/**
             services/api/target/failsafe-reports/**
+            services/api/target/site/jacoco/**
+          retention-days: 7
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Test Results
+          path: services/api/target/surefire-reports/TEST-*.xml,services/api/target/failsafe-reports/TEST-*.xml
+          reporter: java-junit
+          fail-on-error: false

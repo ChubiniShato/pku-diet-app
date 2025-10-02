@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   build-and-push:
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
     runs-on: ubuntu-latest
     
     steps:
@@ -45,7 +46,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=sha-,short=true
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -61,10 +62,18 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
 
+      - name: Get SHA tag from metadata
+        id: sha-tag
+        run: |
+          # Extract the SHA tag from metadata output
+          SHA_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep "sha-" | head -1)
+          echo "sha-tag=$SHA_TAG" >> $GITHUB_OUTPUT
+          echo "Using SHA tag: $SHA_TAG"
+
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ghcr.io/${{ github.repository }}/pku-api:${{ github.sha }}
+          image-ref: ${{ steps.sha-tag.outputs.sha-tag }}
           format: 'table'
           vuln-type: 'os,library'
           exit-code: '0'

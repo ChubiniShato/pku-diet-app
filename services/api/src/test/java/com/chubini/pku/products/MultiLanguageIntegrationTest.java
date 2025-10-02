@@ -8,11 +8,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
+import com.chubini.pku.BaseIntegrationTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-class MultiLanguageIntegrationTest {
+@DisabledIfSystemProperty(
+    named = "skipDockerTests",
+    matches = "true",
+    disabledReason = "Docker/Testcontainers not available")
+class MultiLanguageIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 

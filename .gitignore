@@ -1,61 +1,29 @@
-# =========================
-# Java / Maven / Spring Boot
-# =========================
-
-# Maven build directory (ყველა ქვეფოლდერში)
+# Maven build
 **/target/
 
-# Compiled class files
+# Compiled & logs
 *.class
-
-# Logs
 *.log
 
-# Package files
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# Environment variables
+# Env / JVM / Spring Boot
 .env
-
-# JVM crash logs
 hs_err_pid*
 replay_pid*
-
-# Spring Boot specific
 *.pid
 
-# =========================
-# IDE / Editors
-# =========================
+# IDE
 .idea/
 .vscode/
 *.iml
 
-# =========================
-# Node.js (თუ შემდგომ დაემატება)
-# =========================
-node_modules/
-
-# =========================
-# OS junk files
-# =========================
+# OS junk
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# =========================
-# Local docker/test files
-# =========================
+# Local docker/test
 test-compose.yml
 docker-compose.override.yml
-
-# =========================
-# Docker volumes
-# =========================
 pgdata/
 redisdata/
+

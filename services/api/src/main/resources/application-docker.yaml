@@ -1,24 +1,9 @@
-spring:
-  datasource:
-    hikari:
-      maximum-pool-size: ${DB_POOL_SIZE:20}
-      minimum-idle: ${DB_POOL_MIN:5}
-      connection-timeout: 30000
-      validation-timeout: 5000
-      leak-detection-threshold: 60000
-
 server:
-  tomcat:
-    accesslog:
-      enabled: true
-      pattern: '%h %l %u %t "%r" %s %b %D'
-
+  port: 8080
 management:
-  server:
-    port: 8081
-    address: 0.0.0.0
   endpoints:
     web:
+      base-path: /actuator
       exposure:
         include: health,info,prometheus
   endpoint:
@@ -27,3 +12,25 @@ management:
       show-components: always
       probes:
         enabled: true
+    configprops:
+      enabled: true
+  health:
+    redis:
+      enabled: true
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/pku?sslmode=disable
+    username: pku
+    password: pku
+    hikari:
+      connection-timeout: 5000
+      validation-timeout: 3000
+      minimum-idle: 1
+      maximum-pool-size: 10
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      ssl:
+        enabled: false
+      timeout: 2s
