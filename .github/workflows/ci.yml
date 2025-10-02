@@ -92,7 +92,7 @@ jobs:
           -Dsurefire.printSummary=true
 
       - name: Integration Tests (Testcontainers)
-        run: mvn -B -ntp verify -DskipTests=false -DskipDockerTests=true -Djunit.jupiter.exclude.tags=it
+        run: mvn -B -ntp verify -DskipTests=false -Djunit.jupiter.include.tags=it -DskipDockerTests=false
         env:
           SPRING_PROFILES_ACTIVE: test
 

@@ -255,6 +255,9 @@
             <include>**/*Test.java</include>
             <include>**/*Tests.java</include>
           </includes>
+          <excludes>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
           <properties>
             <configurationParameters>junit.jupiter.exclude.tags=it</configurationParameters>
           </properties>
@@ -278,6 +281,7 @@
             <configuration>
               <includes>
                 <include>**/*IT.java</include>
+                <include>**/*IntegrationTest.java</include>
               </includes>
               <properties>
                 <configurationParameters>junit.jupiter.include.tags=it</configurationParameters>
