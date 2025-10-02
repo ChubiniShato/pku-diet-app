@@ -300,6 +300,11 @@
         <version>12.1.0</version>
         <configuration>
           <nvdApiKey>${env.NVD_API_KEY}</nvdApiKey>
+          <ossIndexAnalyzerEnabled>false</ossIndexAnalyzerEnabled>           
+          <connectionTimeout>60000</connectionTimeout>   <!-- 60s -->
+          <readTimeout>600000</readTimeout>              <!-- 10min -->
+          <cveValidForHours>72</cveValidForHours> 
+          <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
         </configuration>
         <executions>
           <execution>
