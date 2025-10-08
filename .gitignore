@@ -27,3 +27,10 @@ docker-compose.override.yml
 pgdata/
 redisdata/
 
+# E2E Testing
+node_modules/
+test-results/
+playwright-report/
+.playwright/
+npm-debug.log*
+
