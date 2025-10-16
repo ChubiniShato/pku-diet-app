@@ -18,9 +18,32 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+<<<<<<< HEAD
+  # Skip job for PRs to prevent blocking
+  check-skip:
+    name: Check if should run
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - id: check
+        run: |
+          if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+            echo "Skipping smoke test - only runs on push to main"
+          fi
+
+  smoke-test-prod:
+    name: Smoke Test with Prod Profile
+    needs: check-skip
+    if: needs.check-skip.outputs.should_run == 'true'
+=======
   smoke-test-prod:
     name: Smoke Test with Prod Profile
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+>>>>>>> origin/main
     runs-on: ubuntu-latest
     
     steps:
