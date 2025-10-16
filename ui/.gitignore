@@ -29,7 +29,6 @@ dist-ssr
 .env.development.local
 .env.test.local
 .env.production.local
-<<<<<<< HEAD
 
 # Playwright
 /test-results/
@@ -37,5 +36,3 @@ dist-ssr
 /playwright/.cache/
 /blob-report/
 /playwright/.auth/
-=======
->>>>>>> origin/main
