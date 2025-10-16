@@ -11,8 +11,8 @@ test.describe('Authentication', () => {
     // Submit form
     await page.click('button[type="submit"]');
     
-    // Should redirect to dashboard
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 });
+    // Should redirect to dashboard (root route)
+    await expect(page).toHaveURL('/', { timeout: 10000 });
     
     // Verify navigation is visible (authenticated state)
     await expect(page.locator('nav')).toBeVisible();
@@ -124,7 +124,7 @@ test.describe('Authentication', () => {
     await page.fill('input[name="password"]', 'admin123');
     await page.click('button[type="submit"]');
     
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 });
+    await expect(page).toHaveURL('/', { timeout: 10000 });
     
     // Find and click logout (adjust selector based on your implementation)
     // This might be in a user menu or header
