@@ -112,6 +112,13 @@ jobs:
           curl -s http://localhost:8080/api/debug/check-admin | jq '.' || echo "Failed to check admin user"
           echo ""
 
+      - name: Reset admin password
+        run: |
+          echo "Resetting admin password to ensure it's correct..."
+          response=$(curl -s -X POST http://localhost:8080/api/debug/reset-admin-password)
+          echo "$response" | jq '.' || echo "$response"
+          echo ""
+
       - name: Verify API login endpoint
         run: |
           echo "Testing API login endpoint..."
