@@ -85,7 +85,7 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: ui
-        run: npx playwright install --with-deps chromium firefox
+        run: npx playwright install --with-deps chromium
 
       - name: Start Vite Dev Server
         working-directory: ui

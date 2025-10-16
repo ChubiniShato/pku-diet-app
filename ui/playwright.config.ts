@@ -7,8 +7,8 @@ export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 1 : 0, // Reduced from 2 to 1
+  workers: process.env.CI ? 2 : undefined, // Increased from 1 to 2
   timeout: 30000, // 30 seconds per test
   reporter: [
     ['html'],
@@ -29,10 +29,11 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // Firefox disabled temporarily to reduce CI time
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
   ],
 
   // webServer config only for local development
