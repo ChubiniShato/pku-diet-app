@@ -1,0 +1,262 @@
+{
+  "app": {
+    "title": "PKU Diet App",
+    "description": "Керуйте дієтою при фенілкетонурії легко"
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "day": "День",
+    "week": "Тиждень",
+    "products": "Продукти",
+    "dishes": "Страви",
+    "pantry": "Комора",
+    "scan": "Скан",
+    "share": "Поділитися",
+    "critical": "Критичне",
+    "profile": "Профіль",
+    "settings": "Налаштування",
+    "adminPanel": "Адмін панель",
+    "toggleMenu": "Перемкнути меню"
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "error": "Помилка",
+    "success": "Успіх",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "delete": "Видалити",
+    "edit": "Редагувати",
+    "add": "Додати",
+    "addDish": "Додати страву",
+    "search": "Пошук",
+    "goBack": "Назад",
+    "allProducts": "Усі продукти",
+    "back": "Назад",
+    "clear": "Очистити",
+    "filter": "Фільтр",
+    "productName": "Назва продукту",
+    "lowPheFilter": "Фільтр низького PHE",
+    "customMaxPhe": "Максимальний PHE (мг/100г)",
+    "searchProducts": "Пошук продуктів...",
+    "maxPheExample": "напр. 150",
+    "activeFilters": "Активні фільтри:",
+    "query": "Запит",
+    "category": "Категорія",
+    "maxPhe": "Макс PHE",
+    "productDetails": "Деталі продукту",
+    "per100g": "На 100г",
+    "perServing": "На порцію",
+    "servingSize": "Розмір порції:",
+    "phenylalanine": "Фенілаланін",
+    "macronutrients": "Макронутрієнти",
+    "protein": "Білки",
+    "carbohydrates": "Вуглеводи",
+    "fats": "Жири",
+    "calories": "Калорії",
+    "aminoAcids": "Амінокислоти",
+    "leucine": "Лейцин",
+    "tyrosine": "Тирозин",
+    "methionine": "Метіонін",
+    "energy": "Енергія",
+    "kilojoules": "Кілоджоулі",
+    "kilocalories": "Кілокалорії",
+    "per100gText": "на 100г",
+    "perServingText": "на порцію",
+    "failedToLoad": "Не вдалося завантажити деталі продукту"
+  },
+  "api": {
+    "testConnection": "Перевірити з'єднання API",
+    "testing": "Перевірка...",
+    "status": {
+      "up": "API ПРАЦЮЄ",
+      "down": "API НЕ ПРАЦЮЄ"
+    }
+  },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "Завантаження CSV файлу",
+        "subtitle": "Перетягніть CSV файл сюди або натисніть кнопку"
+      },
+      "browseFiles": "Вибрати файл",
+      "upload": "Завантажити",
+      "uploading": "Завантаження...",
+      "errors": {
+        "invalidType": "Дозволені тільки CSV файли",
+        "fileTooLarge": "Файл занадто великий. Максимум {maxSize}МБ"
+      }
+    },
+    "productRequest": {
+      "title": "Запит на додавання продукту",
+      "productName": "Назва продукту",
+      "productNamePlaceholder": "Введіть назву продукту",
+      "productType": "Тип продукту",
+      "rawProduct": "Сирий продукт (овочі, фрукти, зернові)",
+      "processedProduct": "Комбінований/Готовий продукт (вироблені закуски, напої, їжа)",
+      "category": "Категорія",
+      "selectCategory": "Оберіть категорію",
+      "description": "Опис",
+      "descriptionPlaceholder": "Детальний опис продукту",
+      "pheContent": "Вміст ФАЛ",
+      "pheContentPlaceholder": "напр. 15.5",
+      "proteinContent": "Вміст білків",
+      "proteinContentPlaceholder": "напр. 2.3",
+      "sourceLink": "Посилання на джерело",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "Вкажіть валідне посилання на джерело, де ви знайшли інформацію про харчування",
+      "productImages": "Фотографії документації продукту",
+      "dragDropImages": "Перетягніть зображення сюди або натисніть кнопку",
+      "imageRequirements": "Максимум 5 зображень, кожне до 5МБ",
+      "selectImages": "Вибрати зображення",
+      "selectedImages": "Вибрані зображення",
+      "notes": "Додаткові нотатки",
+      "validation": {
+        "productNameRequired": "Назва продукту обов'язкова",
+        "categoryRequired": "Категорія обов'язкова",
+        "descriptionRequired": "Опис обов'язковий",
+        "imagesRequired": "Фотографії документації обов'язкові для комбінованих продуктів"
+      },
+      "notesPlaceholder": "Нотатки для адміністратора",
+      "submit": "Надіслати запит",
+      "submitting": "Надсилання...",
+      "success": "Запит успішно надіслано!",
+      "error": "Помилка при надсиланні запиту"
+    },
+    "dishRequest": {
+      "title": "Запит на додавання страви",
+      "dishName": "Назва страви",
+      "dishNamePlaceholder": "Введіть назву страви",
+      "category": "Категорія",
+      "selectCategory": "Оберіть категорію",
+      "cuisine": "Кухня",
+      "selectCuisine": "Оберіть кухню",
+      "description": "Опис",
+      "descriptionPlaceholder": "Введіть опис страви",
+      "recipeProject": "Проект рецепту",
+      "recipeProjectPlaceholder": "Введіть детальний опис рецепту, інгредієнти та спосіб приготування",
+      "recipeProjectHelp": "Вкажіть повні деталі рецепту, кількість інгредієнтів та кроки приготування",
+      "notes": "Нотатки",
+      "notesPlaceholder": "Додаткова інформація",
+      "submit": "Надіслати запит",
+      "submitting": "Надсилання..."
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Панель",
+      "subtitle": "Ваш щоденний огляд ПФЕ",
+      "welcome": "Ласкаво просимо",
+      "welcomeMessage": "Ласкаво просимо до PKU Diet App. Почніть відстежувати своє щоденне харчування."
+    },
+    "adminPanel": {
+      "title": "Адмін панель",
+      "subtitle": "Управління системою та перегляд запитів",
+      "pendingRequests": "Запити в очікуванні",
+      "productRequests": "Запити продуктів",
+      "dishRequests": "Запити страв",
+      "noRequestsYet": "Запитів поки немає",
+      "viewAll": "Показати всі",
+      "csvUpload": "Завантаження CSV",
+      "uploadProductsCsv": "Завантажити CSV продуктів",
+      "uploadDishesCsv": "Завантажити CSV страв"
+    },
+    "products": {
+      "title": "Продукти",
+      "subtitle": "Перегляньте базу продуктів",
+      "addProduct": "Додати продукт",
+      "upload": {
+        "title": "Режим адміністратора - Завантаження CSV",
+        "description": "Завантажте CSV для масового імпорту продуктів",
+        "selectFile": "Вибрати CSV файл",
+        "uploading": "Завантаження...",
+        "upload": "Завантажити",
+        "cancel": "Скасувати",
+        "success": "Завантажено успішно",
+        "error": "Помилка завантаження"
+      },
+      "drawer": {
+        "title": "Деталі продукту",
+        "per100g": "На 100 г",
+        "perServing": "На порцію",
+        "servingSize": "Розмір порції",
+        "macronutrients": "Макронутрієнти",
+        "aminoAcids": "Амінокислоти",
+        "energy": "Енергія"
+      }
+    },
+    "productNew": {
+      "title": "Додати новий продукт",
+      "subtitle": "Введіть всі харчові характеристики продукту",
+      "basicInfo": "Основна інформація",
+      "productName": "Назва продукту",
+      "productNamePlaceholder": "напр. Яблуко",
+      "category": "Категорія",
+      "selectCategory": "Оберіть категорію",
+      "description": "Опис",
+      "descriptionPlaceholder": "Детальний опис продукту",
+      "aminoAcids": "Амінокислоти",
+      "phenylalanine": "Фенілаланін",
+      "leucine": "Лейцин",
+      "tyrosine": "Тирозин",
+      "methionine": "Метіонін",
+      "macronutrients": "Макронутрієнти",
+      "protein": "Білки",
+      "carbohydrates": "Вуглеводи",
+      "fats": "Жири",
+      "energy": "Енергія",
+      "kilocalories": "Кілокалорії",
+      "kilojoules": "Кілоджоулі",
+      "create": "Створити продукт",
+      "creating": "Створення...",
+      "success": "Продукт успішно створено!",
+      "error": "Помилка при створенні продукту"
+    },
+    "dishes": {
+      "title": "Страви",
+      "subtitle": "Ваші створені рецепти та страви",
+      "requestToAddToCommon": "Запит на додавання страви до загальної бази",
+      "addToMyDishes": "Додати страву до моїх страв",
+      "requestTitle": "Запит на додавання страви до загальної бази",
+      "submitRequest": "Надіслати запит",
+      "categories": {
+        "all": "Всі",
+        "filterBy": "Фільтр:",
+        "suggested": "Рекомендовані страви",
+        "myDishes": "Мої створені страви",
+        "ukrainian": "Українські страви",
+        "georgian": "Грузинські страви", 
+        "caucasian": "Кавказькі страви",
+        "breakfast": "Сніданок",
+        "lunch": "Обід",
+        "dinner": "Вечеря",
+        "snacks": "Перекуси",
+        "georgianCuisine": "Грузинська кухня",
+        "ukrainianCuisine": "Українська кухня",
+        "caucasianCuisine": "Кавказька кухня",
+        "russianCuisine": "Російська кухня",
+        "europeanCuisine": "Європейська кухня",
+        "asianCuisine": "Азійська кухня",
+        "mediterraneanCuisine": "Середземноморська кухня",
+        "americanCuisine": "Американська кухня"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Вхід",
+      "subtitle": "Увійдіть до свого облікового запису",
+      "username": "Ім'я користувача",
+      "password": "Пароль",
+      "signIn": "Увійти",
+      "signingIn": "Вхід..."
+    }
+  },
+  "roles": {
+    "admin": "Адміністратор",
+    "healthcare_provider": "Медичний працівник",
+    "patient": "Пацієнт",
+    "user": "Користувач"
+  }
+}
+
+

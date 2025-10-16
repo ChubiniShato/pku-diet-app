@@ -1,0 +1,129 @@
+# Production Profile Configuration
+# Rev C compliant production hardening
+
+spring:
+    
+  # Database Configuration - Production Tuned
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      keepalive-time: 300000      # 5 minutes keepalive
+      validation-timeout: 5000    # Connection validation
+      
+  # JPA/Hibernate - Production Optimized
+  jpa:
+    show-sql: false              # Critical: No SQL in prod logs
+    open-in-view: false          # Performance improvement
+    properties:
+      hibernate:
+        format_sql: false
+        generate_statistics: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        
+  # Jackson - Stable Time Handling
+  jackson:
+    time-zone: UTC
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false  # API evolution compatibility
+      fail-on-null-for-primitives: true
+      fail-on-numbers-for-enums: true
+    default-property-inclusion: NON_NULL
+    mapper:
+      accept-case-insensitive-enums: false
+      
+  # Flyway - Production Safety
+  flyway:
+    validate-on-migrate: true
+    clean-disabled: true          # Critical: No clean in prod
+    out-of-order: false
+    baseline-on-migrate: false
+    
+  # Redis Configuration (Feature Toggle)
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+  # Lifecycle - Graceful Shutdown
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  task:
+    execution:
+      shutdown:
+        await-termination: true
+        await-termination-period: 30s
+
+# Server Configuration
+server:
+  shutdown: graceful
+  forward-headers-strategy: framework
+  tomcat:
+    remoteip:
+      header-name: X-Forwarded-For
+    connection-timeout: 20000
+    keep-alive-timeout: 15000
+    max-connections: 200
+    threads:
+      max: 50
+      min-spare: 10
+
+# Management configuration moved to application-base.yaml             # For internal monitoring only
+
+# Logging - Production Level
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: OFF        # Critical: No SQL logging
+    org.hibernate.type.descriptor.sql.BasicBinder: OFF
+    org.springframework.web: INFO
+    com.chubini.pku: INFO
+  pattern:
+    console: '{"timestamp":"%d{ISO8601}","level":"%p","logger":"%c{1}","traceId":"%X{traceId:-}","spanId":"%X{spanId:-}","message":"%replace(%m){"(email|phone|token)=[^\\s]+","$1=***"}"}%n'
+
+# Application Specific - Production Values
+app:
+  security:
+    cors:
+      allowed-origins:
+        - "https://app.pku.example"
+        - "https://admin.pku.example"
+  
+  # Rate Limiting - Production Tuned (hooks for future Redis/Hazelcast)
+  rate-limiting:
+    strict-tier:
+      capacity: 5
+      refill-period: 300s
+    moderate-tier:
+      capacity: 15
+      refill-period: 60s
+    standard-tier:
+      capacity: 50
+      refill-period: 60s
+    exclude-methods: ["OPTIONS"]
+    
+  # Idempotency - Hooks for future Redis storage
+  idempotency:
+    enabled: true
+    ttl-seconds: 3600            # 1 hour TTL for duplicate detection
+
+# PKU Application Configuration
+pku:
+  ratelimit:
+    distributed: ${PKU_RATELIMIT_DISTRIBUTED:false}  # Feature toggle for Redis

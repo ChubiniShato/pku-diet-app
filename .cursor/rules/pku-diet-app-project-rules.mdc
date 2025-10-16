@@ -1,0 +1,285 @@
+---
+alwaysApply: true
+---
+
+# PKU Diet App — Cursor Project Rules (Rev C)
+
+> This Rev C incorporates three refinements:
+> 1) Golden tests use **tolerant matching** for floating‑point results.
+> 2) **Circuit Breaker** is optional and enabled **phase‑wise** based on observability thresholds.
+> 3) **Consumer‑Driven Contract (CDC) tests** are deferred until MCP split is imminent; before that we enforce **OpenAPI contract‑first + mock‑based contract validation**.
+
+---
+
+## 0) General Principles
+- **No behavior change without tests.** Any functional change must ship with tests.
+- **Small, focused PRs.** ~400 LoC max; split large refactors.
+- **Conventional Commits:** `feat|fix|refactor|test|chore|docs|perf`.
+- **Branch naming:** `type/scope-short-desc` (e.g., `refactor/menu-engine`).
+- **Architecture Decision Records (ADR):** Record significant decisions in `/docs/adr/`.
+
+---
+
+## 1) Backend Architecture
+
+### Controllers are thin
+- Controllers perform **DTO validation + one orchestrator/service call** only.
+- **No business logic** in controllers; **no loops/streams**, **≤ 2 nesting levels**.
+- Handle status codes + mapping; delegate all computation.
+
+### Single Responsibility Services
+- One service = one business capability.
+- Prefer composition: `*Orchestrator`, `*Engine`, `*Checker`, `*Calculator`.
+- **Complexity budgets:** method **cyclomatic complexity ≤ 12**, parameters per method **≤ 5**; constructor DI **≤ 6 beans**.
+
+### DTO Mapping via MapStruct
+- Domain objects **must not** cross API boundaries.
+- Request/Response DTOs are **mandatory**.
+- `mapping/` package with MapStruct `@Mapper` interfaces.
+- Exception: trivial **record ↔ DTO** inline mapping allowed for simple, non-domain types.
+
+### Validation
+- All public DTOs use precise `@NotNull/@Positive/@Size/@Pattern`.
+- Business rules via custom validators.
+- Unified error payload: `error.code`, `message`, `details[]`, `traceId` (via `@ControllerAdvice`).
+
+### Rate Limiting — Single Source of Truth
+- **Bucket4j only** (no custom filters/interceptors).
+- Identity: **per `userId`** (auth) or **per `ip+UA`** (public).
+- Route tiers (example): `/auth/*` moderate; `/menu/generate` strict burst + long window.
+- **Idempotency-Key** required for POST upload/import endpoints.
+
+### Pagination & Filtering
+- All list endpoints accept `page,size,sort,filter` → return `Page<T>`.
+- Consistent names and default sorting.
+
+---
+
+## 2) Persistence / SQL / Transactions
+
+### Flyway
+- Migrations named `V<timestamp>__short_desc.sql` with intent comments.
+- Indexes/unique keys on frequently filtered fields (justify in PR).
+
+### Queries & Performance
+- **No N+1**; use fetch join/batch fetch.
+- Attach **EXPLAIN** (before/after if changed) for complex queries.
+- Budgets (guideline): simple <100 ms, complex <500 ms (test dataset).
+
+### Transaction Boundaries
+- Service layer transactional: default **READ COMMITTED**.
+- Read-heavy ops: `@Transactional(readOnly=true)`.
+- Backfills & destructive changes behind feature flags; document rollback strategy.
+
+---
+
+## 3) Configuration / Security
+
+### Profiles
+- Strict `dev|test|prod` separation.
+- `prod`: `spring.jpa.show-sql=false`, `logging.level.root=INFO`.
+
+### Secrets
+- **No secrets in `.env`**. Use Secret Manager / env injection.
+- Rotate secrets regularly.
+
+### CORS & Headers
+- Explicit whitelist; `*` forbidden in prod.
+- Security headers enabled: `X-Content-Type-Options`, `X-Frame-Options/Permissions-Policy`, `Referrer-Policy`, `CSP`.
+- HTTPS enforced in prod.
+
+### Tokens & CSRF
+- If using refresh tokens: **rotation + reuse detection**.
+- CSRF disabled only for pure API with token auth; otherwise enable + `SameSite/HttpOnly/Secure`.
+
+### Logging
+- No PII/secrets. Structured JSON logs in prod with `traceId/spanId`.
+
+---
+
+## 4) File Uploads / Imports
+
+- Max upload size (CSV) **≤ 10 MB**, **≤ 10k rows** per file.
+- Enforce charset (UTF-8), dialect, header schema; **reject on first schema error**.
+- Per-field length/format limits; numeric range checks.
+- Idempotent processing via **Idempotency-Key**.
+
+---
+
+## 5) Observability & SLOs
+
+- **Actuator**: `/actuator/health`, `/metrics` enabled.
+- **OpenTelemetry tracing** for HTTP & DB; propagate `traceId` to UI and logs.
+- Business metrics (menus generated, CSV import failures, nutrition calc failures).
+- SLOs: list endpoints median <200 ms, p95 <800 ms; weekly 5xx rate <0.5%. Add alerts.
+
+---
+
+## 6) Frontend (React/TypeScript)
+
+### Type Safety & Structure
+- `"strict": true`; no `any`.
+- Clear prop interfaces; split container/presentational components.
+- **Max ~350 lines/component** (if exceeded → decompose in the PR).
+
+### API Client
+- Single centralized API client; **no direct `fetch`** in components.
+- **Phase-wise resilience:**
+  - **Phase 1 (default):** timeouts + **bounded retries** + idempotency.
+  - **Phase 3 (optional):** enable **circuit breaker** **only** for flaky/high-latency external routes **when** p95 latency > 800 ms or error‑rate > 2% over 10‑minute window.
+- Conditional caching (ETag/Last-Modified) for read-heavy endpoints.
+
+### UX States & A11y
+- Mandatory loading/error states on all pages/grids.
+- Add basic accessibility checks (`jest-axe` or equivalent) to critical flows.
+
+---
+
+## 7) Testing Strategy
+
+### Coverage (phased)
+- **Phase 1:** lines ≥ 55%, branches ≥ 45%  
+- **Phase 2:** lines ≥ 65%, branches ≥ 55%  
+- **Phase 3 (steady-state):** lines ≥ 75%, branches ≥ 60%  
+- Critical modules (menu/nutrition/security) **≥ 80% lines**.
+
+### Types of Tests
+- Unit tests for business logic (engines/calculators).
+- Integration tests for API (Testcontainers **mandatory**).
+- E2E for critical journeys (Login, CsvUpload, MenuGeneration, LanguageSwitcher).
+
+### Golden Tests (Tolerant)
+- Numeric comparisons use **tolerant matching**: `abs(actual - expected) ≤ 1e-6` **or** `relative_error ≤ 1e-4`.
+- Fix random seeds and deterministic ordering for reproducibility.
+- Bit‑identical matching remains for **strings/serialized structures** (normalized/sorted).
+
+---
+
+## 8) Code Quality & Hygiene
+
+- No `temp_disabled/` in repo (use feature flags or branches).
+- TODO lifecycle: every `TODO/FIXME` links to issue → `TODO(#1234): text`.
+- Max file length 300–350 lines; above limit requires refactor plan.
+- Formatting: Spotless + Google Java Style (backend), ESLint + Prettier (frontend).
+
+---
+
+## 9) API Versioning
+
+- REST namespace `/api/v1/...`; breaking changes → `/api/v2`.
+- Keep previous version for ≥1 release; emit deprecation warnings.
+
+---
+
+## 10) Microservice/MCP Readiness
+
+- Split criteria (both required):
+  1) CPU-bound or latency-critical (e.g., **Menu Generation**, **Analytics**)
+  2) Independent deploy cadence / scaling needs
+
+### Contracts & Tests (Phased)
+- **Before split:** **OpenAPI contract‑first**, schema validation in CI, **mock‑based contract tests** (example‑driven).
+- **When split is imminent:** add **Consumer‑Driven Contract tests** (e.g., Pact) for critical consumer/provider pairs.
+- **Contract‑first** remains source of truth; SLAs per service (e.g., Menu Generation p95 ≤ 1.2 s; Translation ≤ 300 ms).
+
+---
+
+## 11) Governance
+
+- **CODEOWNERS** for critical packages (`menu/`, `nutrition/`, `security/`).
+- ADR link required in PR when architecture decisions change.
+
+---
+
+## 12) CI/CD Blocking Gates
+
+### Backend
+- `spotless:check`, Checkstyle/PMD/SpotBugs pass.
+- `mvn -Ptest verify` with Testcontainers.
+- Dependency audit (OWASP/Snyk) — no high/critical vulns.
+
+### Frontend
+- ESLint + typecheck pass; Vitest passes; build succeeds.
+- A11y smoke checks for critical flows.
+
+### Performance & Observability
+- If queries changed: attach **EXPLAIN + before/after latency**.
+- Smoke tests on `prod` profile; Docker image builds.
+
+---
+
+## Enforcement Config Snippets
+
+### Spotless (backend)
+```xml
+<plugin>
+  <groupId>com.diffplug.spotless</groupId>
+  <artifactId>spotless-maven-plugin</artifactId>
+  <version>2.43.0</version>
+  <configuration>
+    <java>
+      <googleJavaFormat/>
+      <removeUnusedImports/>
+    </java>
+  </configuration>
+  <executions>
+    <execution>
+      <goals><goal>check</goal></goals>
+    </execution>
+  </executions>
+</plugin>
+```
+
+### MapStruct
+```xml
+<properties>
+  <mapstruct.version>1.6.0</mapstruct.version>
+</properties>
+<dependencies>
+  <dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>${mapstruct.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct-processor</artifactId>
+    <version>${mapstruct.version}</version>
+    <scope>provided</scope>
+  </dependency>
+</dependencies>
+```
+
+### ESLint (frontend)
+```json
+{
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:react/recommended"],
+  "rules": {
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "max-lines": ["error", 350],
+    "complexity": ["error", 12],
+    "@typescript-eslint/no-explicit-any": "error",
+    "import/no-default-export": "error",
+    "no-restricted-imports": ["error", { "paths": [{ "name": "node-fetch", "message": "Use centralized ApiClient" }] }]
+  }
+}
+```
+
+### PR Template (delta)
+```markdown
+### What & Why
+- [ ] No behavior change without tests (or explained)
+- [ ] Controller remains thin (no loops/streams, ≤2 nesting levels)
+- [ ] MapStruct used for DTO mapping (no domain crossing API)
+- [ ] Validation added/updated (DTO constraints + unified ApiError)
+- [ ] Pagination/Filtering standard (page,size,sort,filter)
+- [ ] Rate limiting: Bucket4j only; route tier + identity clarified
+- [ ] Idempotency-Key for POST upload/import endpoints (if applicable)
+- [ ] DB changes: EXPLAIN attached (+ before/after latency)
+- [ ] Transactions defined (readOnly where applicable)
+- [ ] Observability: metrics/traces unaffected or improved
+- [ ] Tests updated (unit/integration/E2E; coverage thresholds met)
+- [ ] Security: secrets not in .env; headers/CORS verified
+```
+
+

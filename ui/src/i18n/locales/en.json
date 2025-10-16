@@ -1,0 +1,877 @@
+{
+  "app": {
+    "title": "PKU Diet App",
+    "description": "Manage your phenylketonuria diet with ease"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "day": "Day",
+    "week": "Week",
+    "products": "Products",
+    "dishes": "Dishes",
+    "pantry": "Pantry",
+    "scan": "Scan",
+    "share": "Share",
+    "critical": "Critical",
+    "profile": "Profile",
+    "settings": "Settings",
+    "adminPanel": "Admin Panel",
+    "toggleMenu": "Toggle Menu"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "addDish": "Add Dish",
+    "search": "Search",
+    "goBack": "Go Back",
+    "allProducts": "All Products",
+    "back": "Back",
+    "clear": "Clear",
+    "filter": "Filter",
+    "productName": "Product Name",
+    "lowPheFilter": "Low PHE Filter",
+    "customMaxPhe": "Custom Max PHE (mg/100g)",
+    "searchProducts": "Search products...",
+    "maxPheExample": "e.g. 150",
+    "activeFilters": "Active filters:",
+    "query": "Query",
+    "category": "Category",
+    "maxPhe": "Max PHE",
+    "productDetails": "Product Details",
+    "per100g": "Per 100g",
+    "perServing": "Per Serving",
+    "servingSize": "Serving size:",
+    "phenylalanine": "Phenylalanine",
+    "macronutrients": "Macronutrients",
+    "protein": "Protein",
+    "carbohydrates": "Carbohydrates",
+    "fats": "Fats",
+    "calories": "Calories",
+    "aminoAcids": "Amino Acids",
+    "leucine": "Leucine",
+    "tyrosine": "Tyrosine",
+    "methionine": "Methionine",
+    "energy": "Energy",
+    "kilojoules": "Kilojoules",
+    "kilocalories": "Kilocalories",
+    "per100gText": "per 100g",
+    "perServingText": "per serving",
+    "failedToLoad": "Failed to load product details"
+  },
+  "api": {
+    "testConnection": "Test API Connection",
+    "testing": "Testing...",
+    "status": {
+      "up": "API is UP",
+      "down": "API is DOWN"
+    }
+  },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "Upload CSV File",
+        "subtitle": "Drag and drop CSV file here or click the button"
+      },
+      "browseFiles": "Browse Files",
+      "upload": "Upload",
+      "uploading": "Uploading...",
+      "errors": {
+        "invalidType": "Only CSV files are allowed",
+        "fileTooLarge": "File is too large. Maximum {maxSize}MB"
+      }
+    },
+    "productRequest": {
+      "title": "Product Addition Request",
+      "productName": "Product Name",
+      "productNamePlaceholder": "Enter product name",
+      "productType": "Product Type",
+      "rawProduct": "Raw Product (vegetables, fruits, grains)",
+      "processedProduct": "Combined/Ready Product (manufactured snacks, drinks, food)",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "description": "Description",
+      "descriptionPlaceholder": "Detailed product description",
+      "pheContent": "PHE Content",
+      "pheContentPlaceholder": "e.g. 15.5",
+      "proteinContent": "Protein Content",
+      "proteinContentPlaceholder": "e.g. 2.3",
+      "sourceLink": "Source Link",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "Please provide a valid source link where you found the nutritional information",
+      "productImages": "Product Documentation Photos",
+      "dragDropImages": "Drag and drop images here or click the button",
+      "imageRequirements": "Maximum 5 images, each up to 5MB",
+      "selectImages": "Select Images",
+      "selectedImages": "Selected Images",
+      "notes": "Additional Notes",
+      "validation": {
+        "productNameRequired": "Product name is required",
+        "categoryRequired": "Category is required",
+        "descriptionRequired": "Description is required",
+        "imagesRequired": "Documentation photos are required for processed products"
+      },
+      "notesPlaceholder": "Notes for admin",
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "success": "Request submitted successfully!",
+      "error": "Error submitting request"
+    },
+    "dishRequest": {
+      "title": "Dish Addition Request",
+      "dishName": "Dish Name",
+      "dishNamePlaceholder": "Enter dish name",
+      "category": "Category",
+      "selectCategory": "Select category",
+      "cuisine": "Cuisine",
+      "selectCuisine": "Select cuisine",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter dish description",
+      "recipeProject": "Recipe Project",
+      "recipeProjectPlaceholder": "Enter detailed recipe description, ingredients and preparation method",
+      "recipeProjectHelp": "Please provide complete recipe details, ingredient quantities and preparation steps",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional information",
+      "submit": "Submit Request",
+      "submitting": "Submitting..."
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Your daily PHE overview",
+      "welcome": "Welcome",
+      "welcomeMessage": "Welcome to PKU Diet App. Start tracking your daily nutrition."
+    },
+    "adminPanel": {
+      "title": "Admin Panel",
+      "subtitle": "System management and request review",
+      "pendingRequests": "Pending Requests",
+      "productRequests": "Product Requests",
+      "dishRequests": "Dish Requests",
+      "noRequestsYet": "No requests yet",
+      "viewAll": "View All",
+      "csvUpload": "CSV Upload",
+      "uploadProductsCsv": "Upload Products CSV",
+      "uploadDishesCsv": "Upload Dishes CSV"
+    },
+    "day": {
+      "title": "Day View",
+      "subtitle": "Detailed daily meal tracking",
+      "validation": {
+        "validate": "Validate Menu",
+        "validating": "Validating...",
+        "complete": "Validation Complete",
+        "status": {
+          "ok": "Menu Validated Successfully",
+          "warn": "Menu Validation Warnings",
+          "breach": "Menu Validation Failed"
+        }
+      },
+      "suggestions": {
+        "show": "Show Suggestions",
+        "hide": "Hide Suggestions",
+        "title": "Snack Suggestions",
+        "loading": "Loading suggestions...",
+        "none": "No snack suggestions available",
+        "based": "Based on your current daily intake, here are some low-PHE snack options:"
+      },
+      "meals": {
+        "breakfast": "Breakfast",
+        "lunch": "Lunch", 
+        "dinner": "Dinner",
+        "supper": "Supper",
+        "snack": "Snack"
+      },
+      "nutrition": {
+        "planned": "Planned",
+        "consumed": "Consumed",
+        "actuallyConsumed": "Actually Consumed",
+        "consumptionProgress": "Consumption Progress",
+        "dailyNutrition": "Daily Nutrition",
+        "mealTotals": "Meal Totals"
+      },
+      "actions": {
+        "addProduct": "+ Product",
+        "addDish": "+ Dish",
+        "productAdded": "Product Added",
+        "dishAdded": "Dish Added",
+        "itemRemoved": "Item Removed",
+        "snackAdded": "Snack Added",
+        "none": "None",
+        "half": "Half",
+        "all": "All"
+      }
+    },
+    "week": {
+      "title": "Week View",
+      "subtitle": "Weekly meal planning",
+      "calendar": {
+        "today": "Today",
+        "previous": "← Prev",
+        "next": "Next →",
+        "mondayStart": "Mon",
+        "sundayStart": "Sun",
+        "generated": "Generated",
+        "emergency": "Emergency",
+        "planned": "Planned"
+      },
+      "generation": {
+        "title": "Menu Generation",
+        "subtitle": "AI-powered meal planning",
+        "options": "Generation Options",
+        "emergencyMode": "Emergency Mode",
+        "emergencyDesc": "Allows dish repeats within 2 days for urgent planning",
+        "respectPantry": "Respect Pantry",
+        "respectPantryDesc": "Prioritize ingredients you already have in your pantry",
+        "generateWeek": "Generate Week",
+        "generateDay": "Generate Day",
+        "generatingWeek": "Generating Week...",
+        "generatingDay": "Generating Day...",
+        "selectDayFirst": "Select Day First",
+        "active": "Active",
+        "enabled": "Enabled",
+        "rules": {
+          "title": "Generation Rules",
+          "variety": "Variety",
+          "varietyNormal": "No dish repeats within 2 days",
+          "varietyEmergency": "Dishes can repeat within 2 days",
+          "pantry": "Pantry",
+          "pantryEnabled": "Uses available ingredients first",
+          "pantryDisabled": "Ignores current pantry stock",
+          "nutrition": "Targets daily PHE limits and nutritional balance",
+          "preferences": "Respects dietary restrictions and preferences"
+        },
+        "advanced": "Advanced dietary preferences can be configured in your profile"
+      },
+      "statistics": {
+        "title": "Week Statistics",
+        "daysGenerated": "Days Generated",
+        "totalMeals": "Total Meals",
+        "emergencyDays": "Emergency Days",
+        "completion": "Completion"
+      },
+      "badges": {
+        "phe": "PHE",
+        "protein": "Pro",
+        "calories": "Cal",
+        "fat": "Fat"
+      }
+    },
+    "products": {
+      "title": "Products",
+      "subtitle": "Browse food products database",
+      "addProduct": "Add Product"
+    },
+    "productNew": {
+      "title": "Add New Product",
+      "subtitle": "Enter all nutritional characteristics of the product",
+      "basicInfo": "Basic Information",
+      "productName": "Product Name",
+      "productNamePlaceholder": "e.g. Apple",
+      "category": "Category",
+      "selectCategory": "Select Category",
+      "description": "Description",
+      "descriptionPlaceholder": "Detailed product description",
+      "aminoAcids": "Amino Acids",
+      "phenylalanine": "Phenylalanine",
+      "leucine": "Leucine",
+      "tyrosine": "Tyrosine",
+      "methionine": "Methionine",
+      "macronutrients": "Macronutrients",
+      "protein": "Protein",
+      "carbohydrates": "Carbohydrates",
+      "fats": "Fats",
+      "energy": "Energy",
+      "kilocalories": "Kilocalories",
+      "kilojoules": "Kilojoules",
+      "create": "Create Product",
+      "creating": "Creating...",
+      "success": "Product created successfully!",
+      "error": "Error creating product"
+    },
+    "drawer": {
+      "title": "Product Details",
+      "per100g": "Per 100g",
+      "perServing": "Per Serving",
+      "servingSize": "Serving size",
+      "macronutrients": "Macronutrients",
+      "aminoAcids": "Amino Acids",
+      "energy": "Energy"
+    },
+    "upload": {
+      "title": "Admin Mode - CSV Upload",
+      "description": "Upload a CSV file to bulk import products",
+      "selectFile": "Select CSV file",
+      "uploading": "Uploading...",
+      "upload": "Upload",
+      "cancel": "Cancel",
+      "success": "Upload successful",
+      "error": "Upload failed"
+    },
+    "dishes": {
+      "title": "Dishes",
+      "subtitle": "Your created recipes and dishes",
+      "requestToAddToCommon": "Request to Add Dish to Common Database",
+      "addToMyDishes": "Add Dish to My Dishes",
+      "requestTitle": "Request Dish Addition to Common Database",
+      "submitRequest": "Submit Request",
+      "categories": {
+        "all": "All",
+        "filterBy": "Filter:",
+        "suggested": "Suggested Dishes",
+        "myDishes": "My Created Dishes",
+        "ukrainian": "Ukrainian Dishes",
+        "georgian": "Georgian Dishes", 
+        "caucasian": "Caucasian Dishes",
+        "breakfast": "Breakfast",
+        "lunch": "Lunch",
+        "dinner": "Dinner",
+        "snacks": "Snacks",
+        "georgianCuisine": "Georgian Cuisine",
+        "ukrainianCuisine": "Ukrainian Cuisine",
+        "caucasianCuisine": "Caucasian Cuisine",
+        "russianCuisine": "Russian Cuisine",
+        "europeanCuisine": "European Cuisine",
+        "asianCuisine": "Asian Cuisine",
+        "mediterraneanCuisine": "Mediterranean Cuisine",
+        "americanCuisine": "American Cuisine"
+      },
+      "builder": {
+        "createNew": "Create New Dish",
+        "editDish": "Edit Dish",
+        "basicInfo": "Basic Information",
+        "dishName": "Dish Name",
+        "description": "Description",
+        "category": "Category",
+        "servings": "Servings",
+        "ingredients": "Ingredients",
+        "addIngredient": "Add Ingredient",
+        "noIngredients": "No ingredients added yet",
+        "nutritionSummary": "Nutrition Summary",
+        "perServing": "Per Serving",
+        "total": "Total",
+        "scale": "Scale",
+        "solveMass": "Solve Mass",
+        "createDish": "Create Dish",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "scaling": "Scaling...",
+        "solving": "Solving...",
+        "deleting": "Deleting..."
+      },
+      "picker": {
+        "title": "Select Product",
+        "searchPlaceholder": "Search products...",
+        "allCategories": "All Categories",
+        "noProducts": "No products found matching your criteria"
+      }
+    },
+    "pantry": {
+      "title": "Pantry",
+      "subtitle": "Manage your food inventory",
+      "table": {
+        "product": "Product",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "expiry": "Expiry",
+        "price": "Price",
+        "actions": "Actions",
+        "addItem": "Add Item",
+        "adding": "Adding...",
+        "edit": "Edit",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "noItems": "No pantry items",
+        "getStarted": "Get started by adding your first pantry item",
+        "selectProduct": "Select Product",
+        "expiringItems": "expiring soon",
+        "noExpiry": "No expiry"
+      },
+      "budget": {
+        "title": "Budget Settings",
+        "subtitle": "Set spending limits for meal planning",
+        "active": "Active",
+        "inactive": "Inactive",
+        "edit": "Edit",
+        "setBudget": "Set Budget",
+        "enableConstraints": "Enable Budget Constraints",
+        "enableDesc": "When enabled, menu generation will respect budget limits",
+        "currency": "Currency",
+        "dailyBudget": "Daily Budget",
+        "weeklyBudget": "Weekly Budget",
+        "monthlyBudget": "Monthly Budget",
+        "maxDaily": "Maximum daily spending",
+        "maxWeekly": "Maximum weekly spending",
+        "maxMonthly": "Maximum monthly spending",
+        "suggestions": "Budget Suggestions",
+        "basedOnDaily": "Based on your daily budget",
+        "consider": "consider setting",
+        "budgetActive": "Budget Active",
+        "budgetActiveDesc": "Menu generation will respect your budget constraints and prioritize cost-effective ingredients",
+        "noBudget": "No budget set",
+        "noBudgetDesc": "Set budget limits to help control meal planning costs",
+        "createBudget": "Create Budget",
+        "updateBudget": "Update Budget",
+        "creating": "Creating...",
+        "updating": "Updating..."
+      },
+      "filters": {
+        "searchPlaceholder": "Search pantry items...",
+        "expiringFilter": "Show expiring items (within 7 days)",
+        "activeFilters": "Active filters",
+        "search": "Search",
+        "expiringWithin": "Expiring within 7 days"
+      },
+      "tips": {
+        "title": "Pantry Tips",
+        "useExpiringFirst": "Use expiring items first",
+        "useExpiringDesc": "Items expiring within 7 days will be highlighted and prioritized in menu generation",
+        "trackPrices": "Track prices",
+        "trackPricesDesc": "Adding unit prices helps with budget planning and cost-effective meal generation",
+        "organizeLocation": "Organize by location",
+        "organizeLocationDesc": "Note storage locations (Fridge, Freezer, Pantry) to better track your inventory"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "checkExpiring": "Check Expiring Items",
+        "viewAll": "View All Items"
+      }
+    },
+    "scan": {
+      "title": "Scan",
+      "subtitle": "Scan product labels and extract nutrition information",
+      "upload": {
+        "title": "Upload Product Images",
+        "subtitle": "Upload clear photos of product labels, nutrition facts, and ingredient lists. Multiple angles help improve accuracy.",
+        "dragDrop": "Drag and drop or click to select",
+        "supported": "Supported: JPEG, PNG, WebP",
+        "maxFiles": "Max files",
+        "maxSize": "MB each",
+        "ready": "Ready for processing",
+        "clearAll": "Clear All"
+      },
+      "additional": {
+        "title": "Additional Information (Optional)",
+        "subtitle": "Provide additional context to improve scanning accuracy",
+        "region": "Region/Country",
+        "regionPlaceholder": "e.g., USA, UK, Germany",
+        "regionHelp": "Helps with language detection and regional product databases",
+        "barcode": "Barcode (if visible)",
+        "barcodePlaceholder": "e.g., 1234567890123",
+        "barcodeHelp": "Manual entry if barcode detection fails"
+      },
+      "ready": {
+        "title": "Ready to Scan?",
+        "subtitle": "Upload at least one image to start processing",
+        "startScan": "Start Scan",
+        "processing": "Processing..."
+      },
+      "complete": {
+        "title": "Scan Complete",
+        "subtitle": "Choose what to do with your scan results",
+        "newScan": "New Scan",
+        "submitGlobal": "Submit to Global Catalog"
+      },
+      "tips": {
+        "title": "Scanning Tips",
+        "goodLighting": "Good lighting",
+        "goodLightingDesc": "Ensure labels are well-lit and clearly visible",
+        "multipleAngles": "Multiple angles",
+        "multipleAnglesDesc": "Capture front label, nutrition facts, and ingredients list",
+        "avoidGlare": "Avoid glare",
+        "avoidGlareDesc": "Position to avoid reflections and shadows",
+        "focusText": "Focus on text",
+        "focusTextDesc": "Ensure nutrition facts and ingredients are in focus"
+      },
+      "serviceStatus": {
+        "title": "Service Status",
+        "ocrProcessing": "OCR Processing",
+        "barcodeDetection": "Barcode Detection",
+        "safetyChecking": "Safety Checking",
+        "globalSubmission": "Global Submission",
+        "available": "Available",
+        "unavailable": "Unavailable",
+        "fallbackMode": "Running in fallback mode with limited functionality"
+      },
+      "extraction": {
+        "title": "What We Extract",
+        "productInfo": "Product Information",
+        "productInfoDesc": "Name, brand, category",
+        "nutritionFacts": "Nutrition Facts",
+        "nutritionFactsDesc": "PHE, protein, calories, etc.",
+        "ingredientsList": "Ingredients List",
+        "ingredientsListDesc": "Complete ingredient breakdown",
+        "safetyAlerts": "Safety Alerts",
+        "safetyAlertsDesc": "Allergens, forbidden ingredients",
+        "barcodeMatching": "Barcode Matching",
+        "barcodeMatchingDesc": "Product database lookups"
+      },
+      "results": {
+        "title": "Label Scan Results",
+        "ocrResults": "OCR Results",
+        "barcodes": "Barcodes",
+        "productData": "Product Data",
+        "confidence": "Confidence",
+        "language": "Language",
+        "detectedRegions": "Detected Regions",
+        "noTextDetected": "No text detected",
+        "noTextDesc": "Unable to extract text from the uploaded images",
+        "noBarcodesDetected": "No barcodes detected",
+        "noBarcodesDesc": "No barcodes were found in the uploaded images",
+        "matchedProduct": "Matched Product",
+        "name": "Name",
+        "brand": "Brand",
+        "category": "Category",
+        "phe": "PHE per 100g",
+        "verified": "Verified",
+        "unverified": "Unverified",
+        "source": "Source"
+      },
+      "safety": {
+        "title": "Safety Alerts",
+        "highPheContent": "High PHE Content",
+        "forbiddenIngredient": "Forbidden Ingredient",
+        "allergenWarning": "Allergen Warning",
+        "artificialSweetener": "Artificial Sweetener",
+        "processingWarning": "Processing Warning",
+        "incompleteInfo": "Incomplete Information",
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "affectedIngredients": "Affected ingredients",
+        "recommendation": "Recommendation",
+        "summary": "Safety Summary",
+        "reviewAlerts": "Please review all safety alerts before consuming this product. Consult your healthcare provider if you have questions about any flagged ingredients."
+      },
+      "submission": {
+        "consentRequired": "Consent Required",
+        "consentDesc": "To submit product data to the global catalog, you must first grant consent to contribute to research.",
+        "researchConsent": "Research Contribution Consent Required",
+        "researchConsentDesc": "Submitting product data to the global catalog requires consent to contribute your anonymized data to PKU research studies. This helps improve treatments and understanding of the condition.",
+        "whatHappens": "What happens when you submit:",
+        "anonymized": "Your product data is anonymized and added to a research database",
+        "researchers": "Researchers can use this data to study PKU dietary patterns",
+        "noPersonal": "Your personal information is never shared or linked to the data",
+        "improvesTreatment": "The data helps improve PKU treatment recommendations",
+        "revokeAnytime": "You can revoke consent at any time in your sharing settings",
+        "benefits": "Benefits of contributing:",
+        "expandDatabase": "Help expand the global PKU food database",
+        "improveAccuracy": "Improve accuracy of PHE content information",
+        "betterTools": "Support development of better dietary management tools",
+        "advanceResearch": "Contribute to PKU research and treatment advances",
+        "grantConsent": "Grant Consent in Settings",
+        "submitTitle": "Submit to Global Catalog",
+        "reviewDesc": "Review the extracted product information before submitting to the global catalog",
+        "submissionProcess": "Submission Process",
+        "submissionProcessDesc": "Your submission will be reviewed by our moderation team to ensure accuracy before being added to the global catalog. This process typically takes 1-3 business days.",
+        "submitting": "Submitting...",
+        "submitCatalog": "Submit to Catalog",
+        "successful": "Submission Successful!",
+        "successDesc": "Your product data has been submitted to the global catalog and will be reviewed by our moderation team.",
+        "thankYou": "Thank you for contributing!",
+        "thankYouDesc": "Your contribution helps improve the PKU community's access to accurate dietary information. You'll receive a notification once your submission has been reviewed."
+      },
+      "status": {
+        "pending": "Scan queued for processing...",
+        "processing": "Analyzing images and extracting data...",
+        "completed": "Processing completed successfully",
+        "failed": "Processing failed. Please try again.",
+        "partial": "Processing completed with some issues"
+      }
+    },
+    "share": {
+      "title": "Share",
+      "subtitle": "Share your data securely with healthcare providers",
+      "consents": {
+        "title": "Data Sharing Consents",
+        "subtitle": "Manage your data sharing permissions and privacy settings",
+        "shareWithDoctor": {
+          "title": "Share with Healthcare Providers",
+          "description": "Allow sharing of your PKU dietary data with doctors and healthcare professionals for medical consultation and treatment planning."
+        },
+        "globalSubmission": {
+          "title": "Contribute to Research",
+          "description": "Allow your anonymized dietary data to be used in PKU research studies to help improve treatments and understanding of the condition."
+        },
+        "granted": "Granted",
+        "notGranted": "Not Granted",
+        "grantedAt": "Granted",
+        "revokedAt": "Revoked",
+        "lastUpdated": "Last updated"
+      },
+      "links": {
+        "title": "Share Your Data",
+        "subtitle": "Create secure links to share your dietary data with healthcare providers",
+        "createLink": "Create Share Link",
+        "sharingDisabled": "Sharing Disabled",
+        "sharingDisabledDesc": "To create share links, you must first grant consent to \"Share with Healthcare Providers\" above. This ensures you have explicitly authorized sharing your medical data.",
+        "modal": {
+          "title": "Create Share Link",
+          "subtitle": "Generate a secure link to share your data with healthcare providers",
+          "whatToShare": "What to Share",
+          "dateSelection": "Date Selection",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "expiration": "Link Expiration",
+          "noExpiration": "No expiration",
+          "oneTimeUse": "One-time use",
+          "oneTimeDesc": "Link becomes invalid after first access",
+          "requireOtp": "Require OTP",
+          "requireOtpDesc": "Recipient needs one-time password",
+          "generateQr": "Generate QR Code",
+          "generateQrDesc": "Easy mobile access via QR code",
+          "emailInvite": "Email Invite (Optional)",
+          "emailPlaceholder": "doctor@example.com",
+          "emailDesc": "Send the share link directly to this email address",
+          "accessLimit": "Access Limit (Optional)",
+          "accessLimitDesc": "Maximum number of times this link can be accessed",
+          "creating": "Creating...",
+          "create": "Create Share Link"
+        },
+        "result": {
+          "title": "Share Link Created",
+          "subtitle": "Your secure share link is ready to use",
+          "shareLink": "Share Link",
+          "otp": "One-Time Password",
+          "otpDesc": "Share this password separately with the recipient",
+          "qrCode": "QR Code",
+          "qrCodeDesc": "Scan with mobile device for easy access",
+          "linkDetails": "Link Details",
+          "scope": "Scope",
+          "expires": "Expires",
+          "never": "Never",
+          "accessLimit": "Access Limit",
+          "unlimited": "Unlimited",
+          "oneTimeUse": "One-time use",
+          "yes": "Yes",
+          "no": "No"
+        },
+        "manager": {
+          "title": "Share Links",
+          "showAll": "All Links",
+          "showActive": "Active Only",
+          "showInactive": "Inactive Only",
+          "allScopes": "All Scopes",
+          "criticalFacts": "Critical Facts",
+          "day": "Day",
+          "week": "Week",
+          "range": "Range",
+          "noLinks": "No share links",
+          "noLinksDesc": "Create your first share link to start sharing data.",
+          "created": "Created",
+          "accessed": "Accessed",
+          "expires": "Expires",
+          "lastAccessed": "Last accessed",
+          "emailInviteSent": "Email invite sent to",
+          "copy": "Copy",
+          "viewAudit": "View Audit",
+          "hideAudit": "Hide Audit",
+          "revoke": "Revoke",
+          "revokeConfirm": "Are you sure you want to revoke this share link? This action cannot be undone.",
+          "auditLog": "Audit Log",
+          "auditEvents": "events",
+          "noAuditEvents": "No audit events recorded.",
+          "status": {
+            "active": "Active",
+            "revoked": "Revoked",
+            "expired": "Expired",
+            "used": "Used",
+            "limitReached": "Limit Reached"
+          }
+        }
+      },
+      "security": {
+        "title": "Privacy & Security",
+        "encryption": "End-to-end encryption",
+        "encryptionDesc": "All shared data is encrypted in transit and at rest",
+        "accessControl": "Access control",
+        "accessControlDesc": "Set expiration dates, access limits, and OTP requirements",
+        "auditLogging": "Audit logging",
+        "auditLoggingDesc": "Complete audit trail of all access and sharing activities",
+        "instantRevocation": "Instant revocation",
+        "instantRevocationDesc": "Revoke access to any share link at any time"
+      },
+      "bestPractices": {
+        "title": "Sharing Best Practices",
+        "trustedProviders": "Only share with trusted healthcare providers",
+        "expirationDates": "Set appropriate expiration dates for temporary access",
+        "oneTimeLinks": "Use one-time links for sensitive consultations",
+        "otpSecurity": "Enable OTP for additional security when needed",
+        "reviewRegularly": "Regularly review and revoke unused share links",
+        "checkAuditLogs": "Check audit logs to monitor access to your data"
+      },
+      "compliance": {
+        "title": "HIPAA Compliant Sharing",
+        "description": "This platform follows HIPAA guidelines for secure sharing of protected health information (PHI). Your data is encrypted and access is logged for compliance."
+      }
+    },
+    "critical": {
+      "title": "Critical Facts",
+      "subtitle": "Monitor and manage critical dietary events and alerts",
+      "filters": {
+        "title": "Critical Facts Filters",
+        "activeFilters": "active filters",
+        "exportCsv": "Export CSV",
+        "exporting": "Exporting...",
+        "status": "Status",
+        "allFacts": "All Facts",
+        "unresolvedOnly": "Unresolved Only",
+        "resolvedOnly": "Resolved Only",
+        "from": "From",
+        "to": "To",
+        "clearAll": "Clear All",
+        "factTypes": "Fact Types",
+        "severityLevels": "Severity Levels",
+        "sources": "Sources"
+      },
+      "table": {
+        "title": "Critical Facts",
+        "showing": "Showing",
+        "of": "of",
+        "facts": "facts",
+        "noFacts": "No critical facts found",
+        "noFactsDesc": "No critical facts match your current filters",
+        "date": "Date",
+        "type": "Type",
+        "severity": "Severity",
+        "delta": "Delta",
+        "context": "Context",
+        "status": "Status",
+        "actions": "Actions",
+        "details": "Details",
+        "hide": "Hide",
+        "resolve": "Resolve",
+        "unresolve": "Unresolve",
+        "processing": "Processing...",
+        "resolved": "Resolved",
+        "unresolved": "Unresolved"
+      },
+      "details": {
+        "deltaDetails": "Delta Details",
+        "contextDetails": "Context Details",
+        "timestamps": "Timestamps",
+        "expected": "Expected",
+        "actual": "Actual",
+        "difference": "Difference",
+        "threshold": "Threshold",
+        "source": "Source",
+        "meal": "Meal",
+        "product": "Product",
+        "dish": "Dish",
+        "quantity": "Quantity",
+        "created": "Created",
+        "resolved": "Resolved",
+        "notes": "Notes"
+      },
+      "types": {
+        "pheBreach": "PHE Breach",
+        "proteinDeficiency": "Protein Deficiency",
+        "calorieExcess": "Calorie Excess",
+        "calorieDeficiency": "Calorie Deficiency",
+        "micronutrientDeficiency": "Micronutrient Deficiency",
+        "medicationInteraction": "Medication Interaction",
+        "allergenExposure": "Allergen Exposure",
+        "forbiddenIngredient": "Forbidden Ingredient",
+        "safetyWarning": "Safety Warning",
+        "dietaryViolation": "Dietary Violation"
+      },
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "sources": {
+        "dailyValidation": "Daily Validation",
+        "mealEntry": "Meal Entry",
+        "productScan": "Product Scan",
+        "manualEntry": "Manual Entry",
+        "automatedCheck": "Automated Check",
+        "healthcareProvider": "Healthcare Provider",
+        "systemAlert": "System Alert"
+      },
+      "summary": {
+        "totalFacts": "Total Facts",
+        "unresolved": "Unresolved",
+        "critical": "Critical",
+        "highPriority": "High Priority",
+        "recentFacts": "Recent Critical Facts"
+      },
+      "export": {
+        "complete": "Export Complete",
+        "downloaded": "Downloaded",
+        "as": "as"
+      },
+      "actions": {
+        "factResolved": "Fact Resolved",
+        "factResolvedDesc": "Critical fact has been marked as resolved",
+        "factUnresolved": "Fact Unresolved",
+        "factUnresolvedDesc": "Critical fact has been marked as unresolved"
+      },
+      "navigation": {
+        "criticalAlert": "Critical Alert",
+        "criticalAlerts": "Critical Alerts"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Your personal information"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "App preferences"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "subtitle": "Access your PKU diet management account",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "signIn": "Sign In",
+      "signingIn": "Signing in...",
+      "demoCredentials": "Demo Credentials Available",
+      "demoNote": "Use admin/admin123 or user/user123 for testing"
+    },
+    "logout": {
+      "title": "Sign Out",
+      "confirm": "Are you sure you want to sign out?",
+      "signingOut": "Signing out..."
+    },
+    "validation": {
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters"
+    },
+    "unauthorized": {
+      "title": "Access Denied",
+      "message": "You don't have permission to access this page.",
+      "yourRole": "Your Role",
+      "requiredRole": "Required Role",
+      "minimumRole": "Minimum Role"
+    },
+    "demo": {
+      "title": "Demo Accounts"
+    },
+    "security": {
+      "notice": "Your data is encrypted and secure"
+    }
+  },
+  "roles": {
+    "admin": "Administrator",
+    "healthcare_provider": "Healthcare Provider",
+    "patient": "Patient",
+    "user": "User"
+  }
+}

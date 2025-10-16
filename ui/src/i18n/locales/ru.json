@@ -1,0 +1,359 @@
+{
+  "app": {
+    "title": "ФКУ Диетическое Приложение",
+    "description": "Управляйте своей диетой при фенилкетонурии с лёгкостью"
+  },
+  "navigation": {
+    "dashboard": "Панель",
+    "day": "День",
+    "week": "Неделя",
+    "products": "Продукты",
+    "dishes": "Блюда",
+    "pantry": "Кладовая",
+    "scan": "Сканировать",
+    "share": "Поделиться",
+    "critical": "Критичное",
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "adminPanel": "Админ панель"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успешно",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "add": "Добавить",
+    "addDish": "Добавить блюдо",
+    "search": "Поиск",
+    "allProducts": "Все продукты",
+    "back": "Назад",
+    "clear": "Очистить",
+    "filter": "Фильтр",
+    "productName": "Название продукта",
+    "lowPheFilter": "Фильтр низкого PHE",
+    "customMaxPhe": "Максимальный PHE (мг/100г)",
+    "searchProducts": "Поиск продуктов...",
+    "maxPheExample": "напр. 150",
+    "activeFilters": "Активные фильтры:",
+    "query": "Запрос",
+    "category": "Категория",
+    "maxPhe": "Макс PHE",
+    "productDetails": "Детали продукта",
+    "per100g": "На 100г",
+    "perServing": "На порцию",
+    "servingSize": "Размер порции:",
+    "phenylalanine": "Фенилаланин",
+    "macronutrients": "Макронутриенты",
+    "protein": "Белки",
+    "carbohydrates": "Углеводы",
+    "fats": "Жиры",
+    "calories": "Калории",
+    "aminoAcids": "Аминокислоты",
+    "leucine": "Лейцин",
+    "tyrosine": "Тирозин",
+    "methionine": "Метионин",
+    "energy": "Энергия",
+    "kilojoules": "Килоджоули",
+    "kilocalories": "Килокалории",
+    "per100gText": "на 100г",
+    "perServingText": "на порцию",
+    "failedToLoad": "Не удалось загрузить детали продукта"
+  },
+  "api": {
+    "testConnection": "Тест API соединения",
+    "testing": "Тестирование...",
+    "status": {
+      "up": "API работает",
+      "down": "API не работает"
+    }
+  },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "Загрузка CSV файла",
+        "subtitle": "Перетащите CSV файл сюда или нажмите кнопку"
+      },
+      "browseFiles": "Выбрать файл",
+      "upload": "Загрузить",
+      "uploading": "Загрузка...",
+      "errors": {
+        "invalidType": "Разрешены только CSV файлы",
+        "fileTooLarge": "Файл слишком большой. Максимум {maxSize}МБ"
+      }
+    },
+    "productRequest": {
+      "title": "Запрос на добавление продукта",
+      "productName": "Название продукта",
+      "productNamePlaceholder": "Введите название продукта",
+      "productType": "Тип продукта",
+      "rawProduct": "Сырой продукт (овощи, фрукты, зерновые)",
+      "processedProduct": "Комбинированный/Готовый продукт (произведенные закуски, напитки, еда)",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "description": "Описание",
+      "descriptionPlaceholder": "Подробное описание продукта",
+      "pheContent": "Содержание ФАЛ",
+      "pheContentPlaceholder": "напр. 15.5",
+      "proteinContent": "Содержание белка",
+      "proteinContentPlaceholder": "напр. 2.3",
+      "sourceLink": "Ссылка на источник",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "Укажите валидную ссылку на источник, где вы нашли информацию о питании",
+      "productImages": "Фотографии документации продукта",
+      "dragDropImages": "Перетащите изображения сюда или нажмите кнопку",
+      "imageRequirements": "Максимум 5 изображений, каждое до 5МБ",
+      "selectImages": "Выбрать изображения",
+      "selectedImages": "Выбранные изображения",
+      "notes": "Дополнительные заметки",
+      "validation": {
+        "productNameRequired": "Название продукта обязательно",
+        "categoryRequired": "Категория обязательна",
+        "descriptionRequired": "Описание обязательно",
+        "imagesRequired": "Фотографии документации обязательны для комбинированных продуктов"
+      },
+      "notesPlaceholder": "Заметки для администратора",
+      "submit": "Отправить запрос",
+      "submitting": "Отправка...",
+      "success": "Запрос успешно отправлен!",
+      "error": "Ошибка при отправке запроса"
+    },
+    "dishRequest": {
+      "title": "Запрос на добавление блюда",
+      "dishName": "Название блюда",
+      "dishNamePlaceholder": "Введите название блюда",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "cuisine": "Кухня",
+      "selectCuisine": "Выберите кухню",
+      "description": "Описание",
+      "descriptionPlaceholder": "Введите описание блюда",
+      "recipeProject": "Проект рецепта",
+      "recipeProjectPlaceholder": "Введите подробное описание рецепта, ингредиенты и способ приготовления",
+      "recipeProjectHelp": "Укажите полные детали рецепта, количество ингредиентов и шаги приготовления",
+      "notes": "Заметки",
+      "notesPlaceholder": "Дополнительная информация",
+      "submit": "Отправить запрос",
+      "submitting": "Отправка..."
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Панель управления",
+      "subtitle": "Ваш ежедневный обзор ФАЛ",
+      "welcome": "Добро пожаловать",
+      "welcomeMessage": "Добро пожаловать в PKU Diet App. Начните отслеживать свое ежедневное питание."
+    },
+    "adminPanel": {
+      "title": "Админ панель",
+      "subtitle": "Управление системой и просмотр запросов",
+      "pendingRequests": "Ожидающие запросы",
+      "productRequests": "Запросы продуктов",
+      "dishRequests": "Запросы блюд",
+      "noRequestsYet": "Запросов пока нет",
+      "viewAll": "Показать все",
+      "csvUpload": "Загрузка CSV",
+      "uploadProductsCsv": "Загрузить CSV продуктов",
+      "uploadDishesCsv": "Загрузить CSV блюд"
+    },
+    "day": {
+      "title": "Вид дня",
+      "subtitle": "Подробное отслеживание ежедневного питания"
+    },
+    "week": {
+      "title": "Вид недели",
+      "subtitle": "Планирование питания на неделю"
+    },
+    "products": {
+      "title": "Продукты",
+      "subtitle": "Просмотр базы данных продуктов питания",
+      "addProduct": "Добавить продукт"
+    },
+    "productNew": {
+      "title": "Добавить новый продукт",
+      "subtitle": "Введите все пищевые характеристики продукта",
+      "basicInfo": "Основная информация",
+      "productName": "Название продукта",
+      "productNamePlaceholder": "напр. Яблоко",
+      "category": "Категория",
+      "selectCategory": "Выберите категорию",
+      "description": "Описание",
+      "descriptionPlaceholder": "Подробное описание продукта",
+      "aminoAcids": "Аминокислоты",
+      "phenylalanine": "Фенилаланин",
+      "leucine": "Лейцин",
+      "tyrosine": "Тирозин",
+      "methionine": "Метионин",
+      "macronutrients": "Макронутриенты",
+      "protein": "Белки",
+      "carbohydrates": "Углеводы",
+      "fats": "Жиры",
+      "energy": "Энергия",
+      "kilocalories": "Килокалории",
+      "kilojoules": "Килоджоули",
+      "create": "Создать продукт",
+      "creating": "Создание...",
+      "success": "Продукт успешно создан!",
+      "error": "Ошибка при создании продукта"
+    },
+    "dishes": {
+      "title": "Блюда",
+      "subtitle": "Ваши созданные рецепты и блюда",
+      "requestToAddToCommon": "Запрос на добавление блюда в общую базу",
+      "addToMyDishes": "Добавить блюдо в мои блюда",
+      "requestTitle": "Запрос на добавление блюда в общую базу",
+      "submitRequest": "Отправить запрос",
+      "categories": {
+        "all": "Все",
+        "filterBy": "Фильтр:",
+        "suggested": "Рекомендуемые блюда",
+        "myDishes": "Мои созданные блюда",
+        "ukrainian": "Украинские блюда",
+        "georgian": "Грузинские блюда", 
+        "caucasian": "Кавказские блюда",
+        "breakfast": "Завтрак",
+        "lunch": "Обед",
+        "dinner": "Ужин",
+        "snacks": "Перекусы",
+        "georgianCuisine": "Грузинская кухня",
+        "ukrainianCuisine": "Украинская кухня",
+        "caucasianCuisine": "Кавказская кухня",
+        "russianCuisine": "Русская кухня",
+        "europeanCuisine": "Европейская кухня",
+        "asianCuisine": "Азиатская кухня",
+        "mediterraneanCuisine": "Средиземноморская кухня",
+        "americanCuisine": "Американская кухня"
+      }
+    },
+    "pantry": {
+      "title": "Кладовая",
+      "subtitle": "Управление запасами продуктов"
+    },
+    "scan": {
+      "title": "Сканирование",
+      "subtitle": "Сканирование этикеток продуктов"
+    },
+    "share": {
+      "title": "Поделиться",
+      "subtitle": "Делитесь блюдами и рецептами"
+    },
+    "critical": {
+      "title": "Критические Факты",
+      "subtitle": "Мониторинг и управление критическими диетическими событиями",
+      "filters": {
+        "title": "Фильтры Критических Фактов",
+        "activeFilters": "активных фильтров",
+        "exportCsv": "Экспорт CSV",
+        "exporting": "Экспортирование...",
+        "status": "Статус",
+        "allFacts": "Все Факты",
+        "unresolvedOnly": "Только Неразрешённые",
+        "resolvedOnly": "Только Разрешённые",
+        "from": "От",
+        "to": "До",
+        "clearAll": "Очистить Всё",
+        "factTypes": "Типы Фактов",
+        "severityLevels": "Уровни Серьёзности",
+        "sources": "Источники"
+      },
+      "table": {
+        "title": "Критические Факты",
+        "showing": "Показаны",
+        "of": "из",
+        "facts": "факты",
+        "noFacts": "Критические факты не найдены",
+        "noFactsDesc": "Нет критических фактов, соответствующих вашим текущим фильтрам",
+        "date": "Дата",
+        "type": "Тип",
+        "severity": "Серьёзность",
+        "delta": "Дельта",
+        "context": "Контекст",
+        "status": "Статус",
+        "actions": "Действия",
+        "details": "Детали",
+        "hide": "Скрыть",
+        "resolve": "Разрешить",
+        "unresolve": "Сделать Неразрешённым",
+        "processing": "Обработка...",
+        "resolved": "Разрешён",
+        "unresolved": "Неразрешён"
+      },
+      "details": {
+        "deltaDetails": "Детали Дельты",
+        "contextDetails": "Детали Контекста",
+        "timestamps": "Временные Метки",
+        "expected": "Ожидалось",
+        "actual": "Фактически",
+        "difference": "Разница",
+        "threshold": "Порог",
+        "source": "Источник",
+        "meal": "Приём пищи",
+        "product": "Продукт",
+        "dish": "Блюдо",
+        "quantity": "Количество",
+        "created": "Создано",
+        "resolved": "Разрешено",
+        "notes": "Заметки"
+      },
+      "types": {
+        "pheBreach": "Превышение ФАЛ",
+        "proteinDeficiency": "Дефицит Белка",
+        "calorieExcess": "Избыток Калорий",
+        "calorieDeficiency": "Дефицит Калорий",
+        "micronutrientDeficiency": "Дефицит Микронутриентов",
+        "medicationInteraction": "Взаимодействие Лекарств",
+        "allergenExposure": "Экспозиция Аллергенов",
+        "forbiddenIngredient": "Запрещённый Ингредиент",
+        "safetyWarning": "Предупреждение Безопасности",
+        "dietaryViolation": "Диетическое Нарушение"
+      },
+      "severity": {
+        "critical": "Критический",
+        "high": "Высокий",
+        "medium": "Средний",
+        "low": "Низкий"
+      },
+      "sources": {
+        "dailyValidation": "Ежедневная Валидация",
+        "mealEntry": "Ввод Приёма Пищи",
+        "productScan": "Сканирование Продукта",
+        "manualEntry": "Ручной Ввод",
+        "automatedCheck": "Автоматическая Проверка",
+        "healthcareProvider": "Медицинский Работник",
+        "systemAlert": "Системное Предупреждение"
+      },
+      "summary": {
+        "totalFacts": "Всего Фактов",
+        "unresolved": "Неразрешённые",
+        "critical": "Критические",
+        "highPriority": "Высокий Приоритет",
+        "recentFacts": "Недавние Критические Факты"
+      },
+      "export": {
+        "complete": "Экспорт Завершён",
+        "downloaded": "Загружено",
+        "as": "как"
+      },
+      "actions": {
+        "factResolved": "Факт Разрешён",
+        "factResolvedDesc": "Критический факт отмечен как разрешённый",
+        "factUnresolved": "Факт Неразрешён",
+        "factUnresolvedDesc": "Критический факт отмечен как неразрешённый"
+      },
+      "navigation": {
+        "criticalAlert": "Критическое Предупреждение",
+        "criticalAlerts": "Критические Предупреждения"
+      }
+    },
+    "profile": {
+      "title": "Профиль",
+      "subtitle": "Ваша личная информация"
+    },
+    "settings": {
+      "title": "Настройки",
+      "subtitle": "Настройки приложения"
+    }
+  }
+}

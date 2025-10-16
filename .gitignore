@@ -1,0 +1,29 @@
+# Maven build
+**/target/
+
+# Compiled & logs
+*.class
+*.log
+
+# Env / JVM / Spring Boot
+.env
+hs_err_pid*
+replay_pid*
+*.pid
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local docker/test
+test-compose.yml
+docker-compose.override.yml
+pgdata/
+redisdata/
+

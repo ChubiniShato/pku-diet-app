@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pku
+      POSTGRES_USER: pku
+      POSTGRES_PASSWORD: pku
+    ports: 
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports: 
+      - "6379:6379"
+
+  api:
+    image: eclipse-temurin:21-jdk
+    working_dir: /workspace
+    volumes:
+      - ./services/api:/workspace
+      - m2cache:/root/.m2
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pku
+      SPRING_DATASOURCE_USERNAME: pku
+      SPRING_DATASOURCE_PASSWORD: pku
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    depends_on:
+      - db
+      - redis
+    command: bash -lc "mvn -q -DskipTests -Dspotless.check.skip=true spring-boot:run"
+    ports: 
+      - "8080:8080"
+
+volumes:
+  m2cache:

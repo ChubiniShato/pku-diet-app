@@ -1,0 +1,125 @@
+spring:
+  config:
+    import: "classpath:application-base.yaml"
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/pku?characterEncoding=UTF-8&useUnicode=true}
+    username: ${DB_USER:pku}
+    password: ${DB_PASSWORD:pku}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+server:
+  port: 8080
+
+# Management configuration moved to application-base.yaml
+
+# Feature flags
+app:
+  features:
+    emergency-mode: ${EMERGENCY_MODE_ENABLED:false}
+    pantry-usage: ${PANTRY_USAGE_ENABLED:true}
+    notifications: ${NOTIFICATIONS_ENABLED:true}
+    sharing: ${SHARING_ENABLED:true}
+    label-scan: ${LABEL_SCAN_ENABLED:true}
+
+  # External service configurations
+  external-services:
+    fcm:
+      enabled: ${FCM_ENABLED:false}
+      project-id: ${FCM_PROJECT_ID:}
+      private-key: ${FCM_PRIVATE_KEY:}
+      client-email: ${FCM_CLIENT_EMAIL:}
+    sendgrid:
+      enabled: ${SENDGRID_ENABLED:false}
+      api-key: ${SENDGRID_API_KEY:}
+      from-email: ${SENDGRID_FROM_EMAIL:}
+      from-name: ${SENDGRID_FROM_NAME:}
+    twilio:
+      enabled: ${TWILIO_ENABLED:false}
+      account-sid: ${TWILIO_ACCOUNT_SID:}
+      auth-token: ${TWILIO_AUTH_TOKEN:}
+      phone-number: ${TWILIO_PHONE_NUMBER:}
+    openfoodfacts:
+      enabled: ${OFF_API_ENABLED:false}
+      base-url: ${OFF_API_BASE_URL:https://world.openfoodfacts.org/api/v0}
+      user-agent: ${OFF_API_USER_AGENT:PKU-Diet-App/1.0}
+    s3:
+      enabled: ${S3_ENABLED:false}
+      access-key: ${S3_ACCESS_KEY:}
+      secret-key: ${S3_SECRET_KEY:}
+      region: ${S3_REGION:us-east-1}
+      bucket: ${S3_BUCKET:}
+
+  # Default settings
+  defaults:
+    region: ${REGION_DEFAULT:US}
+    locale: ${LOCALE_DEFAULT:en_US}
+    week-start: ${WEEK_START_DEFAULT:MONDAY}
+
+  # Security and compliance
+  security:
+    log-sensitive-data: ${LOG_SENSITIVE_DATA:false}
+    jwt:
+      secret: ${JWT_SECRET:your-256-bit-secret-key-here-must-be-at-least-256-bits-long}
+      expiration: ${JWT_EXPIRATION:86400000}
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,http://localhost:80}
+    rate-limit:
+      requests-per-minute: ${RATE_LIMIT_REQUESTS_PER_MINUTE:60}
+      requests-per-hour: ${RATE_LIMIT_REQUESTS_PER_HOUR:1000}
+
+  # File upload configuration
+  upload:
+    max-file-size: ${UPLOAD_MAX_FILE_SIZE:20MB}
+    max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:20MB}
+    allowed-mime-types:
+      - image/jpeg
+      - image/png
+      - text/csv
+      - text/plain
+      - application/vnd.ms-excel
+      - application/csv
+    allowed-extensions:
+      - .jpg
+      - .jpeg
+      - .png
+      - .csv
+      - .txt
+
+# Multipart configuration merged into main spring section above
+
+logging:
+  level:
+    com.chubini.pku: ${LOG_LEVEL:INFO}
+    # Suppress sensitive data in logs
+    org.springframework.security: WARN
+    org.hibernate: WARN
+  # PHI protection - mask sensitive fields
+  config:
+    logback:
+      masking:
+        enabled: true
+        fields:
+          - password
+          - secret
+          - token
+          - key
+          - ssn
+          - dob
+          - phone
+          - email
+          - address

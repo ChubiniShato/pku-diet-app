@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pku
+      POSTGRES_USER: pku
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pku}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pku} -d ${POSTGRES_DB:-pku}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server","--save","60","1","--loglevel","warning"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: services/api
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      DEBUG: "true"
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_CONTEXT_PROPERTIES: "DEBUG"
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT_BIND: "DEBUG"
+      SPRING_DATA_REDIS_SSL_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    stop_grace_period: 30s
+
+  k6:
+    image: grafana/k6
+    depends_on: [api]
+    environment:
+      - BASE_URL=http://api:8080
+      - K6_OUTPUT=summary
+      - K6_LOG_LEVEL=info
+    command: ["run", "/scripts/smoke.js", "--env", "BASE_URL=http://api:8080"]
+    volumes:
+      - ./testing/k6/scripts:/scripts
+    networks:
+      - default
+
+volumes:
+  pgdata:
+  redisdata:

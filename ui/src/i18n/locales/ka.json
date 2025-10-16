@@ -1,0 +1,359 @@
+{
+  "app": {
+    "title": "PKU დიეტის აპი",
+    "description": "მართეთ თქვენი ფენილკეტონურიის დიეტა ადვილად"
+  },
+  "navigation": {
+    "dashboard": "მთავარი",
+    "day": "დღე",
+    "week": "კვირა",
+    "products": "პროდუქტები",
+    "dishes": "კერძები",
+    "pantry": "საწყობი",
+    "scan": "სკანირება",
+    "share": "გაზიარება",
+    "critical": "კრიტიკული",
+    "profile": "პროფილი",
+    "settings": "პარამეტრები",
+    "adminPanel": "ადმინის პანელი"
+  },
+  "common": {
+    "loading": "იტვირთება...",
+    "error": "შეცდომა",
+    "success": "წარმატება",
+    "save": "შენახვა",
+    "cancel": "გაუქმება",
+    "delete": "წაშლა",
+    "edit": "რედაქტირება",
+    "add": "დამატება",
+    "addDish": "კერძის დამატება",
+    "search": "ძიება",
+    "allProducts": "ყველა პროდუქტი",
+    "back": "უკან",
+    "clear": "გასუფთავება",
+    "filter": "ფილტრი",
+    "productName": "პროდუქტის სახელი",
+    "lowPheFilter": "დაბალი PHE ფილტრი",
+    "customMaxPhe": "მაქსიმალური PHE (მგ/100გ)",
+    "searchProducts": "პროდუქტების ძიება...",
+    "maxPheExample": "მაგ. 150",
+    "activeFilters": "აქტიური ფილტრები:",
+    "query": "ძიება",
+    "category": "კატეგორია",
+    "maxPhe": "მაქს PHE",
+    "productDetails": "პროდუქტის დეტალები",
+    "per100g": "100გ-ზე",
+    "perServing": "პორციაზე",
+    "servingSize": "პორციის ზომა:",
+    "phenylalanine": "ფენილალანინი",
+    "macronutrients": "მაკრონუტრიენტები",
+    "protein": "ცილები",
+    "carbohydrates": "ნახშირწყლები",
+    "fats": "ცხიმები",
+    "calories": "კალორიები",
+    "aminoAcids": "ამინომჟავები",
+    "leucine": "ლეიცინი",
+    "tyrosine": "ტიროზინი",
+    "methionine": "მეთიონინი",
+    "energy": "ენერგია",
+    "kilojoules": "კილოჯოულები",
+    "kilocalories": "კილოკალორიები",
+    "per100gText": "100გ-ზე",
+    "perServingText": "პორციაზე",
+    "failedToLoad": "პროდუქტის დეტალების ჩატვირთვა ვერ მოხერხდა"
+  },
+  "api": {
+    "testConnection": "API კავშირის ტესტი",
+    "testing": "ტესტირება...",
+    "status": {
+      "up": "API მუშაობს",
+      "down": "API არ მუშაობს"
+    }
+  },
+  "components": {
+    "csvUpload": {
+      "dragDrop": {
+        "title": "CSV ფაილის ატვირთვა",
+        "subtitle": "გადაიტანეთ CSV ფაილი აქ ან დააჭირეთ ღილაკს"
+      },
+      "browseFiles": "ფაილის არჩევა",
+      "upload": "ატვირთვა",
+      "uploading": "იტვირთება...",
+      "errors": {
+        "invalidType": "მხოლოდ CSV ფაილები დაშვებულია",
+        "fileTooLarge": "ფაილი ძალიან დიდია. მაქსიმუმ {maxSize}MB"
+      }
+    },
+    "productRequest": {
+      "title": "პროდუქტის დამატების მოთხოვნა",
+      "productName": "პროდუქტის სახელი",
+      "productNamePlaceholder": "შეიყვანეთ პროდუქტის სახელი",
+      "productType": "პროდუქტის ტიპი",
+      "rawProduct": "ნედლი პროდუქტი (ბოსტნეული, ხილი, მარცვლეული)",
+      "processedProduct": "კომბინირებული/მზა პროდუქტი (წარმოებული სნექი, სასმელი, საჭმელი)",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "პროდუქტის დეტალური აღწერა",
+      "pheContent": "PHE შემცველობა",
+      "pheContentPlaceholder": "მაგ. 15.5",
+      "proteinContent": "ცილების შემცველობა",
+      "proteinContentPlaceholder": "მაგ. 2.3",
+      "sourceLink": "წყაროს ლინკი",
+      "sourceLinkPlaceholder": "https://example.com/nutrition-info",
+      "sourceLinkHelp": "მიუთითეთ ვალიდური წყაროს ლინკი, სადაც ნახავთ ნუტრიციულ ინფორმაციას",
+      "productImages": "პროდუქტის დოკუმენტაციის ფოტოები",
+      "dragDropImages": "გადაიტანეთ ფოტოები აქ ან დააჭირეთ ღილაკს",
+      "imageRequirements": "მაქსიმუმ 5 ფოტო, თითოეული 5MB-მდე",
+      "selectImages": "ფოტოების არჩევა",
+      "selectedImages": "არჩეული ფოტოები",
+      "notes": "დამატებითი შენიშვნები",
+      "validation": {
+        "productNameRequired": "პროდუქტის სახელი სავალდებულოა",
+        "categoryRequired": "კატეგორია სავალდებულოა",
+        "descriptionRequired": "აღწერა სავალდებულოა",
+        "imagesRequired": "კომბინირებული პროდუქტისთვის დოკუმენტაციის ფოტოები სავალდებულოა"
+      },
+      "notesPlaceholder": "შენიშვნები ადმინისთვის",
+      "submit": "მოთხოვნის გაგზავნა",
+      "submitting": "იგზავნება...",
+      "success": "მოთხოვნა წარმატებით გაიგზავნა!",
+      "error": "შეცდომა მოთხოვნის გაგზავნისას"
+    },
+    "dishRequest": {
+      "title": "კერძის დამატების მოთხოვნა",
+      "dishName": "კერძის სახელი",
+      "dishNamePlaceholder": "შეიყვანეთ კერძის სახელი",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "cuisine": "სამზარეულო",
+      "selectCuisine": "აირჩიეთ სამზარეულო",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "შეიყვანეთ კერძის აღწერა",
+      "recipeProject": "რეცეპტის პროექტი",
+      "recipeProjectPlaceholder": "შეიყვანეთ რეცეპტის დეტალური აღწერა, ინგრედიენტები და მომზადების წესი",
+      "recipeProjectHelp": "მიუთითეთ რეცეპტის სრული აღწერა, ინგრედიენტების რაოდენობა და მომზადების ნაბიჯები",
+      "notes": "შენიშვნები",
+      "notesPlaceholder": "დამატებითი ინფორმაცია",
+      "submit": "მოთხოვნის გაგზავნა",
+      "submitting": "გაგზავნა..."
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "მთავარი გვერდი",
+      "subtitle": "თქვენი ყოველდღიური PHE მიმოხილვა",
+      "welcome": "მოგესალმებით",
+      "welcomeMessage": "PKU Diet აპლიკაციაში. დაიწყეთ თქვენი ყოველდღიური კვების თვალყურის დევნება."
+    },
+    "adminPanel": {
+      "title": "ადმინის პანელი",
+      "subtitle": "სისტემის მართვა და მოთხოვნების გადახედვა",
+      "pendingRequests": "მოლოდინის მოთხოვნები",
+      "productRequests": "პროდუქტების მოთხოვნები",
+      "dishRequests": "კერძების მოთხოვნები",
+      "noRequestsYet": "ჯერ არ არის მოთხოვნები",
+      "viewAll": "ყველას ნახვა",
+      "csvUpload": "CSV ატვირთვა",
+      "uploadProductsCsv": "პროდუქტების CSV-ის ატვირთვა",
+      "uploadDishesCsv": "კერძების CSV-ის ატვირთვა"
+    },
+    "day": {
+      "title": "დღის ხედი",
+      "subtitle": "დეტალური ყოველდღიური კვების თვალყურის დევნება"
+    },
+    "week": {
+      "title": "კვირის ხედი",
+      "subtitle": "კვირეული კვების დაგეგმვა"
+    },
+    "products": {
+      "title": "პროდუქტები",
+      "subtitle": "საკვები პროდუქტების ბაზის დათვალიერება",
+      "addProduct": "პროდუქტის დამატება"
+    },
+    "productNew": {
+      "title": "ახალი პროდუქტის დამატება",
+      "subtitle": "შეიყვანეთ პროდუქტის ყველა ნუტრიციული მახასიათებელი",
+      "basicInfo": "ძირითადი ინფორმაცია",
+      "productName": "პროდუქტის სახელი",
+      "productNamePlaceholder": "მაგ. ვაშლი",
+      "category": "კატეგორია",
+      "selectCategory": "აირჩიეთ კატეგორია",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "პროდუქტის დეტალური აღწერა",
+      "aminoAcids": "ამინომჟავები",
+      "phenylalanine": "ფენილალანინი",
+      "leucine": "ლეიცინი",
+      "tyrosine": "ტიროზინი",
+      "methionine": "მეთიონინი",
+      "macronutrients": "მაკრონუტრიენტები",
+      "protein": "ცილები",
+      "carbohydrates": "ნახშირწყლები",
+      "fats": "ცხიმები",
+      "energy": "ენერგია",
+      "kilocalories": "კილოკალორიები",
+      "kilojoules": "კილოჯოულები",
+      "create": "პროდუქტის შექმნა",
+      "creating": "იქმნება...",
+      "success": "პროდუქტი წარმატებით შეიქმნა!",
+      "error": "შეცდომა პროდუქტის შექმნისას"
+    },
+    "dishes": {
+      "title": "კერძები",
+      "subtitle": "თქვენი შენახული რეცეპტები და კერძები",
+      "requestToAddToCommon": "საერთო ბაზაში კერძის დამატების მოთხოვნა",
+      "addToMyDishes": "კერძის დამატება ჩემს კერძებში",
+      "requestTitle": "კერძის დამატების მოთხოვნა საერთო ბაზაში",
+      "submitRequest": "მოთხოვნის გაგზავნა",
+      "categories": {
+        "all": "ყველა კერძი",
+        "filterBy": "ფილტრი",
+        "suggested": "შემოთავაზებული კერძები",
+        "myDishes": "ჩემი შექმნილი კერძები",
+        "ukrainian": "უკრაინული კერძები",
+        "georgian": "ქართული კერძები",
+        "caucasian": "კავკასიური კერძები",
+        "breakfast": "საუზმე",
+        "lunch": "სადილი",
+        "dinner": "ვახშამი",
+        "snacks": "სნეკები",
+        "georgianCuisine": "ქართული სამზარეულო",
+        "ukrainianCuisine": "უკრაინული სამზარეულო",
+        "caucasianCuisine": "კავკასიური სამზარეულო",
+        "russianCuisine": "რუსული სამზარეულო",
+        "europeanCuisine": "ევროპული სამზარეულო",
+        "asianCuisine": "აზიური სამზარეულო",
+        "mediterraneanCuisine": "მედიტერანული სამზარეულო",
+        "americanCuisine": "ამერიკული სამზარეულო"
+      }
+    },
+    "pantry": {
+      "title": "საწყობი",
+      "subtitle": "მართეთ თქვენი საკვები მარაგი"
+    },
+    "scan": {
+      "title": "სკანირება",
+      "subtitle": "პროდუქტის ეტიკეტების სკანირება"
+    },
+    "share": {
+      "title": "გაზიარება",
+      "subtitle": "კერძებისა და რეცეპტების გაზიარება"
+    },
+    "critical": {
+      "title": "კრიტიკული ფაქტები",
+      "subtitle": "კრიტიკული დიეტური მოვლენების მონიტორინგი და მართვა",
+      "filters": {
+        "title": "კრიტიკული ფაქტების ფილტრები",
+        "activeFilters": "აქტიური ფილტრები",
+        "exportCsv": "CSV ექსპორტი",
+        "exporting": "ექსპორტირება...",
+        "status": "სტატუსი",
+        "allFacts": "ყველა ფაქტი",
+        "unresolvedOnly": "მხოლოდ გადაუწყვეტელი",
+        "resolvedOnly": "მხოლოდ გადაწყვეტილი",
+        "from": "დან",
+        "to": "მდე",
+        "clearAll": "ყველას გასუფთავება",
+        "factTypes": "ფაქტების ტიპები",
+        "severityLevels": "სიმძიმის დონეები",
+        "sources": "წყაროები"
+      },
+      "table": {
+        "title": "კრიტიკული ფაქტები",
+        "showing": "ნაჩვენებია",
+        "of": "-დან",
+        "facts": "ფაქტი",
+        "noFacts": "კრიტიკული ფაქტები არ მოიძებნა",
+        "noFactsDesc": "თქვენს მიმდინარე ფილტრებს არ შეესაბამება კრიტიკული ფაქტები",
+        "date": "თარიღი",
+        "type": "ტიპი",
+        "severity": "სიმძიმე",
+        "delta": "ცვლილება",
+        "context": "კონტექსტი",
+        "status": "სტატუსი",
+        "actions": "მოქმედებები",
+        "details": "დეტალები",
+        "hide": "დამალვა",
+        "resolve": "გადაწყვეტა",
+        "unresolve": "გადაუწყვეტელად დატოვება",
+        "processing": "დამუშავება...",
+        "resolved": "გადაწყვეტილი",
+        "unresolved": "გადაუწყვეტელი"
+      },
+      "details": {
+        "deltaDetails": "ცვლილების დეტალები",
+        "contextDetails": "კონტექსტის დეტალები",
+        "timestamps": "დროის შტამპები",
+        "expected": "მოლოდინი",
+        "actual": "ფაქტობრივი",
+        "difference": "სხვაობა",
+        "threshold": "ზღვარი",
+        "source": "წყარო",
+        "meal": "კვება",
+        "product": "პროდუქტი",
+        "dish": "კერძი",
+        "quantity": "რაოდენობა",
+        "created": "შექმნილია",
+        "resolved": "გადაწყვეტილია",
+        "notes": "შენიშვნები"
+      },
+      "types": {
+        "pheBreach": "PHE გადამეტება",
+        "proteinDeficiency": "ცილის დეფიციტი",
+        "calorieExcess": "კალორიების გადამეტება",
+        "calorieDeficiency": "კალორიების დეფიციტი",
+        "micronutrientDeficiency": "მიკრონუტრიენტების დეფიციტი",
+        "medicationInteraction": "მედიკამენტების ურთიერთქმედება",
+        "allergenExposure": "ალერგენების ექსპოზიცია",
+        "forbiddenIngredient": "აკრძალული ინგრედიენტი",
+        "safetyWarning": "უსაფრთხოების გაფრთხილება",
+        "dietaryViolation": "დიეტური დარღვევა"
+      },
+      "severity": {
+        "critical": "კრიტიკული",
+        "high": "მაღალი",
+        "medium": "საშუალო",
+        "low": "დაბალი"
+      },
+      "sources": {
+        "dailyValidation": "ყოველდღიური ვალიდაცია",
+        "mealEntry": "კვების შეყვანა",
+        "productScan": "პროდუქტის სკანირება",
+        "manualEntry": "ხელით შეყვანა",
+        "automatedCheck": "ავტომატური შემოწმება",
+        "healthcareProvider": "ჯანდაცვის მომწოდებელი",
+        "systemAlert": "სისტემური გაფრთხილება"
+      },
+      "summary": {
+        "totalFacts": "სულ ფაქტები",
+        "unresolved": "გადაუწყვეტელი",
+        "critical": "კრიტიკული",
+        "highPriority": "მაღალი პრიორიტეტი",
+        "recentFacts": "ბოლო კრიტიკული ფაქტები"
+      },
+      "export": {
+        "complete": "ექსპორტი დასრულდა",
+        "downloaded": "ჩამოტვირთულია",
+        "as": "როგორც"
+      },
+      "actions": {
+        "factResolved": "ფაქტი გადაწყვეტილია",
+        "factResolvedDesc": "კრიტიკული ფაქტი გადაწყვეტილად მოინიშნა",
+        "factUnresolved": "ფაქტი გადაუწყვეტელად დარჩა",
+        "factUnresolvedDesc": "კრიტიკული ფაქტი გადაუწყვეტელად მოინიშნა"
+      },
+      "navigation": {
+        "criticalAlert": "კრიტიკული გაფრთხილება",
+        "criticalAlerts": "კრიტიკული გაფრთხილებები"
+      }
+    },
+    "profile": {
+      "title": "პროფილი",
+      "subtitle": "თქვენი პირადი ინფორმაცია"
+    },
+    "settings": {
+      "title": "პარამეტრები",
+      "subtitle": "აპლიკაციის პრეფერენციები"
+    }
+  }
+}

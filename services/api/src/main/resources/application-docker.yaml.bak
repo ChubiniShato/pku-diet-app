@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true
+  health:
+    redis:
+      enabled: true
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/pku?sslmode=disable
+    username: pku
+    password: pku
+    hikari:
+      connection-timeout: 5000
+      validation-timeout: 3000
+      minimum-idle: 1
+      maximum-pool-size: 10
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST:redis}
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      ssl: false
+	enabled: false
+      timeout: 2s

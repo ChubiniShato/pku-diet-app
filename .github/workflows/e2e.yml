@@ -1,0 +1,165 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    paths:
+      - 'ui/**'
+      - 'services/api/**'
+      - '.github/workflows/e2e.yml'
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: pkudiet_test
+          POSTGRES_USER: pkuadmin
+          POSTGRES_PASSWORD: test123
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Build API
+        working-directory: services/api
+        run: |
+          mvn clean package -DskipTests -q
+          echo "API build completed"
+
+      - name: Start API Server
+        working-directory: services/api
+        env:
+          SPRING_PROFILES_ACTIVE: test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/pkudiet_test
+          SPRING_DATASOURCE_USERNAME: pkuadmin
+          SPRING_DATASOURCE_PASSWORD: test123
+        run: |
+          java -jar target/*.jar &
+          echo $! > api.pid
+          echo "API server started with PID $(cat api.pid)"
+
+      - name: Wait for API health check
+        run: |
+          echo "Waiting for API to be ready..."
+          timeout 60 bash -c 'until curl -f http://localhost:8080/actuator/health; do sleep 2; echo "Retrying..."; done'
+          echo "API is ready!"
+
+      - name: Install UI dependencies
+        working-directory: ui
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: ui
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Start Vite Dev Server
+        working-directory: ui
+        run: |
+          npm run dev &
+          echo $! > vite.pid
+          echo "Vite server started with PID $(cat vite.pid)"
+
+      - name: Wait for Vite server
+        run: |
+          echo "Waiting for Vite to be ready..."
+          timeout 120 bash -c 'until curl -f http://localhost:5173; do sleep 2; echo "Retrying..."; done'
+          echo "Vite is ready!"
+
+      - name: Run E2E tests
+        working-directory: ui
+        env:
+          BASE_URL: http://localhost:5173
+          API_URL: http://localhost:8080
+          TEST_USER: admin
+          TEST_PASS: admin123
+        run: npm run test:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: ui/playwright-report/
+          retention-days: 7
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: ui/test-results/
+          retention-days: 7
+
+      - name: Stop Vite server
+        if: always()
+        working-directory: ui
+        run: |
+          if [ -f vite.pid ]; then
+            kill $(cat vite.pid) || true
+            rm vite.pid
+          fi
+
+      - name: Stop API server
+        if: always()
+        working-directory: services/api
+        run: |
+          if [ -f api.pid ]; then
+            kill $(cat api.pid) || true
+            rm api.pid
+          fi
+
+      - name: Comment PR with results
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const reportPath = 'ui/playwright-report/index.html';
+            
+            let message = '## 🎭 Playwright E2E Test Results\n\n';
+            
+            if (fs.existsSync(reportPath)) {
+              message += '✅ E2E tests completed. [View detailed report in artifacts](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\n';
+            } else {
+              message += '❌ E2E tests failed or did not complete.\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: message
+            });
+
+

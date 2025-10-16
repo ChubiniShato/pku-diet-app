@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pku?characterEncoding=UTF-8&useUnicode=true
+    username: pku
+    password: pku
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    repair-on-migrate: true
+    out-of-order: true
+
+server:
+  port: 8080
+
+# Management configuration moved to application-base.yaml
+
+logging:
+  level:
+    com.chubini.pku: DEBUG

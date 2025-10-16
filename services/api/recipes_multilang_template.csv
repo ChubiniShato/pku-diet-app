@@ -1,0 +1,24 @@
+# Multi-Language Recipe CSV Template
+# This template supports Georgian, Russian, English, and other languages
+# Use this structure for bulk recipe import with translations
+
+dish_name_ka,dish_name_ru,dish_name_en,category_ka,category_ru,category_en,final_dish_weight,ingredient_1,ingredient_1_grams,ingredient_2,ingredient_2_grams,ingredient_3,ingredient_3_grams,ingredient_4,ingredient_4_grams,ingredient_5,ingredient_5_grams,ingredient_6,ingredient_6_grams,preparation_time_minutes,difficulty_level,recipe_instructions_ka,recipe_instructions_ru,recipe_instructions_en
+
+# Example recipes:
+ბოსტნეული წვნიანი,Овощной суп,Vegetable Soup,წვნიანები,Супы,Soups,200,Potato,50,Carrot,30,Onion,20,,,,,,,30,EASY,"1. დაჭერი კარტოფილი. 2. მოხარშე წყალში. 3. დაამატე სხვა ბოსტნეული.","1. Нарезать картофель. 2. Варить в воде. 3. Добавить другие овощи.","1. Cut potatoes. 2. Boil in water. 3. Add other vegetables."
+ქართული ხარჩო,Грузинский харчо,Georgian Kharcho,წვნიანები,Супы,Soups,250,Beef,100,Rice,30,Onion,25,Garlic,5,Tomato,40,,45,MEDIUM,"1. მოხარშე ხორცი. 2. დაამატე ბრინჯი. 3. გააკეთე ხარჩოს მასალა.","1. Отварить мясо. 2. Добавить рис. 3. Приготовить харчо.","1. Boil meat. 2. Add rice. 3. Make kharcho seasoning."
+
+# Instructions:
+# - dish_name_XX: Recipe name in each language (ka=Georgian, ru=Russian, en=English)
+# - category_XX: Category name in each language
+# - final_dish_weight: Total weight of finished dish in grams
+# - ingredient_X: Use exact product names from database (run /api/v1/dishes/csv-template to get list)
+# - ingredient_X_grams: Weight of each ingredient in grams
+# - difficulty_level: EASY, MEDIUM, or HARD
+# - recipe_instructions_XX: Cooking instructions in each language
+# - Leave unused ingredient columns empty
+# - Use double quotes for instructions with commas
+
+# Template for your recipes:
+# Your Recipe Name KA,Your Recipe Name RU,Your Recipe Name EN,Category KA,Category RU,Category EN,Weight,Ingredient1,Grams1,Ingredient2,Grams2,Ingredient3,Grams3,,,,,,,Time,Difficulty,"Instructions KA","Instructions RU","Instructions EN"
+
