@@ -13,11 +13,15 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+<<<<<<< HEAD
     "test:run": "vitest run",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug"
+=======
+    "test:run": "vitest run"
+>>>>>>> origin/main
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -32,7 +36,10 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@playwright/test": "^1.41.2",
+=======
+>>>>>>> origin/main
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",

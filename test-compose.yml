@@ -1,0 +1,21 @@
+services:
+  postgres-test:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: pku_test
+      POSTGRES_USER: pku
+      POSTGRES_PASSWORD: pku
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./services/api/src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pku -d pku_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    tmpfs:
+      - /var/lib/postgresql/data
+      - /tmp
