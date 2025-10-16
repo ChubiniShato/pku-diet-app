@@ -14,8 +14,8 @@ export const test = base.extend<AuthFixtures>({
     await page.fill('input[name="password"]', process.env.TEST_PASS || 'admin123');
     await page.click('button[type="submit"]');
     
-    // Wait for successful login and navigation to dashboard (root route)
-    await page.waitForURL('/', { timeout: 10000 });
+    // Wait for successful login and navigation to admin panel
+    await page.waitForURL('/admin', { timeout: 10000 });
     
     // Use the authenticated page
     await use(page);
