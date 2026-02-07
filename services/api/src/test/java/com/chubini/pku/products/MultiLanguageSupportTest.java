@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.chubini.pku.products.mapper.ProductMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,8 @@ class MultiLanguageSupportTest {
   @Mock private CsvUploadService csvUploadService;
 
   @Mock private TranslationCsvService translationCsvService;
+
+  @Mock private ProductMapper productMapper;
 
   @InjectMocks private ProductService productService;
 
@@ -73,7 +77,11 @@ class MultiLanguageSupportTest {
     // Test Georgian language normalization
     ProductService service =
         new ProductService(
-            productRepository, translationRepository, csvUploadService, translationCsvService);
+            productRepository,
+            translationRepository,
+            csvUploadService,
+            translationCsvService,
+            productMapper);
 
     // Use reflection to access private method for testing
     try {
@@ -92,7 +100,11 @@ class MultiLanguageSupportTest {
   void testNormalizeLang_Russian() {
     ProductService service =
         new ProductService(
-            productRepository, translationRepository, csvUploadService, translationCsvService);
+            productRepository,
+            translationRepository,
+            csvUploadService,
+            translationCsvService,
+            productMapper);
 
     try {
       var method = ProductService.class.getDeclaredMethod("normalizeLang", String.class);
@@ -110,7 +122,11 @@ class MultiLanguageSupportTest {
   void testNormalizeLang_English() {
     ProductService service =
         new ProductService(
-            productRepository, translationRepository, csvUploadService, translationCsvService);
+            productRepository,
+            translationRepository,
+            csvUploadService,
+            translationCsvService,
+            productMapper);
 
     try {
       var method = ProductService.class.getDeclaredMethod("normalizeLang", String.class);
@@ -132,7 +148,11 @@ class MultiLanguageSupportTest {
   void testNormalizeLang_Ukrainian() {
     ProductService service =
         new ProductService(
-            productRepository, translationRepository, csvUploadService, translationCsvService);
+            productRepository,
+            translationRepository,
+            csvUploadService,
+            translationCsvService,
+            productMapper);
 
     try {
       var method = ProductService.class.getDeclaredMethod("normalizeLang", String.class);

@@ -76,13 +76,9 @@ public class ProductController {
       @Parameter(description = "Accept-Language header for fallback")
           @RequestHeader(value = "Accept-Language", required = false)
           String acceptLang) {
-    try {
-      String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
-      ProductDto product = productService.getProductByIdLocalized(id, language);
-      return ResponseEntity.ok(product);
-    } catch (ProductNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+    String language = (lang != null && !lang.isBlank()) ? lang : acceptLang;
+    ProductDto product = productService.getProductByIdLocalized(id, language);
+    return ResponseEntity.ok(product);
   }
 
   @PostMapping
@@ -110,12 +106,8 @@ public class ProductController {
   public ResponseEntity<Product> update(
       @Parameter(description = "Product UUID") @PathVariable UUID id,
       @Valid @RequestBody ProductUpsertDto dto) {
-    try {
-      Product product = productService.updateProduct(id, dto);
-      return ResponseEntity.ok(product);
-    } catch (ProductNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+    Product product = productService.updateProduct(id, dto);
+    return ResponseEntity.ok(product);
   }
 
   @DeleteMapping("/{id}")
@@ -127,12 +119,8 @@ public class ProductController {
       })
   public ResponseEntity<Void> delete(
       @Parameter(description = "Product UUID") @PathVariable UUID id) {
-    try {
-      productService.deleteProduct(id);
-      return ResponseEntity.noContent().build();
-    } catch (ProductNotFoundException e) {
-      return ResponseEntity.notFound().build();
-    }
+    productService.deleteProduct(id);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/categories")

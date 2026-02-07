@@ -18,16 +18,19 @@ public class ProductService {
   private final ProductTranslationRepository translationRepository;
   private final CsvUploadService csvUploadService;
   private final TranslationCsvService translationCsvService;
+  private final com.chubini.pku.products.mapper.ProductMapper productMapper;
 
   public ProductService(
       ProductRepository repository,
       ProductTranslationRepository translationRepository,
       CsvUploadService csvUploadService,
-      TranslationCsvService translationCsvService) {
+      TranslationCsvService translationCsvService,
+      com.chubini.pku.products.mapper.ProductMapper productMapper) {
     this.repository = repository;
     this.translationRepository = translationRepository;
     this.csvUploadService = csvUploadService;
     this.translationCsvService = translationCsvService;
+    this.productMapper = productMapper;
   }
 
   // ... existing code ...
@@ -57,62 +60,13 @@ public class ProductService {
   }
 
   public Product createProduct(ProductUpsertDto dto) {
-    Product product =
-        Product.builder()
-            .productName(dto.productName())
-            .category(dto.category())
-            .phenylalanine(dto.phenylalanine())
-            .leucine(dto.leucine())
-            .tyrosine(dto.tyrosine())
-            .methionine(dto.methionine())
-            .kilojoules(dto.kilojoules())
-            .kilocalories(dto.kilocalories())
-            .protein(dto.protein())
-            .carbohydrates(dto.carbohydrates())
-            .fats(dto.fats())
-            .build();
-
+    Product product = productMapper.toEntity(dto);
     return repository.save(product);
   }
 
   public Product updateProduct(UUID id, ProductUpsertDto dto) {
     Product existingProduct = getProductById(id);
-
-    // Partial update - only update non-null fields
-    if (dto.productName() != null) {
-      existingProduct.setProductName(dto.productName());
-    }
-    if (dto.category() != null) {
-      existingProduct.setCategory(dto.category());
-    }
-    if (dto.phenylalanine() != null) {
-      existingProduct.setPhenylalanine(dto.phenylalanine());
-    }
-    if (dto.leucine() != null) {
-      existingProduct.setLeucine(dto.leucine());
-    }
-    if (dto.tyrosine() != null) {
-      existingProduct.setTyrosine(dto.tyrosine());
-    }
-    if (dto.methionine() != null) {
-      existingProduct.setMethionine(dto.methionine());
-    }
-    if (dto.kilojoules() != null) {
-      existingProduct.setKilojoules(dto.kilojoules());
-    }
-    if (dto.kilocalories() != null) {
-      existingProduct.setKilocalories(dto.kilocalories());
-    }
-    if (dto.protein() != null) {
-      existingProduct.setProtein(dto.protein());
-    }
-    if (dto.carbohydrates() != null) {
-      existingProduct.setCarbohydrates(dto.carbohydrates());
-    }
-    if (dto.fats() != null) {
-      existingProduct.setFats(dto.fats());
-    }
-
+    productMapper.updateEntityFromDto(dto, existingProduct);
     return repository.save(existingProduct);
   }
 
