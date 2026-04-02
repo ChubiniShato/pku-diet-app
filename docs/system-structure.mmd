@@ -1,0 +1,18 @@
+graph TD
+    classDef default fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000,rx:5px,ry:5px;
+    classDef db fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000;
+
+    U[User / Admin]:::default
+    F[Frontend UI]:::default
+    B[Backend API - Spring Boot]:::default
+    D[(Database - PostgreSQL)]:::db
+    
+    C[CSV File]:::default
+    A[Auth Flow]:::default
+
+    U -->|Action| F
+    F -->|API Call| B
+    B -->|Query| D
+    
+    C -->|CSV Import| B
+    A -->|Authentication| B

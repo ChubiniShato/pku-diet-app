@@ -72,3 +72,14 @@ Current focus:
 - TODO: add main workflow screenshot
 - TODO: add data view screenshot
 - TODO: add validation/logic screenshot
+
+## Screenshots
+
+### All Products View
+![All Products View](./docs/images/all-products-view.png)
+
+### Product Management View
+![Product Management View](./docs/images/product-management-view.png)
+
+### System Structure
+![System Structure](./docs/images/system-structure.png)
