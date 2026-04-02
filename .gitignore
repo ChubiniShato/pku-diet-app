@@ -7,6 +7,7 @@
 
 # Env / JVM / Spring Boot
 .env
+.env.*
 hs_err_pid*
 replay_pid*
 *.pid
